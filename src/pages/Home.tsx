@@ -230,18 +230,18 @@ export const Home: React.FC = () => {
               ))}
             </CarouselContent>
 
-            {/* Navigation Arrows */}
+            {/* Navigation Arrows - Minimal style, just arrows */}
             <CarouselPrevious
-              className="absolute left-4 lg:left-12 top-1/2 -translate-y-1/2 bg-white text-gray-900 border-0 hover:bg-white/90 shadow-lg rounded-full flex items-center justify-center"
+              className="absolute left-4 lg:left-12 top-1/2 -translate-y-1/2 bg-transparent hover:bg-white/20 border-0 text-white rounded-full flex items-center justify-center transition-all"
               style={{ width: '48px', height: '48px', fontSize: 0 }}
             />
             <CarouselNext
-              className="absolute right-4 lg:right-12 top-1/2 -translate-y-1/2 bg-white text-gray-900 border-0 hover:bg-white/90 shadow-lg rounded-full flex items-center justify-center"
+              className="absolute right-4 lg:right-12 top-1/2 -translate-y-1/2 bg-transparent hover:bg-white/20 border-0 text-white rounded-full flex items-center justify-center transition-all"
               style={{ width: '48px', height: '48px', fontSize: 0 }}
             />
 
-            {/* Dot Indicators */}
-            <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex gap-3 z-20">
+            {/* Dot Indicators - Positioned higher to be visible */}
+            <div className="absolute bottom-16 left-1/2 -translate-x-1/2 flex gap-3 z-20">
               {heroSlides.map((_, index) => (
                 <button
                   key={index}
