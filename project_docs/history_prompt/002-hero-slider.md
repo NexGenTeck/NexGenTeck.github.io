@@ -7,38 +7,23 @@
 
 ## User Request
 
-Redesign the Hero section of `src/pages/Home.tsx` to be a dynamic slider/carousel similar to the provided reference image. Features: full-width slides, background images, text overlays, navigation arrows, and dot indicators.
+Redesign the Hero section of `src/pages/Home.tsx` to be a dynamic slider/carousel matching a specific reference design (centered content, circular arrows).
 
 ---
 
 ## Specification
 
 ### Technical Approach
-- **Component:** Existing Embla Carousel from `src/components/ui/carousel.tsx`
-- **State Management:** React useState for carousel API and current slide tracking
-- **Styling:** Custom CSS with `!important` rules to force single-slide display
+- **Component:** Embla Carousel (`src/components/ui/carousel.tsx`)
+- **Centered Layout:** `flex flex-col items-center justify-center text-center`
+- **Navigation:** Custom circular white buttons (`size-14 rounded-full`)
+- **Height Enforcement:** Inline `style={{ height: '600px' }}` for robust layout
 
 ### Design Choices
-1. **Full-width slides** with 600px/700px height (mobile/desktop)
-2. **Gradient overlay** (`from-black/60 via-black/40 to-transparent`) for text readability
-3. **Left-aligned content** with max-width constraint
-4. **Clickable dot indicators** with active state animation
-5. **Navigation arrows** positioned on left/right edges with blur backdrop
-
----
-
-## Prompt Used
-
-```
-"I need to redesign the Hero section of my src/pages/Home.tsx file to look like a slider/carousel, similar to the reference image I have.
-
-Requirements:
-- Import Carousel, CarouselContent, CarouselItem, CarouselNext, CarouselPrevious
-- Create heroSlides array with 3 slides (id, image, title, subtitle, ctaText, ctaLink)
-- Full width carousel with background images
-- Overlay text with gradient for readability
-- Use Tailwind CSS, fully responsive"
-```
+1. **Centered Content:** Text and buttons are strictly centered.
+2. **Typography:** Huge bold title (`text-4xl md:text-6xl`) with drop shadow for readability.
+3. **Navigation:** White circular buttons with hover effects. Text labels hidden via `text-[0px]` hack to ensure circular shape.
+4. **Overlay:** `bg-black/40` uniformly applied for text contrast.
 
 ---
 
@@ -48,62 +33,31 @@ Requirements:
 
 | File | Changes |
 |------|---------|
-| `src/pages/Home.tsx` | Added Carousel imports, heroSlides data, carousel state, replaced Hero section |
-| `src/index.css` | Added `.hero-carousel` CSS rules for single-slide display |
+| `src/pages/Home.tsx` | Implemented centered carousel design, custom arrow styling, text logic |
+| `src/index.css` | Added helper classes (though inline styles were preferred for fixes) |
 
-### Key Code Changes
+### Key Code Patterns
 
-**Home.tsx - Imports:**
+**Centered Carousel Item:**
 ```tsx
-import {
-  Carousel, CarouselContent, CarouselItem,
-  CarouselNext, CarouselPrevious, type CarouselApi,
-} from '../components/ui/carousel';
+<CarouselItem ... style={{ flexBasis: '100%' }}>
+  <div className="relative w-full flex items-center justify-center" style={{ height: '600px' }}>
+    {/* Content */}
+  </div>
+</CarouselItem>
 ```
 
-**Home.tsx - State:**
+**Circular Navigation Arrows:**
 ```tsx
-const [carouselApi, setCarouselApi] = React.useState<CarouselApi>();
-const [currentSlide, setCurrentSlide] = React.useState(0);
-```
-
-**index.css - Fix for single-slide display:**
-```css
-.hero-carousel [data-slot="carousel-item"] {
-  flex: 0 0 100% !important;
-  min-width: 0 !important;
-  padding-left: 0 !important;
-}
-```
-
-### Slide Data Structure
-```typescript
-const heroSlides = [
-  { id: 1, image: "...", title: "Transform Your Digital Presence", ... },
-  { id: 2, image: "...", title: "Innovative Web Solutions", ... },
-  { id: 3, image: "...", title: "Scale Your Business", ... },
-];
+<CarouselPrevious className="... rounded-full [&_span]:hidden text-[0px]" />
 ```
 
 ---
 
-## Future Considerations
-
-### Enhancements to Consider
-1. **Auto-play:** Add Embla Autoplay plugin for automatic slide transitions
-2. **Pause on hover:** Stop auto-play when user hovers
-3. **Swipe gestures:** Already supported by Embla, test on mobile
-4. **Dynamic slides:** Load from CMS/API
-5. **Lazy loading:** Add lazy loading for slide images
-
-### Important Notes
-- The `hero-carousel` class is required for the CSS fix to work
-- If carousel shows multiple slides, check that the CSS was applied
-- The `[data-slot="carousel-item"]` selector targets Embla's internal structure
-
-### Known Issues Fixed
-- **Multiple slides visible:** Fixed by adding `flex: 0 0 100% !important`
-- **Slides overlapping:** Fixed by adding `overflow-hidden` to wrapper
+## Known Issues & Fixes
+- **Pill-shaped arrows:** Caused by visible "Previous slide" text. Fixed by adding `text-[0px]` to button classes.
+- **Collapsed Height:** `h-[600px]` class was ineffective. Fixed by using inline `style={{ height: '600px' }}`.
+- **Text Visibility:** Improved by centering and adding drop shadows + background overlay.
 
 ---
 

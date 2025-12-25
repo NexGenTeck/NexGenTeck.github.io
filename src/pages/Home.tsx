@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { ArrowRight, CheckCircle, Users, Award, TrendingUp, Star, Quote } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Quote, Star } from 'lucide-react';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
@@ -173,7 +173,7 @@ export const Home: React.FC = () => {
             <CarouselContent className="ml-0">
               {heroSlides.map((slide) => (
                 <CarouselItem key={slide.id} className="pl-0 min-w-0 shrink-0 grow-0" style={{ flexBasis: '100%' }}>
-                  <div className="relative h-[600px] lg:h-[700px] w-full">
+                  <div className="relative w-full flex items-center justify-center" style={{ height: '600px' }}>
                     {/* Background Image */}
                     <div className="absolute inset-0">
                       <img
@@ -182,49 +182,48 @@ export const Home: React.FC = () => {
                         className="w-full h-full object-cover"
                       />
                       {/* Gradient Overlay */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/60 via-black/40 to-transparent" />
+                      <div className="absolute inset-0 bg-black/40" />
                     </div>
 
                     {/* Content Overlay */}
-                    <div className="relative z-10 h-full flex items-center">
-                      <div className="container mx-auto px-4 lg:px-16">
-                        <motion.div
-                          initial={{ opacity: 0, y: 30 }}
+                    <div className="relative z-10 w-full h-full flex flex-col items-center justify-center text-center px-4">
+                      <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.8 }}
+                        className="max-w-4xl mx-auto text-white mt-16"
+                      >
+                        <motion.h1
+                          initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
-                          transition={{ duration: 0.8 }}
-                          className="max-w-2xl text-white"
+                          transition={{ delay: 0.2, duration: 0.6 }}
+                          className="text-4xl md:text-6xl font-bold mb-6 leading-tight tracking-tight drop-shadow-lg"
                         >
-                          <motion.h1
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.2, duration: 0.6 }}
-                            className="text-4xl md:text-5xl lg:text-6xl font-bold mb-6 leading-tight"
+                          {slide.title}
+                        </motion.h1>
+                        <motion.p
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.4, duration: 0.6 }}
+                          className="text-lg md:text-xl mb-10 text-white/90 leading-relaxed max-w-2xl mx-auto drop-shadow-md"
+                        >
+                          {slide.subtitle}
+                        </motion.p>
+                        <motion.div
+                          initial={{ opacity: 0, y: 20 }}
+                          animate={{ opacity: 1, y: 0 }}
+                          transition={{ delay: 0.6, duration: 0.6 }}
+                          className="flex justify-center"
+                        >
+                          <Link
+                            to={slide.ctaLink}
+                            className="inline-flex items-center space-x-2 bg-white text-gray-900 px-8 py-3 rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 font-bold text-base shadow-lg"
                           >
-                            {slide.title}
-                          </motion.h1>
-                          <motion.p
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.4, duration: 0.6 }}
-                            className="text-lg md:text-xl mb-8 text-white/90 leading-relaxed"
-                          >
-                            {slide.subtitle}
-                          </motion.p>
-                          <motion.div
-                            initial={{ opacity: 0, y: 20 }}
-                            animate={{ opacity: 1, y: 0 }}
-                            transition={{ delay: 0.6, duration: 0.6 }}
-                          >
-                            <Link
-                              to={slide.ctaLink}
-                              className="inline-flex items-center space-x-2 bg-white text-gray-900 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105 font-semibold"
-                            >
-                              <span>{slide.ctaText}</span>
-                              <ArrowRight className="w-5 h-5" />
-                            </Link>
-                          </motion.div>
+                            <span>{slide.ctaText}</span>
+                            <ArrowRight className="w-5 h-5" />
+                          </Link>
                         </motion.div>
-                      </div>
+                      </motion.div>
                     </div>
                   </div>
                 </CarouselItem>
@@ -232,8 +231,8 @@ export const Home: React.FC = () => {
             </CarouselContent>
 
             {/* Navigation Arrows */}
-            <CarouselPrevious className="absolute left-4 lg:left-8 top-1/2 -translate-y-1/2 h-12 w-12 bg-white/20 hover:bg-white/40 border-0 text-white backdrop-blur-sm" />
-            <CarouselNext className="absolute right-4 lg:right-8 top-1/2 -translate-y-1/2 h-12 w-12 bg-white/20 hover:bg-white/40 border-0 text-white backdrop-blur-sm" />
+            <CarouselPrevious className="absolute left-4 lg:left-12 top-1/2 -translate-y-1/2 h-14 w-14 bg-white text-gray-900 border-0 hover:bg-white/90 shadow-lg rounded-full flex items-center justify-center [&_svg]:w-6 [&_svg]:h-6 [&_span]:hidden text-[0px]" />
+            <CarouselNext className="absolute right-4 lg:right-12 top-1/2 -translate-y-1/2 h-14 w-14 bg-white text-gray-900 border-0 hover:bg-white/90 shadow-lg rounded-full flex items-center justify-center [&_svg]:w-6 [&_svg]:h-6 [&_span]:hidden text-[0px]" />
 
             {/* Dot Indicators */}
             <div className="absolute bottom-8 left-1/2 -translate-x-1/2 flex space-x-3 z-20">
@@ -241,11 +240,11 @@ export const Home: React.FC = () => {
                 <button
                   key={index}
                   onClick={() => carouselApi?.scrollTo(index)}
-                  className={`w-3 h-3 rounded-full transition-all duration-300 ${index === currentSlide
+                  className={`w - 3 h - 3 rounded - full transition - all duration - 300 ${index === currentSlide
                     ? 'bg-white w-8'
                     : 'bg-white/50 hover:bg-white/80'
-                    }`}
-                  aria-label={`Go to slide ${index + 1}`}
+                    } `}
+                  aria-label={`Go to slide ${index + 1} `}
                 />
               ))}
             </div>
@@ -362,7 +361,7 @@ export const Home: React.FC = () => {
                     transition={{ delay: index * 0.1 }}
                     className="flex items-start space-x-3"
                   >
-                    <CheckCircle className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
+                    <CheckCircle2 className="w-6 h-6 text-green-500 flex-shrink-0 mt-1" />
                     <span className="text-gray-700">{item}</span>
                   </motion.div>
                 ))}
