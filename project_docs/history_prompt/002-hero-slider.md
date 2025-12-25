@@ -22,7 +22,8 @@ Redesign the Hero section of `src/pages/Home.tsx` to be a dynamic slider/carouse
 ### Design Choices
 1. **Centered Content:** Text and buttons are strictly centered.
 2. **Typography:** Huge bold title (`text-4xl md:text-6xl`) with drop shadow for readability.
-3. **Navigation:** White circular buttons with hover effects. Text labels hidden via `text-[0px]` hack to ensure circular shape.
+3. **Navigation:** White circular buttons with Chevron icons (updated from Arrows). Text labels hidden via `text-[0px]`.
+4. **Indicators:** Active slide uses a "Ring" style (white dot with transparent ring), inactive are semi-transparent.
 4. **Overlay:** `bg-black/40` uniformly applied for text contrast.
 
 ---
