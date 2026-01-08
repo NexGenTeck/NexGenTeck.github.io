@@ -83,7 +83,7 @@ export const Blog: React.FC = () => {
   const filteredPosts = blogPosts.filter(post => {
     const matchesCategory = selectedCategory === 'all' || post.category === selectedCategory;
     const matchesSearch = post.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
+      post.excerpt.toLowerCase().includes(searchQuery.toLowerCase());
     return matchesCategory && matchesSearch;
   });
 
@@ -91,15 +91,18 @@ export const Blog: React.FC = () => {
 
   return (
     <div className="min-h-screen pt-20">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-orange-500 to-orange-600 text-white py-20">
-        <div className="container mx-auto px-4">
+      {/* Hero Section - Dark Theme */}
+      <section className="relative hero-dark text-white py-20">
+        <div className="hero-network"></div>
+        <div className="hero-glow-lines"></div>
+        <div className="hero-particles"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <AnimatedSection className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl mb-6">Our Blog</h1>
+            <h1 className="text-5xl lg:text-6xl font-bold mb-6">Our Blog</h1>
             <p className="text-xl text-white/90 mb-8">
               Insights, tips, and trends in digital technology
             </p>
-            
+
             {/* Search Bar */}
             <div className="max-w-xl mx-auto">
               <div className="relative">
@@ -109,7 +112,7 @@ export const Blog: React.FC = () => {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   placeholder="Search articles..."
-                  className="w-full pl-12 pr-4 py-4 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white/50"
+                  className="w-full pl-12 pr-4 py-4 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
             </div>
@@ -181,11 +184,10 @@ export const Blog: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setSelectedCategory(cat)}
-                className={`px-6 py-3 rounded-lg transition-all capitalize ${
-                  selectedCategory === cat
+                className={`px-6 py-3 rounded-lg transition-all capitalize ${selectedCategory === cat
                     ? 'bg-orange-500 text-white shadow-lg'
                     : 'bg-white text-gray-700 hover:bg-gray-100'
-                }`}
+                  }`}
               >
                 {cat.replace('-', ' ')}
               </motion.button>

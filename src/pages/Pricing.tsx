@@ -92,34 +92,35 @@ export const Pricing: React.FC = () => {
 
   return (
     <div className="min-h-screen pt-20">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-orange-500 to-orange-600 text-white py-20">
-        <div className="container mx-auto px-4">
+      {/* Hero Section - Dark Theme */}
+      <section className="relative hero-dark text-white py-20">
+        <div className="hero-network"></div>
+        <div className="hero-glow-lines"></div>
+        <div className="hero-particles"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <AnimatedSection className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl mb-6">{t('nav.pricing')}</h1>
+            <h1 className="text-5xl lg:text-6xl font-bold mb-6">{t('nav.pricing')}</h1>
             <p className="text-xl text-white/90 mb-8">
               Transparent pricing for businesses of all sizes
             </p>
-            
+
             {/* Billing Toggle */}
             <div className="inline-flex items-center bg-white/10 backdrop-blur-lg rounded-lg p-1">
               <button
                 onClick={() => setBillingCycle('monthly')}
-                className={`px-6 py-3 rounded-lg transition-all ${
-                  billingCycle === 'monthly'
-                    ? 'bg-white text-orange-500'
+                className={`px-6 py-3 rounded-lg transition-all ${billingCycle === 'monthly'
+                    ? 'bg-orange-500 text-white'
                     : 'text-white hover:bg-white/10'
-                }`}
+                  }`}
               >
                 Monthly
               </button>
               <button
                 onClick={() => setBillingCycle('yearly')}
-                className={`px-6 py-3 rounded-lg transition-all relative ${
-                  billingCycle === 'yearly'
-                    ? 'bg-white text-orange-500'
+                className={`px-6 py-3 rounded-lg transition-all relative ${billingCycle === 'yearly'
+                    ? 'bg-orange-500 text-white'
                     : 'text-white hover:bg-white/10'
-                }`}
+                  }`}
               >
                 Yearly
                 <span className="absolute -top-2 -right-2 bg-yellow-400 text-gray-900 text-xs px-2 py-1 rounded-full">
@@ -139,18 +140,17 @@ export const Pricing: React.FC = () => {
               <AnimatedSection key={index} delay={index * 0.1}>
                 <motion.div
                   whileHover={{ y: -10 }}
-                  className={`rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all h-full flex flex-col ${
-                    plan.popular
+                  className={`rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all h-full flex flex-col ${plan.popular
                       ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white border-4 border-yellow-400 relative'
                       : 'bg-white border border-gray-200'
-                  }`}
+                    }`}
                 >
                   {plan.popular && (
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 px-6 py-2 rounded-full">
                       Most Popular
                     </div>
                   )}
-                  
+
                   <div className="mb-6">
                     <h3 className={`text-3xl mb-2 ${plan.popular ? 'text-white' : 'text-gray-900'}`}>
                       {plan.name}
@@ -176,9 +176,8 @@ export const Pricing: React.FC = () => {
                     <ul className="space-y-3">
                       {plan.features.map((feature, idx) => (
                         <li key={idx} className="flex items-start space-x-3">
-                          <CheckCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                            plan.popular ? 'text-white' : 'text-green-500'
-                          }`} />
+                          <CheckCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${plan.popular ? 'text-white' : 'text-green-500'
+                            }`} />
                           <span className={plan.popular ? 'text-white/90' : 'text-gray-600'}>
                             {feature}
                           </span>
@@ -186,9 +185,8 @@ export const Pricing: React.FC = () => {
                       ))}
                       {plan.notIncluded.map((feature, idx) => (
                         <li key={idx} className="flex items-start space-x-3 opacity-50">
-                          <X className={`w-5 h-5 flex-shrink-0 mt-0.5 ${
-                            plan.popular ? 'text-white' : 'text-gray-400'
-                          }`} />
+                          <X className={`w-5 h-5 flex-shrink-0 mt-0.5 ${plan.popular ? 'text-white' : 'text-gray-400'
+                            }`} />
                           <span className={plan.popular ? 'text-white/70' : 'text-gray-400'}>
                             {feature}
                           </span>
@@ -199,11 +197,10 @@ export const Pricing: React.FC = () => {
 
                   <Link
                     to="/contact"
-                    className={`block text-center px-8 py-4 rounded-lg transition-all ${
-                      plan.popular
+                    className={`block text-center px-8 py-4 rounded-lg transition-all ${plan.popular
                         ? 'bg-white text-orange-500 hover:bg-gray-100'
                         : 'bg-orange-500 text-white hover:bg-orange-600'
-                    }`}
+                      }`}
                   >
                     Get Started
                   </Link>

@@ -66,17 +66,20 @@ export const Portfolio: React.FC = () => {
     },
   ];
 
-  const filteredProjects = filter === 'all' 
-    ? projects 
+  const filteredProjects = filter === 'all'
+    ? projects
     : projects.filter(p => p.category === filter);
 
   return (
     <div className="min-h-screen pt-20">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-orange-500 to-orange-600 text-white py-20">
-        <div className="container mx-auto px-4">
+      {/* Hero Section - Dark Theme */}
+      <section className="relative hero-dark text-white py-20">
+        <div className="hero-network"></div>
+        <div className="hero-glow-lines"></div>
+        <div className="hero-particles"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <AnimatedSection className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl mb-6">Our Portfolio</h1>
+            <h1 className="text-5xl lg:text-6xl font-bold mb-6">Our Portfolio</h1>
             <p className="text-xl text-white/90">
               Explore our successful projects and see how we've helped businesses transform digitally
             </p>
@@ -94,11 +97,10 @@ export const Portfolio: React.FC = () => {
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
                 onClick={() => setFilter(cat)}
-                className={`px-6 py-3 rounded-lg transition-all capitalize ${
-                  filter === cat
+                className={`px-6 py-3 rounded-lg transition-all capitalize ${filter === cat
                     ? 'bg-orange-500 text-white shadow-lg'
                     : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
-                }`}
+                  }`}
               >
                 {cat}
               </motion.button>

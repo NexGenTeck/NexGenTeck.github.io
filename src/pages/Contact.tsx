@@ -18,10 +18,10 @@ export const Contact: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
-    
+
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
-    
+
     alert('Thank you for your message! We will get back to you soon.');
     setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
     setIsSubmitting(false);
@@ -36,11 +36,14 @@ export const Contact: React.FC = () => {
 
   return (
     <div className="min-h-screen pt-20">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-orange-500 to-orange-600 text-white py-20">
-        <div className="container mx-auto px-4">
+      {/* Hero Section - Dark Theme */}
+      <section className="relative hero-dark text-white py-20">
+        <div className="hero-network"></div>
+        <div className="hero-glow-lines"></div>
+        <div className="hero-particles"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <AnimatedSection className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl mb-6">{t('contact.title')}</h1>
+            <h1 className="text-5xl lg:text-6xl font-bold mb-6">{t('contact.title')}</h1>
             <p className="text-xl text-white/90">
               {t('contact.subtitle')}
             </p>
@@ -162,7 +165,7 @@ export const Contact: React.FC = () => {
                 <div>
                   <h2 className="text-3xl text-gray-900 mb-6">Get in Touch</h2>
                   <p className="text-lg text-gray-600 mb-8">
-                    Have a question or want to work together? We'd love to hear from you. 
+                    Have a question or want to work together? We'd love to hear from you.
                     Fill out the form or reach out through our contact information below.
                   </p>
                 </div>

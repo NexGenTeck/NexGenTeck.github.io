@@ -5,6 +5,7 @@ import { ArrowRight, CheckCircle2, Quote, Star } from 'lucide-react';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { TypewriterText } from '../components/TypewriterText';
 import {
   Carousel,
   CarouselContent,
@@ -19,12 +20,21 @@ export const Home: React.FC = () => {
   const [carouselApi, setCarouselApi] = React.useState<CarouselApi>();
   const [currentSlide, setCurrentSlide] = React.useState(0);
 
+  // Typewriter phrases for hero animation
+  const typewriterPhrases = [
+    'Agile Scalable Teams',
+    'Smart Solutions',
+    'Remote Professionals',
+    'Digital Excellence',
+  ];
+
   // Hero Slider Data - NexGenTeck Brand
   const heroSlides = [
     {
       id: 1,
       image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
-      title: 'Transform Your Workflow With Agile Scalable Teams',
+      titlePrefix: 'Transform Your Workflow With',
+      useTypewriter: true,
       subtitle: 'Grow without the overhead. We find, vet, and onboard reliable remote professionals who adapt to your workflow.',
       ctaText: 'Discover More Today',
       ctaSecondary: 'Watch a Quick Demo',
@@ -198,7 +208,14 @@ export const Home: React.FC = () => {
                           transition={{ delay: 0.2, duration: 0.6 }}
                           className="text-4xl md:text-6xl font-bold mb-6 leading-tight tracking-tight drop-shadow-lg"
                         >
-                          {slide.title}
+                          {'titlePrefix' in slide && slide.useTypewriter ? (
+                            <>
+                              {slide.titlePrefix}{' '}
+                              <TypewriterText phrases={typewriterPhrases} />
+                            </>
+                          ) : (
+                            'title' in slide ? slide.title : ''
+                          )}
                         </motion.h1>
                         <motion.p
                           initial={{ opacity: 0, y: 20 }}

@@ -86,11 +86,14 @@ export const Services: React.FC = () => {
 
   return (
     <div className="min-h-screen pt-20">
-      {/* Hero Section */}
-      <section className="relative bg-gradient-to-br from-orange-500 to-orange-600 text-white py-20">
-        <div className="container mx-auto px-4">
+      {/* Hero Section - Dark Theme */}
+      <section className="relative hero-dark text-white py-20">
+        <div className="hero-network"></div>
+        <div className="hero-glow-lines"></div>
+        <div className="hero-particles"></div>
+        <div className="container mx-auto px-4 relative z-10">
           <AnimatedSection className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl mb-6">{t('services.title')}</h1>
+            <h1 className="text-5xl lg:text-6xl font-bold mb-6">{t('services.title')}</h1>
             <p className="text-xl text-white/90">
               {t('services.subtitle')}
             </p>
