@@ -42,10 +42,10 @@ export const Header: React.FC = () => {
   ];
 
   // Dynamic classes for dark mode support
-  const headerBg = theme === 'dark' 
+  const headerBg = theme === 'dark'
     ? (isScrolled ? 'bg-gray-900 shadow-lg shadow-black/20' : 'bg-gray-900/95 backdrop-blur-sm')
     : (isScrolled ? 'bg-white shadow-lg' : 'bg-white/95 backdrop-blur-sm');
-  
+
   const textColor = theme === 'dark' ? 'text-gray-200' : 'text-gray-700';
   const textColorStrong = theme === 'dark' ? 'text-white' : 'text-gray-900';
   const dropdownBg = theme === 'dark' ? 'bg-gray-800' : 'bg-white';
@@ -67,7 +67,7 @@ export const Header: React.FC = () => {
             <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
               <span className="text-white">NT</span>
             </div>
-            <span className={`text-xl ${textColorStrong}`}>NexGen Tech</span>
+            <span className={`text-xl ${textColorStrong}`}>NexGenTeck</span>
           </Link>
 
           {/* Desktop Navigation */}

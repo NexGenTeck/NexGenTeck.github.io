@@ -1,4 +1,4 @@
-# NexGen Tech - Modern Multi-Page Business Website
+# NexGenTeck - Modern Multi-Page Business Website
 
 [![Deploy to GitHub Pages](https://github.com/muhammadhasaan82/Startup/actions/workflows/deploy.yml/badge.svg)](https://github.com/muhammadhasaan82/Startup/actions/workflows/deploy.yml)
 [![CI](https://github.com/muhammadhasaan82/Startup/actions/workflows/ci.yml/badge.svg)](https://github.com/muhammadhasaan82/Startup/actions/workflows/ci.yml)

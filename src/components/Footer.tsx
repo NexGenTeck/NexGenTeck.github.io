@@ -37,7 +37,7 @@ export const Footer: React.FC = () => {
               <div className="w-10 h-10 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center">
                 <span className="text-white">NT</span>
               </div>
-              <span className="text-xl text-white">NexGen Tech</span>
+              <span className="text-xl text-white">NexGenTeck</span>
             </div>
             <p className="text-gray-400">
               {t('footer.tagline')}
@@ -149,7 +149,7 @@ export const Footer: React.FC = () => {
         <div className="container mx-auto px-4 py-6">
           <div className="flex flex-col md:flex-row justify-between items-center space-y-4 md:space-y-0">
             <p className="text-gray-400 text-center md:text-left">
-              © 2025 NexGen Tech. All rights reserved.
+              © 2025 NexGenTeck. All rights reserved.
             </p>
             <div className="flex space-x-6">
               <Link to="/privacy" className="text-gray-400 hover:text-orange-500 transition-colors">

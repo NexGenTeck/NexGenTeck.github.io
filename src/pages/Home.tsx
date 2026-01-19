@@ -136,7 +136,7 @@ export const Home: React.FC = () => {
       name: 'Sarah Johnson',
       role: 'CEO, TechStart Inc',
       image: 'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      quote: 'NexGen Tech transformed our digital presence. Their expertise in web development and SEO helped us achieve 300% growth in online revenue.',
+      quote: 'NexGenTeck transformed our digital presence. Their expertise in web development and SEO helped us achieve 300% growth in online revenue.',
       rating: 5,
     },
     {
@@ -383,7 +383,7 @@ export const Home: React.FC = () => {
               />
             </AnimatedSection>
             <AnimatedSection direction="right">
-              <h2 className={`text-4xl lg:text-5xl ${textPrimary} mb-6`}>Why Choose NexGen Tech?</h2>
+              <h2 className={`text-4xl lg:text-5xl ${textPrimary} mb-6`}>Why Choose NexGenTeck?</h2>
               <p className={`text-xl ${textSecondary} mb-8`}>
                 We combine technical excellence with creative innovation to deliver digital solutions that exceed expectations.
               </p>

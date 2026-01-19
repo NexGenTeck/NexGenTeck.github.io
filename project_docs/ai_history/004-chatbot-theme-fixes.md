@@ -7,7 +7,7 @@
 
 ## Request Summary
 
-Multiple fixes and enhancements for the NexGen Tech website:
+Multiple fixes and enhancements for the NexGenTeck website:
 1. Restore header banners on all pages (with dark theme)
 2. Add typewriter animation to hero slider on Home page
 3. Update theme to black (#030213) and orange (#F97316)

@@ -132,7 +132,7 @@ export const About: React.FC = () => {
             <AnimatedSection direction="left">
               <h2 className="text-4xl lg:text-5xl text-gray-900 mb-6">Our Story</h2>
               <p className="text-lg text-gray-600 mb-4">
-                Founded in 2010, NexGen Tech started with a simple mission: to help businesses harness the power of digital technology to achieve their goals.
+                Founded in 2010, NexGenTeck started with a simple mission: to help businesses harness the power of digital technology to achieve their goals.
               </p>
               <p className="text-lg text-gray-600 mb-4">
                 Over the years, we've grown from a small startup to a leading digital agency, serving clients across the globe. Our team of 50+ talented professionals brings together expertise in web development, mobile apps, digital marketing, and emerging technologies like blockchain.
@@ -187,7 +187,7 @@ export const About: React.FC = () => {
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('about.team')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Meet the talented people behind NexGen Tech
+              Meet the talented people behind NexGenTeck
             </p>
           </AnimatedSection>
 
