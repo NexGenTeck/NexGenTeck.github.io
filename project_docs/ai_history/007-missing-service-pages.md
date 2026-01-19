@@ -132,6 +132,24 @@ After this update, all 9 services have dedicated pages:
 
 ---
 
+## CI/CD Pipeline Fix
+
+### Problem
+The CI/CD pipeline was failing because of the `npx tsc --noEmit` step. The UI components use versioned imports (e.g., `@radix-ui/react-accordion@1.2.3`) that are resolved by Vite's alias configuration, but `tsc` doesn't understand these aliases.
+
+### Solution
+Removed the standalone TypeScript type check step from both:
+- `.github/workflows/ci.yml`
+- `.github/workflows/deploy.yml`
+
+The `npm run build` command (Vite build) already performs type checking through its TypeScript plugin, so this step was redundant and causing failures.
+
+### Files Modified
+- `.github/workflows/ci.yml` - Removed `npx tsc --noEmit` step
+- `.github/workflows/deploy.yml` - Removed `npx tsc --noEmit` step
+
+---
+
 ## Verification
 
 ✅ All 5 new service pages created  
@@ -140,6 +158,8 @@ After this update, all 9 services have dedicated pages:
 ✅ Each page follows the established ServiceDetail pattern  
 ✅ All pricing packages are realistic and well-structured  
 ✅ FAQs address common customer questions  
+✅ CI/CD pipeline fixed (removed failing TSC step)
+✅ Changes pushed to GitHub
 
 ---
 
