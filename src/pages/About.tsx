@@ -79,23 +79,23 @@ export const About: React.FC = () => {
   const values = [
     {
       icon: <Target className="w-12 h-12" />,
-      title: 'Innovation',
-      description: 'We constantly push boundaries and embrace new technologies to deliver cutting-edge solutions.',
+      titleKey: 'about.values.innovation',
+      descKey: 'about.values.innovation.desc',
     },
     {
       icon: <Users className="w-12 h-12" />,
-      title: 'Collaboration',
-      description: 'We work closely with our clients as partners, ensuring their vision becomes reality.',
+      titleKey: 'about.values.collaboration',
+      descKey: 'about.values.collaboration.desc',
     },
     {
       icon: <Award className="w-12 h-12" />,
-      title: 'Excellence',
-      description: 'We maintain the highest standards of quality in everything we do.',
+      titleKey: 'about.values.excellence',
+      descKey: 'about.values.excellence.desc',
     },
     {
       icon: <Heart className="w-12 h-12" />,
-      title: 'Passion',
-      description: 'We love what we do and it shows in the exceptional results we deliver.',
+      titleKey: 'about.values.passion',
+      descKey: 'about.values.passion.desc',
     },
   ];
 
@@ -130,15 +130,15 @@ export const About: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="grid lg:grid-cols-2 gap-12 items-center">
             <AnimatedSection direction="left">
-              <h2 className="text-4xl lg:text-5xl text-gray-900 mb-6">Our Story</h2>
+              <h2 className="text-4xl lg:text-5xl text-gray-900 mb-6">{t('about.story')}</h2>
               <p className="text-lg text-gray-600 mb-4">
-                Founded in 2010, NexGenTeck started with a simple mission: to help businesses harness the power of digital technology to achieve their goals.
+                {t('about.story.p1')}
               </p>
               <p className="text-lg text-gray-600 mb-4">
-                Over the years, we've grown from a small startup to a leading digital agency, serving clients across the globe. Our team of 50+ talented professionals brings together expertise in web development, mobile apps, digital marketing, and emerging technologies like blockchain.
+                {t('about.story.p2')}
               </p>
               <p className="text-lg text-gray-600">
-                Today, we're proud to have completed over 500 successful projects and helped hundreds of businesses transform their digital presence.
+                {t('about.story.p3')}
               </p>
             </AnimatedSection>
             <AnimatedSection direction="right">
@@ -156,9 +156,9 @@ export const About: React.FC = () => {
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">Our Values</h2>
+            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('about.values')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              The principles that guide everything we do
+              {t('about.values.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -172,8 +172,8 @@ export const About: React.FC = () => {
                   <div className="text-orange-500 flex justify-center mb-4">
                     {value.icon}
                   </div>
-                  <h3 className="text-xl text-gray-900 mb-3">{value.title}</h3>
-                  <p className="text-gray-600">{value.description}</p>
+                  <h3 className="text-xl text-gray-900 mb-3">{t(value.titleKey)}</h3>
+                  <p className="text-gray-600">{t(value.descKey)}</p>
                 </motion.div>
               </AnimatedSection>
             ))}
@@ -187,7 +187,7 @@ export const About: React.FC = () => {
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('about.team')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Meet the talented people behind NexGenTeck
+              {t('about.team.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -237,7 +237,7 @@ export const About: React.FC = () => {
           <AnimatedSection className="text-center mb-16">
             <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('about.partners')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Trusted by industry leaders worldwide
+              {t('about.partners.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -258,7 +258,7 @@ export const About: React.FC = () => {
 
           <AnimatedSection className="mt-16 text-center">
             <p className="text-lg text-gray-600 mb-8">
-              We're proud to partner with the world's leading technology companies to deliver exceptional solutions to our clients.
+              {t('about.partners.text')}
             </p>
           </AnimatedSection>
         </div>
@@ -269,15 +269,15 @@ export const About: React.FC = () => {
         <div className="container mx-auto px-4">
           <AnimatedSection>
             <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-12 text-center text-white">
-              <h2 className="text-4xl lg:text-5xl mb-6">Join Our Team</h2>
+              <h2 className="text-4xl lg:text-5xl mb-6">{t('about.cta.title')}</h2>
               <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90">
-                We're always looking for talented individuals to join our growing team
+                {t('about.cta.subtitle')}
               </p>
               <a
                 href="/contact"
                 className="inline-block bg-white text-orange-500 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105"
               >
-                View Open Positions
+                {t('about.cta.button')}
               </a>
             </div>
           </AnimatedSection>
