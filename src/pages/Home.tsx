@@ -30,40 +30,40 @@ export const Home: React.FC = () => {
   const [carouselApi, setCarouselApi] = React.useState<CarouselApi>();
   const [currentSlide, setCurrentSlide] = React.useState(0);
 
-  // Typewriter phrases for hero animation
+  // Typewriter phrases for hero animation - using translations
   const typewriterPhrases = [
-    'Agile Scalable Teams',
-    'Smart Solutions',
-    'Remote Professionals',
-    'Digital Excellence',
+    t('hero.typewriter.1'),
+    t('hero.typewriter.2'),
+    t('hero.typewriter.3'),
+    t('hero.typewriter.4'),
   ];
 
-  // Hero Slider Data - NexGenTeck Brand
+  // Hero Slider Data - NexGenTeck Brand (using translations)
   const heroSlides = [
     {
       id: 1,
       image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
-      titlePrefix: 'Transform Your Workflow With',
+      titlePrefix: t('hero.slide1.title'),
       useTypewriter: true,
-      subtitle: 'Grow without the overhead. We find, vet, and onboard reliable remote professionals who adapt to your workflow.',
-      ctaText: 'Discover More Today',
-      ctaSecondary: 'Watch a Quick Demo',
+      subtitle: t('hero.slide1.subtitle'),
+      ctaText: t('hero.slide1.cta'),
+      ctaSecondary: t('hero.slide1.cta2'),
       ctaLink: '/contact',
     },
     {
       id: 2,
       image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
-      title: 'Smarter Teams, Stronger Results',
-      subtitle: 'From AI Automation to Web Development, we provide the talent to drive your growth.',
-      ctaText: 'Our Services',
+      title: t('hero.slide2.title'),
+      subtitle: t('hero.slide2.subtitle'),
+      ctaText: t('hero.slide2.cta'),
       ctaLink: '/services',
     },
     {
       id: 3,
       image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
-      title: 'Innovation Meets Excellence',
-      subtitle: 'Cutting-edge solutions for modern businesses. 99% Uptime, 24/7 Support.',
-      ctaText: 'Get Started',
+      title: t('hero.slide3.title'),
+      subtitle: t('hero.slide3.subtitle'),
+      ctaText: t('hero.slide3.cta'),
       ctaLink: '/contact',
     },
   ];
@@ -81,43 +81,43 @@ export const Home: React.FC = () => {
 
   const services = [
     {
-      title: 'E-commerce Development',
-      description: 'Build powerful online stores with seamless shopping experiences',
+      titleKey: 'services.ecommerce',
+      descKey: 'services.ecommerce.desc',
       icon: '🛒',
       link: '/services/ecommerce',
       image: 'https://images.unsplash.com/photo-1727407209320-1fa6ae60ee05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBzaG9wcGluZ3xlbnwxfHx8fDE3NjQzNDQ4NTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
-      title: 'Website Development',
-      description: 'Custom websites that drive engagement and conversions',
+      titleKey: 'services.web',
+      descKey: 'services.web.desc',
       icon: '💻',
       link: '/services/web-development',
       image: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZ3xlbnwxfHx8fDE3NjQzODYyMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
-      title: 'Mobile App Development',
-      description: 'Native and cross-platform apps for iOS and Android',
+      titleKey: 'services.mobile',
+      descKey: 'services.mobile.desc',
       icon: '📱',
       link: '/services/mobile-app',
       image: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
-      title: 'Digital Marketing',
-      description: 'SEO, PPC, and social media strategies that deliver results',
+      titleKey: 'services.social',
+      descKey: 'services.social.desc',
       icon: '📊',
       link: '/services/social-media',
       image: 'https://images.unsplash.com/photo-1557838923-2985c318be48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDF8fHx8MTc2NDQyNjgzNnww&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
-      title: 'SEO Optimization',
-      description: 'Rank higher and attract more organic traffic',
+      titleKey: 'services.seo',
+      descKey: 'services.seo.desc',
       icon: '🔍',
       link: '/services/seo',
       image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzZW8lMjBhbmFseXRpY3N8ZW58MXx8fHwxNzY0NDAyMjQ1fDA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
-      title: 'Blockchain Development',
-      description: 'Decentralized solutions for the future of technology',
+      titleKey: 'services.blockchain',
+      descKey: 'services.blockchain.desc',
       icon: '⛓️',
       link: '/services/blockchain',
       image: 'https://images.unsplash.com/photo-1666816943035-15c29931e975?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibG9ja2NoYWluJTIwdGVjaG5vbG9neXxlbnwxfHx8fDE3NjQ0MzExMDh8MA&ixlib=rb-4.1.0&q=80&w=1080',
@@ -125,10 +125,10 @@ export const Home: React.FC = () => {
   ];
 
   const stats = [
-    { number: '500+', label: 'Projects Completed' },
-    { number: '300+', label: 'Happy Clients' },
-    { number: '50+', label: 'Team Members' },
-    { number: '15+', label: 'Years Experience' },
+    { number: '500+', labelKey: 'stats.projects' },
+    { number: '300+', labelKey: 'stats.clients' },
+    { number: '50+', labelKey: 'stats.team' },
+    { number: '15+', labelKey: 'stats.experience' },
   ];
 
   const testimonials = [
@@ -311,7 +311,7 @@ export const Home: React.FC = () => {
                 <div className="text-4xl lg:text-5xl bg-gradient-to-r from-orange-500 to-orange-600 bg-clip-text text-transparent mb-2">
                   {stat.number}
                 </div>
-                <div className={textSecondary}>{stat.label}</div>
+                <div className={textSecondary}>{t(stat.labelKey)}</div>
               </motion.div>
             ))}
           </div>
@@ -339,17 +339,17 @@ export const Home: React.FC = () => {
                     <div className="relative h-48 overflow-hidden">
                       <ImageWithFallback
                         src={service.image}
-                        alt={service.title}
+                        alt={t(service.titleKey)}
                         className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                       <div className="absolute bottom-4 left-4 text-4xl">{service.icon}</div>
                     </div>
                     <div className="p-6">
-                      <h3 className={`text-xl ${textPrimary} mb-3`}>{service.title}</h3>
-                      <p className={`${textSecondary} mb-4`}>{service.description}</p>
+                      <h3 className={`text-xl ${textPrimary} mb-3`}>{t(service.titleKey)}</h3>
+                      <p className={`${textSecondary} mb-4`}>{t(service.descKey)}</p>
                       <div className="flex items-center text-orange-500 group-hover:text-orange-600 transition-colors">
-                        <span className="mr-2">Learn More</span>
+                        <span className="mr-2">{t('common.learnMore')}</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
                       </div>
                     </div>
@@ -383,18 +383,18 @@ export const Home: React.FC = () => {
               />
             </AnimatedSection>
             <AnimatedSection direction="right">
-              <h2 className={`text-4xl lg:text-5xl ${textPrimary} mb-6`}>Why Choose NexGenTeck?</h2>
+              <h2 className={`text-4xl lg:text-5xl ${textPrimary} mb-6`}>{t('whyus.title')}</h2>
               <p className={`text-xl ${textSecondary} mb-8`}>
-                We combine technical excellence with creative innovation to deliver digital solutions that exceed expectations.
+                {t('whyus.subtitle')}
               </p>
               <div className="space-y-4">
                 {[
-                  'Expert team with 15+ years of industry experience',
-                  'Cutting-edge technologies and best practices',
-                  '24/7 support and maintenance services',
-                  'Transparent communication and project management',
-                  'Proven track record with 500+ successful projects',
-                  'Competitive pricing with no hidden costs',
+                  t('whyus.point1'),
+                  t('whyus.point2'),
+                  t('whyus.point3'),
+                  t('whyus.point4'),
+                  t('whyus.point5'),
+                  t('whyus.point6'),
                 ].map((item, index) => (
                   <motion.div
                     key={index}
@@ -509,23 +509,23 @@ export const Home: React.FC = () => {
         <div className="container mx-auto px-4">
           <AnimatedSection>
             <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-12 text-center text-white">
-              <h2 className="text-4xl lg:text-5xl mb-6">Ready to Start Your Project?</h2>
+              <h2 className="text-4xl lg:text-5xl mb-6">{t('cta.title')}</h2>
               <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90">
-                Let's discuss how we can help transform your business with cutting-edge digital solutions
+                {t('cta.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   to="/contact"
                   className="bg-white text-orange-500 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105 inline-flex items-center justify-center space-x-2"
                 >
-                  <span>Get Started Now</span>
+                  <span>{t('cta.button')}</span>
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
                   to="/pricing"
                   className="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-orange-500 transition-all inline-flex items-center justify-center"
                 >
-                  View Pricing
+                  {t('nav.pricing')}
                 </Link>
               </div>
             </div>
