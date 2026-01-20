@@ -418,9 +418,9 @@ export const Home: React.FC = () => {
       <section className={`py-20 ${sectionBgAlt}`}>
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className={`text-4xl lg:text-5xl ${textPrimary} mb-4`}>Featured Projects</h2>
+            <h2 className={`text-4xl lg:text-5xl ${textPrimary} mb-4`}>{t('portfolio.title')}</h2>
             <p className={`text-xl ${textSecondary} max-w-2xl mx-auto`}>
-              Explore our latest work and see how we've helped businesses transform digitally
+              {t('portfolio.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -455,7 +455,7 @@ export const Home: React.FC = () => {
               to="/portfolio"
               className="inline-flex items-center space-x-2 bg-orange-500 text-white px-8 py-4 rounded-lg hover:bg-orange-600 transition-colors"
             >
-              <span>View All Projects</span>
+              <span>{t('portfolio.viewAll')}</span>
               <ArrowRight className="w-5 h-5" />
             </Link>
           </div>
@@ -466,9 +466,9 @@ export const Home: React.FC = () => {
       <section className="py-20 bg-gradient-to-br from-orange-500 to-orange-600 text-white">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl mb-4">What Our Clients Say</h2>
+            <h2 className="text-4xl lg:text-5xl mb-4">{t('testimonials.title')}</h2>
             <p className="text-xl text-white/90 max-w-2xl mx-auto">
-              Don't just take our word for it - hear from our satisfied clients
+              {t('testimonials.subtitle')}
             </p>
           </AnimatedSection>
 

@@ -72,12 +72,12 @@ export const Footer: React.FC = () => {
           >
             <h3 className="text-white mb-4">{t('footer.company')}</h3>
             <ul className="space-y-2">
-              <li><Link to="/about" className="hover:text-orange-500 transition-colors">About Us</Link></li>
-              <li><Link to="/about#team" className="hover:text-orange-500 transition-colors">Our Team</Link></li>
-              <li><Link to="/about#partners" className="hover:text-orange-500 transition-colors">Partners</Link></li>
-              <li><Link to="/portfolio" className="hover:text-orange-500 transition-colors">Portfolio</Link></li>
-              <li><Link to="/blog" className="hover:text-orange-500 transition-colors">Blog</Link></li>
-              <li><Link to="/contact" className="hover:text-orange-500 transition-colors">Contact</Link></li>
+              <li><Link to="/about" className="hover:text-orange-500 transition-colors">{t('nav.about')}</Link></li>
+              <li><Link to="/about#team" className="hover:text-orange-500 transition-colors">{t('about.team')}</Link></li>
+              <li><Link to="/about#partners" className="hover:text-orange-500 transition-colors">{t('about.partners')}</Link></li>
+              <li><Link to="/portfolio" className="hover:text-orange-500 transition-colors">{t('nav.portfolio')}</Link></li>
+              <li><Link to="/blog" className="hover:text-orange-500 transition-colors">{t('nav.blog')}</Link></li>
+              <li><Link to="/contact" className="hover:text-orange-500 transition-colors">{t('nav.contact')}</Link></li>
             </ul>
           </motion.div>
 
@@ -90,12 +90,12 @@ export const Footer: React.FC = () => {
           >
             <h3 className="text-white mb-4">{t('footer.services')}</h3>
             <ul className="space-y-2">
-              <li><Link to="/services/web-development" className="hover:text-orange-500 transition-colors">Web Development</Link></li>
-              <li><Link to="/services/mobile-app" className="hover:text-orange-500 transition-colors">Mobile Apps</Link></li>
-              <li><Link to="/services/ecommerce" className="hover:text-orange-500 transition-colors">E-commerce</Link></li>
-              <li><Link to="/services/seo" className="hover:text-orange-500 transition-colors">SEO Services</Link></li>
-              <li><Link to="/services/social-media" className="hover:text-orange-500 transition-colors">Social Media</Link></li>
-              <li><Link to="/services/blockchain" className="hover:text-orange-500 transition-colors">Blockchain</Link></li>
+              <li><Link to="/services/web-development" className="hover:text-orange-500 transition-colors">{t('services.web')}</Link></li>
+              <li><Link to="/services/mobile-app" className="hover:text-orange-500 transition-colors">{t('services.mobile')}</Link></li>
+              <li><Link to="/services/ecommerce" className="hover:text-orange-500 transition-colors">{t('services.ecommerce')}</Link></li>
+              <li><Link to="/services/seo" className="hover:text-orange-500 transition-colors">{t('services.seo')}</Link></li>
+              <li><Link to="/services/social-media" className="hover:text-orange-500 transition-colors">{t('services.social')}</Link></li>
+              <li><Link to="/services/blockchain" className="hover:text-orange-500 transition-colors">{t('services.blockchain')}</Link></li>
             </ul>
           </motion.div>
 

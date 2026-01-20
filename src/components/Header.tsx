@@ -40,15 +40,15 @@ export const Header: React.FC = () => {
   ];
 
   const services = [
-    { name: 'E-commerce Development', path: '/services/ecommerce' },
-    { name: 'Website Development', path: '/services/web-development' },
-    { name: 'Google Ads (PPC)', path: '/services/google-ads' },
-    { name: 'SEO', path: '/services/seo' },
-    { name: 'Social Media Marketing', path: '/services/social-media' },
-    { name: 'Mobile App Development', path: '/services/mobile-app' },
-    { name: 'Software Development', path: '/services/software' },
-    { name: 'Outdoor Media', path: '/services/outdoor-media' },
-    { name: 'Blockchain Development', path: '/services/blockchain' },
+    { name: 'services.ecommerce', path: '/services/ecommerce' },
+    { name: 'services.web', path: '/services/web-development' },
+    { name: 'services.ppc', path: '/services/google-ads' },
+    { name: 'services.seo', path: '/services/seo' },
+    { name: 'services.social', path: '/services/social-media' },
+    { name: 'services.mobile', path: '/services/mobile-app' },
+    { name: 'services.software', path: '/services/software' },
+    { name: 'services.outdoor', path: '/services/outdoor-media' },
+    { name: 'services.blockchain', path: '/services/blockchain' },
   ];
 
   // Dynamic classes for dark mode support
@@ -110,7 +110,7 @@ export const Header: React.FC = () => {
                         to={service.path}
                         className={`block px-4 py-2 ${textColor} ${dropdownHover} hover:text-orange-500 transition-colors`}
                       >
-                        {service.name}
+                        {t(service.name)}
                       </Link>
                     ))}
                   </motion.div>
@@ -241,7 +241,7 @@ export const Header: React.FC = () => {
                           onClick={() => setIsMenuOpen(false)}
                           className={`block ${theme === 'dark' ? 'text-gray-400' : 'text-gray-600'} hover:text-orange-500 transition-colors py-1`}
                         >
-                          {service.name}
+                          {t(service.name)}
                         </Link>
                       ))}
                     </div>
