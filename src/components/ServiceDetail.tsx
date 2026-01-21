@@ -4,6 +4,7 @@ import { motion } from 'motion/react';
 import { CheckCircle, ArrowRight } from 'lucide-react';
 import { AnimatedSection } from './AnimatedSection';
 import { ImageWithFallback } from './figma/ImageWithFallback';
+import { useLanguage } from '../contexts/LanguageContext';
 
 interface ServiceDetailProps {
   title: string;
@@ -34,6 +35,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
   faqs,
 }) => {
   const [openFaq, setOpenFaq] = React.useState<number | null>(null);
+  const { t } = useLanguage();
 
   return (
     <div className="min-h-screen pt-20">
@@ -49,14 +51,14 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
                   to="/contact"
                   className="bg-white text-orange-500 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105 inline-flex items-center justify-center space-x-2"
                 >
-                  <span>Get Started</span>
+                  <span>{t('service.common.getStarted')}</span>
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <Link
                   to="/pricing"
                   className="border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-orange-500 transition-all inline-flex items-center justify-center"
                 >
-                  View Pricing
+                  {t('service.common.viewPricing')}
                 </Link>
               </div>
             </AnimatedSection>
@@ -86,9 +88,9 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">Key Features</h2>
+            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('service.common.keyFeatures')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Everything you need to succeed
+              {t('service.common.features.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -112,9 +114,9 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">Benefits</h2>
+            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('service.common.benefits')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              How this service helps your business grow
+              {t('service.common.benefits.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -142,9 +144,9 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">Our Process</h2>
+            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('service.common.process')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              How we deliver exceptional results
+              {t('service.common.process.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -171,9 +173,9 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">Pricing Packages</h2>
+            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('service.common.pricingPackages')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Choose the package that fits your needs
+              {t('service.common.pricing.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -182,15 +184,14 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
               <AnimatedSection key={index} delay={index * 0.1}>
                 <motion.div
                   whileHover={{ y: -10 }}
-                  className={`rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all ${
-                    pkg.popular
+                  className={`rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all ${pkg.popular
                       ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white border-4 border-yellow-400'
                       : 'bg-white border border-gray-200'
-                  }`}
+                    }`}
                 >
                   {pkg.popular && (
                     <div className="bg-yellow-400 text-gray-900 px-4 py-1 rounded-full inline-block mb-4 text-sm">
-                      Most Popular
+                      {t('service.common.mostPopular')}
                     </div>
                   )}
                   <h3 className={`text-2xl mb-2 ${pkg.popular ? 'text-white' : 'text-gray-900'}`}>
@@ -198,7 +199,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
                   </h3>
                   <div className={`text-4xl mb-6 ${pkg.popular ? 'text-white' : 'text-orange-500'}`}>
                     {pkg.price}
-                    <span className="text-lg">/month</span>
+                    <span className="text-lg">{t('service.common.perMonth')}</span>
                   </div>
                   <ul className="space-y-3 mb-8">
                     {pkg.features.map((feature, idx) => (
@@ -210,13 +211,12 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
                   </ul>
                   <Link
                     to="/contact"
-                    className={`block text-center px-8 py-4 rounded-lg transition-all ${
-                      pkg.popular
+                    className={`block text-center px-8 py-4 rounded-lg transition-all ${pkg.popular
                         ? 'bg-white text-orange-500 hover:bg-gray-100'
                         : 'bg-orange-500 text-white hover:bg-orange-600'
-                    }`}
+                      }`}
                   >
-                    Get Started
+                    {t('service.common.getStarted')}
                   </Link>
                 </motion.div>
               </AnimatedSection>
@@ -229,9 +229,9 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">Frequently Asked Questions</h2>
+            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('service.common.faq')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Get answers to common questions
+              {t('service.common.faq.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -276,15 +276,15 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
         <div className="container mx-auto px-4">
           <AnimatedSection>
             <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-12 text-center text-white">
-              <h2 className="text-4xl lg:text-5xl mb-6">Ready to Get Started?</h2>
+              <h2 className="text-4xl lg:text-5xl mb-6">{t('service.common.ready')}</h2>
               <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90">
-                Let's discuss your project and create a custom solution for your needs
+                {t('service.common.readyDesc')}
               </p>
               <Link
                 to="/contact"
                 className="inline-flex items-center space-x-2 bg-white text-orange-500 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105"
               >
-                <span>Contact Us Today</span>
+                <span>{t('service.common.contact')}</span>
                 <ArrowRight className="w-5 h-5" />
               </Link>
             </div>

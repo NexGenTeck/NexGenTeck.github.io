@@ -61,8 +61,8 @@ Each language includes translations for:
 - 11 service-related texts
 - 4 about section texts
 - 6 contact form texts
-- 5 footer texts
-- 3 common UI texts
+  - Footer text (Newsletter section, refined links, copyright)
+  - Common UI text (View All Services, Read More)
 
 **Total: 40 translation keys × 16 languages = 640 translations**
 
