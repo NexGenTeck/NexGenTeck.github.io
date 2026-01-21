@@ -1018,7 +1018,7 @@ const translations: Record<Language, Record<string, string>> = {
     'services.web.faq5.q': '기간?', 'services.web.faq5.a': '2-4주.',
 
     // E-commerce (Korean)
-    'services.ecommerce.description': '맞춤형 이커머스 플랫폼으로 소매 비즈니스를 혁신하세요.',
+    'services.ecommerce.description': '전환율을 극대화하고 원활한 쇼핑 경험을 제공하도록 설계된 맞춤형 전자상거래 플랫폼으로 소매 사업을 혁신하세요.',
     'services.ecommerce.feature1': '장바구니', 'services.ecommerce.feature2': '보안 결제', 'services.ecommerce.feature3': '제품 카탈로그',
     'services.ecommerce.feature4': '주문 관리', 'services.ecommerce.feature5': '고객 계정', 'services.ecommerce.feature6': '재고',
     'services.ecommerce.feature7': '다중 통화', 'services.ecommerce.feature8': '모바일 디자인', 'services.ecommerce.feature9': 'SEO',
