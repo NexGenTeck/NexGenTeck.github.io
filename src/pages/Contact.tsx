@@ -22,7 +22,7 @@ export const Contact: React.FC = () => {
     // Simulate form submission
     await new Promise(resolve => setTimeout(resolve, 1500));
 
-    alert('Thank you for your message! We will get back to you soon.');
+    alert(t('contact.form.success'));
     setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
     setIsSubmitting(false);
   };
@@ -58,7 +58,7 @@ export const Contact: React.FC = () => {
             {/* Contact Form */}
             <AnimatedSection direction="left">
               <div className="bg-white rounded-2xl shadow-xl p-8">
-                <h2 className="text-3xl text-gray-900 mb-6">Send us a Message</h2>
+                <h2 className="text-3xl text-gray-900 mb-6">{t('contact.form.title')}</h2>
                 <form onSubmit={handleSubmit} className="space-y-6">
                   <div>
                     <label htmlFor="name" className="block text-gray-700 mb-2">
@@ -72,7 +72,7 @@ export const Contact: React.FC = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      placeholder="John Doe"
+                      placeholder={t('contact.form.namePlaceholder')}
                     />
                   </div>
 
@@ -88,13 +88,13 @@ export const Contact: React.FC = () => {
                       onChange={handleChange}
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      placeholder="john@example.com"
+                      placeholder={t('contact.form.emailPlaceholder')}
                     />
                   </div>
 
                   <div>
                     <label htmlFor="phone" className="block text-gray-700 mb-2">
-                      Phone Number
+                      {t('contact.phone')}
                     </label>
                     <input
                       type="tel"
@@ -103,13 +103,13 @@ export const Contact: React.FC = () => {
                       value={formData.phone}
                       onChange={handleChange}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
-                      placeholder="+1 (555) 123-4567"
+                      placeholder={t('contact.form.phonePlaceholder')}
                     />
                   </div>
 
                   <div>
                     <label htmlFor="subject" className="block text-gray-700 mb-2">
-                      Subject *
+                      {t('contact.subject')} *
                     </label>
                     <select
                       id="subject"
@@ -119,13 +119,13 @@ export const Contact: React.FC = () => {
                       required
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500"
                     >
-                      <option value="">Select a subject</option>
-                      <option value="web">Website Development</option>
-                      <option value="mobile">Mobile App Development</option>
-                      <option value="ecommerce">E-commerce Development</option>
-                      <option value="marketing">Digital Marketing</option>
-                      <option value="seo">SEO Services</option>
-                      <option value="other">Other</option>
+                      <option value="">{t('contact.form.subjectPlaceholder')}</option>
+                      <option value="web">{t('contact.form.subject.web')}</option>
+                      <option value="mobile">{t('contact.form.subject.mobile')}</option>
+                      <option value="ecommerce">{t('contact.form.subject.ecommerce')}</option>
+                      <option value="marketing">{t('contact.form.subject.marketing')}</option>
+                      <option value="seo">{t('contact.form.subject.seo')}</option>
+                      <option value="other">{t('contact.form.subject.other')}</option>
                     </select>
                   </div>
 
@@ -141,7 +141,7 @@ export const Contact: React.FC = () => {
                       required
                       rows={6}
                       className="w-full px-4 py-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500 resize-none"
-                      placeholder="Tell us about your project..."
+                      placeholder={t('contact.form.messagePlaceholder')}
                     />
                   </div>
 
@@ -152,7 +152,7 @@ export const Contact: React.FC = () => {
                     disabled={isSubmitting}
                     className="w-full bg-orange-500 text-white px-8 py-4 rounded-lg hover:bg-orange-600 transition-all flex items-center justify-center space-x-2 disabled:opacity-50 disabled:cursor-not-allowed"
                   >
-                    <span>{isSubmitting ? 'Sending...' : t('contact.send')}</span>
+                    <span>{isSubmitting ? t('contact.form.sending') : t('contact.send')}</span>
                     <Send className="w-5 h-5" />
                   </motion.button>
                 </form>
@@ -163,10 +163,9 @@ export const Contact: React.FC = () => {
             <AnimatedSection direction="right">
               <div className="space-y-8">
                 <div>
-                  <h2 className="text-3xl text-gray-900 mb-6">Get in Touch</h2>
+                  <h2 className="text-3xl text-gray-900 mb-6">{t('contact.info.title')}</h2>
                   <p className="text-lg text-gray-600 mb-8">
-                    Have a question or want to work together? We'd love to hear from you.
-                    Fill out the form or reach out through our contact information below.
+                    {t('contact.info.description')}
                   </p>
                 </div>
 
@@ -180,7 +179,7 @@ export const Contact: React.FC = () => {
                       <Mail className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-gray-900 mb-1">Email Us</h3>
+                      <h3 className="text-gray-900 mb-1">{t('contact.cards.email.title')}</h3>
                       <a href="mailto:info@nexgentech.com" className="text-orange-500 hover:text-orange-600">
                         info@nexgentech.com
                       </a>
@@ -199,7 +198,7 @@ export const Contact: React.FC = () => {
                       <Phone className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-gray-900 mb-1">Call Us</h3>
+                      <h3 className="text-gray-900 mb-1">{t('contact.cards.phone.title')}</h3>
                       <a href="tel:+15551234567" className="text-orange-600 hover:text-purple-700">
                         +1 (555) 123-4567
                       </a>
@@ -218,11 +217,11 @@ export const Contact: React.FC = () => {
                       <MapPin className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-gray-900 mb-1">Visit Us</h3>
+                      <h3 className="text-gray-900 mb-1">{t('contact.cards.address.title')}</h3>
                       <p className="text-gray-600">
-                        123 Tech Street<br />
-                        Digital City, DC 12345<br />
-                        United States
+                        {t('contact.cards.address.line1')}<br />
+                        {t('contact.cards.address.line2')}<br />
+                        {t('contact.cards.address.line3')}
                       </p>
                     </div>
                   </motion.div>
@@ -235,11 +234,11 @@ export const Contact: React.FC = () => {
                       <Clock className="w-6 h-6 text-white" />
                     </div>
                     <div>
-                      <h3 className="text-gray-900 mb-1">Business Hours</h3>
+                      <h3 className="text-gray-900 mb-1">{t('contact.cards.hours.title')}</h3>
                       <p className="text-gray-600">
-                        Monday - Friday: 9:00 AM - 6:00 PM<br />
-                        Saturday: 10:00 AM - 4:00 PM<br />
-                        Sunday: Closed
+                        {t('contact.cards.hours.weekdays')}<br />
+                        {t('contact.cards.hours.saturday')}<br />
+                        {t('contact.cards.hours.sunday')}
                       </p>
                     </div>
                   </motion.div>
@@ -247,7 +246,7 @@ export const Contact: React.FC = () => {
 
                 {/* Map */}
                 <div className="bg-gray-200 rounded-2xl h-64 flex items-center justify-center">
-                  <p className="text-gray-500">Map Integration Placeholder</p>
+                  <p className="text-gray-500">{t('contact.map.placeholder')}</p>
                 </div>
               </div>
             </AnimatedSection>
@@ -259,29 +258,29 @@ export const Contact: React.FC = () => {
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">Quick Answers</h2>
+            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('contact.faq.title')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Common questions about working with us
+              {t('contact.faq.subtitle')}
             </p>
           </AnimatedSection>
 
           <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto">
             {[
               {
-                q: 'What is your typical response time?',
-                a: 'We typically respond to all inquiries within 24 hours during business days.',
+                q: t('contact.faq.items.1.q'),
+                a: t('contact.faq.items.1.a'),
               },
               {
-                q: 'Do you offer free consultations?',
-                a: 'Yes! We offer a free initial consultation to discuss your project requirements.',
+                q: t('contact.faq.items.2.q'),
+                a: t('contact.faq.items.2.a'),
               },
               {
-                q: 'What information should I include in my message?',
-                a: 'Include your project goals, timeline, budget range, and any specific requirements.',
+                q: t('contact.faq.items.3.q'),
+                a: t('contact.faq.items.3.a'),
               },
               {
-                q: 'Do you work with international clients?',
-                a: 'Absolutely! We work with clients worldwide and offer flexible communication options.',
+                q: t('contact.faq.items.4.q'),
+                a: t('contact.faq.items.4.a'),
               },
             ].map((item, index) => (
               <AnimatedSection key={index} delay={index * 0.1}>
