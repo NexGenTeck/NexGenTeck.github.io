@@ -286,6 +286,10 @@ const translations: Record<Language, Record<string, string>> = {
     // Testimonials
     'testimonials.title': 'What Our Clients Say',
     'testimonials.subtitle': 'Real feedback from real customers',
+    // CTA
+    'cta.title': 'Ready to Transform Your Business?',
+    'cta.subtitle': 'Let\'s discuss how we can help you achieve your digital goals',
+    'cta.button': 'Start Your Project',
     // About page
     'about.title': 'About Us',
     'about.subtitle': 'Leading the digital transformation',
