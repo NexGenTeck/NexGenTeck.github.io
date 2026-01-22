@@ -4,79 +4,112 @@ import { motion } from 'motion/react';
 import { Calendar, User, Clock, ArrowRight, Search } from 'lucide-react';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
+import { useLanguage } from '../contexts/LanguageContext';
 
 export const Blog: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const { t } = useLanguage();
 
-  const categories = ['all', 'web-development', 'mobile-apps', 'digital-marketing', 'seo', 'blockchain'];
+  const categories = [
+    { key: 'all', label: t('blog.categories.all') },
+    { key: 'web-development', label: t('blog.categories.webDevelopment') },
+    { key: 'mobile-apps', label: t('blog.categories.mobileApps') },
+    { key: 'digital-marketing', label: t('blog.categories.digitalMarketing') },
+    { key: 'seo', label: t('blog.categories.seo') },
+    { key: 'blockchain', label: t('blog.categories.blockchain') },
+  ];
 
   const blogPosts = [
     {
       id: 'future-web-development',
-      title: 'The Future of Web Development: Trends to Watch in 2025',
-      excerpt: 'Explore the latest trends shaping the future of web development, from AI integration to progressive web apps.',
-      author: 'John Anderson',
-      date: 'November 25, 2025',
-      readTime: '8 min read',
+      title: t('blog.posts.future-web-development.title'),
+      excerpt: t('blog.posts.future-web-development.excerpt'),
+      author: t('blog.posts.future-web-development.author'),
+      date: t('blog.posts.future-web-development.date'),
+      readTime: t('blog.posts.future-web-development.readTime'),
       category: 'web-development',
       image: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZ3xlbnwxfHx8fDE3NjQzODYyMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      tags: ['Web Development', 'Technology', 'Trends'],
+      tags: [
+        t('blog.tags.webDevelopment'),
+        t('blog.tags.technology'),
+        t('blog.tags.trends'),
+      ],
     },
     {
       id: 'mobile-app-optimization',
-      title: '10 Tips for Optimizing Mobile App Performance',
-      excerpt: 'Learn essential techniques to make your mobile applications faster and more efficient.',
-      author: 'Sarah Mitchell',
-      date: 'November 22, 2025',
-      readTime: '6 min read',
+      title: t('blog.posts.mobile-app-optimization.title'),
+      excerpt: t('blog.posts.mobile-app-optimization.excerpt'),
+      author: t('blog.posts.mobile-app-optimization.author'),
+      date: t('blog.posts.mobile-app-optimization.date'),
+      readTime: t('blog.posts.mobile-app-optimization.readTime'),
       category: 'mobile-apps',
-      image: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-      tags: ['Mobile Apps', 'Performance', 'Optimization'],
+      image: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      tags: [
+        t('blog.tags.mobileApps'),
+        t('blog.tags.performance'),
+        t('blog.tags.optimization'),
+      ],
     },
     {
       id: 'digital-marketing-strategies',
-      title: 'Digital Marketing Strategies That Actually Work',
-      excerpt: 'Discover proven digital marketing strategies that drive real results for businesses in 2025.',
-      author: 'Emily Rodriguez',
-      date: 'November 20, 2025',
-      readTime: '10 min read',
+      title: t('blog.posts.digital-marketing-strategies.title'),
+      excerpt: t('blog.posts.digital-marketing-strategies.excerpt'),
+      author: t('blog.posts.digital-marketing-strategies.author'),
+      date: t('blog.posts.digital-marketing-strategies.date'),
+      readTime: t('blog.posts.digital-marketing-strategies.readTime'),
       category: 'digital-marketing',
-      image: 'https://images.unsplash.com/photo-1557838923-2985c318be48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDF8fHx8MTc2NDQyNjgzNnww&ixlib=rb-4.1.0&q=80&w=1080',
-      tags: ['Marketing', 'Strategy', 'Growth'],
+      image: 'https://images.unsplash.com/photo-1557838923-2985c318be48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDF8fHx8MTc2NDQyNjgzNnww&ixlib=rb-4.1.0&q=80&w=1080',
+      tags: [
+        t('blog.tags.marketing'),
+        t('blog.tags.strategy'),
+        t('blog.tags.growth'),
+      ],
     },
     {
       id: 'seo-best-practices',
-      title: 'SEO Best Practices for 2025: A Complete Guide',
-      excerpt: 'Stay ahead with the latest SEO techniques and best practices to boost your search rankings.',
-      author: 'Michael Chen',
-      date: 'November 18, 2025',
-      readTime: '12 min read',
+      title: t('blog.posts.seo-best-practices.title'),
+      excerpt: t('blog.posts.seo-best-practices.excerpt'),
+      author: t('blog.posts.seo-best-practices.author'),
+      date: t('blog.posts.seo-best-practices.date'),
+      readTime: t('blog.posts.seo-best-practices.readTime'),
       category: 'seo',
-      image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzZW8lMjBhbmFseXRpY3N8ZW58MXx8fHwxNzY0NDAyMjQ1fDA&ixlib=rb-4.1.0&q=80&w=1080',
-      tags: ['SEO', 'Google', 'Search'],
+      image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHxzZW8lMjBhbmFseXRpY3N8ZW58MXx8fHwxNzY0NDAyMjQ1fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      tags: [
+        t('blog.tags.seo'),
+        t('blog.tags.google'),
+        t('blog.tags.search'),
+      ],
     },
     {
       id: 'blockchain-business',
-      title: 'How Blockchain is Transforming Business Operations',
-      excerpt: 'Understanding the impact of blockchain technology on modern business processes.',
-      author: 'David Thompson',
-      date: 'November 15, 2025',
-      readTime: '9 min read',
+      title: t('blog.posts.blockchain-business.title'),
+      excerpt: t('blog.posts.blockchain-business.excerpt'),
+      author: t('blog.posts.blockchain-business.author'),
+      date: t('blog.posts.blockchain-business.date'),
+      readTime: t('blog.posts.blockchain-business.readTime'),
       category: 'blockchain',
-      image: 'https://images.unsplash.com/photo-1666816943035-15c29931e975?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibG9ja2NoYWluJTIwdGVjaG5vbG9neXxlbnwxfHx8fDE3NjQ0MzExMDh8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      tags: ['Blockchain', 'Technology', 'Business'],
+      image: 'https://images.unsplash.com/photo-1666816943035-15c29931e975?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHxibG9ja2NoYWluJTIwdGVjaG5vbG9neXxlbnwxfHx8fDE3NjQ0MzExMDh8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      tags: [
+        t('blog.tags.blockchain'),
+        t('blog.tags.technology'),
+        t('blog.tags.business'),
+      ],
     },
     {
       id: 'ecommerce-conversion',
-      title: 'Boosting E-commerce Conversion Rates: Proven Tactics',
-      excerpt: 'Practical tips to increase your online store\'s conversion rates and maximize revenue.',
-      author: 'Lisa Wang',
-      date: 'November 12, 2025',
-      readTime: '7 min read',
+      title: t('blog.posts.ecommerce-conversion.title'),
+      excerpt: t('blog.posts.ecommerce-conversion.excerpt'),
+      author: t('blog.posts.ecommerce-conversion.author'),
+      date: t('blog.posts.ecommerce-conversion.date'),
+      readTime: t('blog.posts.ecommerce-conversion.readTime'),
       category: 'web-development',
-      image: 'https://images.unsplash.com/photo-1727407209320-1fa6ae60ee05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBzaG9wcGluZ3xlbnwxfHx8fDE3NjQzNDQ4NTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      tags: ['E-commerce', 'Conversion', 'Sales'],
+      image: 'https://images.unsplash.com/photo-1727407209320-1fa6ae60ee05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHxlY29tbWVyY2UlMjBzaG9wcGluZ3xlbnwxfHx8fDE3NjQzNDQ4NTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      tags: [
+        t('blog.tags.ecommerce'),
+        t('blog.tags.conversion'),
+        t('blog.tags.sales'),
+      ],
     },
   ];
 
@@ -98,9 +131,9 @@ export const Blog: React.FC = () => {
         <div className="hero-particles"></div>
         <div className="container mx-auto px-4 relative z-10">
           <AnimatedSection className="text-center max-w-4xl mx-auto">
-            <h1 className="text-5xl lg:text-6xl font-bold mb-6">Our Blog</h1>
+            <h1 className="text-5xl lg:text-6xl font-bold mb-6">{t('blog.hero.title')}</h1>
             <p className="text-xl text-white/90 mb-8">
-              Insights, tips, and trends in digital technology
+              {t('blog.hero.subtitle')}
             </p>
 
             {/* Search Bar */}
@@ -111,7 +144,7 @@ export const Blog: React.FC = () => {
                   type="text"
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  placeholder="Search articles..."
+                  placeholder={t('blog.search.placeholder')}
                   className="w-full pl-12 pr-4 py-4 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-orange-500"
                 />
               </div>
@@ -136,7 +169,7 @@ export const Blog: React.FC = () => {
                     className="w-full h-full object-cover"
                   />
                   <div className="absolute top-4 left-4 bg-yellow-400 text-gray-900 px-4 py-2 rounded-lg">
-                    Featured
+                    {t('blog.featured.label')}
                   </div>
                 </div>
                 <div className="p-8 lg:p-12 flex flex-col justify-center">
@@ -164,7 +197,7 @@ export const Blog: React.FC = () => {
                     </div>
                   </div>
                   <div className="flex items-center text-orange-500 group">
-                    <span className="mr-2">Read Article</span>
+                    <span className="mr-2">{t('blog.actions.readArticle')}</span>
                     <ArrowRight className="w-5 h-5 group-hover:translate-x-2 transition-transform" />
                   </div>
                 </div>
@@ -180,16 +213,16 @@ export const Blog: React.FC = () => {
           <div className="flex flex-wrap justify-center gap-3">
             {categories.map((cat) => (
               <motion.button
-                key={cat}
+                key={cat.key}
                 whileHover={{ scale: 1.05 }}
                 whileTap={{ scale: 0.95 }}
-                onClick={() => setSelectedCategory(cat)}
-                className={`px-6 py-3 rounded-lg transition-all capitalize ${selectedCategory === cat
-                    ? 'bg-orange-500 text-white shadow-lg'
-                    : 'bg-white text-gray-700 hover:bg-gray-100'
+                onClick={() => setSelectedCategory(cat.key)}
+                className={`px-6 py-3 rounded-lg transition-all ${selectedCategory === cat.key
+                  ? 'bg-orange-500 text-white shadow-lg'
+                  : 'bg-white text-gray-700 hover:bg-gray-100'
                   }`}
               >
-                {cat.replace('-', ' ')}
+                {cat.label}
               </motion.button>
             ))}
           </div>
@@ -235,7 +268,7 @@ export const Blog: React.FC = () => {
                         </div>
                       </div>
                       <div className="flex items-center text-orange-500 group">
-                        <span className="mr-2">Read More</span>
+                        <span className="mr-2">{t('blog.actions.readMore')}</span>
                         <ArrowRight className="w-4 h-4 group-hover:translate-x-2 transition-transform" />
                       </div>
                     </div>
@@ -247,7 +280,7 @@ export const Blog: React.FC = () => {
 
           {filteredPosts.length === 0 && (
             <div className="text-center py-20">
-              <p className="text-xl text-gray-600">No articles found matching your criteria.</p>
+              <p className="text-xl text-gray-600">{t('blog.empty')}</p>
             </div>
           )}
         </div>
@@ -258,21 +291,21 @@ export const Blog: React.FC = () => {
         <div className="container mx-auto px-4">
           <AnimatedSection>
             <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-12 text-center text-white">
-              <h2 className="text-4xl lg:text-5xl mb-6">Subscribe to Our Newsletter</h2>
+              <h2 className="text-4xl lg:text-5xl mb-6">{t('blog.newsletter.title')}</h2>
               <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90">
-                Get the latest articles and insights delivered directly to your inbox
+                {t('blog.newsletter.subtitle')}
               </p>
               <form className="max-w-md mx-auto flex gap-4">
                 <input
                   type="email"
-                  placeholder="Your email address"
+                  placeholder={t('blog.newsletter.placeholder')}
                   className="flex-1 px-6 py-4 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white/50"
                 />
                 <button
                   type="submit"
                   className="bg-white text-orange-500 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all flex items-center space-x-2"
                 >
-                  <span>Subscribe</span>
+                  <span>{t('blog.newsletter.button')}</span>
                 </button>
               </form>
             </div>
