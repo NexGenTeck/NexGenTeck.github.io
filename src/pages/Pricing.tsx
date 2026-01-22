@@ -11,83 +11,83 @@ export const Pricing: React.FC = () => {
 
   const pricingPlans = [
     {
-      name: 'Starter',
-      description: 'Perfect for small businesses and startups',
+      name: t('pricing.plans.starter.name'),
+      description: t('pricing.plans.starter.description'),
       monthlyPrice: 499,
       yearlyPrice: 4990,
       features: [
-        'Basic website (up to 5 pages)',
-        'Responsive design',
-        'SEO optimization',
-        'Contact form',
-        'Social media integration',
-        'SSL certificate',
-        'Monthly analytics report',
-        'Email support',
+        t('pricing.plans.starter.features.1'),
+        t('pricing.plans.starter.features.2'),
+        t('pricing.plans.starter.features.3'),
+        t('pricing.plans.starter.features.4'),
+        t('pricing.plans.starter.features.5'),
+        t('pricing.plans.starter.features.6'),
+        t('pricing.plans.starter.features.7'),
+        t('pricing.plans.starter.features.8'),
       ],
       notIncluded: [
-        'E-commerce functionality',
-        'Custom features',
-        'Priority support',
-        'Dedicated account manager',
+        t('pricing.plans.starter.notIncluded.1'),
+        t('pricing.plans.starter.notIncluded.2'),
+        t('pricing.plans.starter.notIncluded.3'),
+        t('pricing.plans.starter.notIncluded.4'),
       ],
     },
     {
-      name: 'Professional',
-      description: 'Ideal for growing businesses',
+      name: t('pricing.plans.professional.name'),
+      description: t('pricing.plans.professional.description'),
       monthlyPrice: 999,
       yearlyPrice: 9990,
       popular: true,
       features: [
-        'Everything in Starter',
-        'Advanced website (up to 15 pages)',
-        'Blog integration',
-        'E-commerce (up to 100 products)',
-        'Custom design',
-        'Advanced SEO',
-        'Google Ads management',
-        'Social media marketing',
-        'Weekly analytics reports',
-        'Priority email support',
-        'Phone support',
+        t('pricing.plans.professional.features.1'),
+        t('pricing.plans.professional.features.2'),
+        t('pricing.plans.professional.features.3'),
+        t('pricing.plans.professional.features.4'),
+        t('pricing.plans.professional.features.5'),
+        t('pricing.plans.professional.features.6'),
+        t('pricing.plans.professional.features.7'),
+        t('pricing.plans.professional.features.8'),
+        t('pricing.plans.professional.features.9'),
+        t('pricing.plans.professional.features.10'),
+        t('pricing.plans.professional.features.11'),
       ],
       notIncluded: [
-        'Custom app development',
-        'Dedicated account manager',
-        '24/7 support',
+        t('pricing.plans.professional.notIncluded.1'),
+        t('pricing.plans.professional.notIncluded.2'),
+        t('pricing.plans.professional.notIncluded.3'),
       ],
     },
     {
-      name: 'Enterprise',
-      description: 'Complete solution for large organizations',
+      name: t('pricing.plans.enterprise.name'),
+      description: t('pricing.plans.enterprise.description'),
       monthlyPrice: 2499,
       yearlyPrice: 24990,
       features: [
-        'Everything in Professional',
-        'Unlimited pages',
-        'Custom features development',
-        'Mobile app development',
-        'Advanced e-commerce',
-        'Multi-language support',
-        'Custom integrations',
-        'Blockchain solutions',
-        'Daily analytics reports',
-        '24/7 priority support',
-        'Dedicated account manager',
-        'Monthly strategy calls',
-        'On-site visits (quarterly)',
+        t('pricing.plans.enterprise.features.1'),
+        t('pricing.plans.enterprise.features.2'),
+        t('pricing.plans.enterprise.features.3'),
+        t('pricing.plans.enterprise.features.4'),
+        t('pricing.plans.enterprise.features.5'),
+        t('pricing.plans.enterprise.features.6'),
+        t('pricing.plans.enterprise.features.7'),
+        t('pricing.plans.enterprise.features.8'),
+        t('pricing.plans.enterprise.features.9'),
+        t('pricing.plans.enterprise.features.10'),
+        t('pricing.plans.enterprise.features.11'),
+        t('pricing.plans.enterprise.features.12'),
+        t('pricing.plans.enterprise.features.13'),
       ],
       notIncluded: [],
     },
   ];
 
   const addons = [
-    { name: 'Additional Page', price: 150 },
-    { name: 'Custom Feature', price: 500 },
-    { name: 'Mobile App (iOS/Android)', price: 3000 },
-    { name: 'E-commerce Setup', price: 1000 },
-    { name: 'SEO Package', price: 300 },
-    { name: 'Social Media Management', price: 500 },
+    { name: t('pricing.addons.additionalPage'), price: 150 },
+    { name: t('pricing.addons.customFeature'), price: 500 },
+    { name: t('pricing.addons.mobileApp'), price: 3000 },
+    { name: t('pricing.addons.ecommerceSetup'), price: 1000 },
+    { name: t('pricing.addons.seoPackage'), price: 300 },
+    { name: t('pricing.addons.socialMediaManagement'), price: 500 },
   ];
 
   return (
@@ -101,7 +101,7 @@ export const Pricing: React.FC = () => {
           <AnimatedSection className="text-center max-w-4xl mx-auto">
             <h1 className="text-5xl lg:text-6xl font-bold mb-6">{t('nav.pricing')}</h1>
             <p className="text-xl text-white/90 mb-8">
-              Transparent pricing for businesses of all sizes
+              {t('pricing.hero.subtitle')}
             </p>
 
             {/* Billing Toggle */}
@@ -113,7 +113,7 @@ export const Pricing: React.FC = () => {
                     : 'text-white hover:bg-white/10'
                   }`}
               >
-                Monthly
+                {t('pricing.billing.monthly')}
               </button>
               <button
                 onClick={() => setBillingCycle('yearly')}
@@ -122,9 +122,9 @@ export const Pricing: React.FC = () => {
                     : 'text-white hover:bg-white/10'
                   }`}
               >
-                Yearly
+                {t('pricing.billing.yearly')}
                 <span className="absolute -top-2 -right-2 bg-yellow-400 text-gray-900 text-xs px-2 py-1 rounded-full">
-                  Save 17%
+                  {t('pricing.billing.save')}
                 </span>
               </button>
             </div>
@@ -147,7 +147,7 @@ export const Pricing: React.FC = () => {
                 >
                   {plan.popular && (
                     <div className="absolute -top-4 left-1/2 transform -translate-x-1/2 bg-yellow-400 text-gray-900 px-6 py-2 rounded-full">
-                      Most Popular
+                      {t('pricing.popularLabel')}
                     </div>
                   )}
 
@@ -163,11 +163,11 @@ export const Pricing: React.FC = () => {
                   <div className="mb-8">
                     <div className={`text-5xl mb-2 ${plan.popular ? 'text-white' : 'text-orange-500'}`}>
                       ${billingCycle === 'monthly' ? plan.monthlyPrice : plan.yearlyPrice}
-                      <span className="text-xl">/{billingCycle === 'monthly' ? 'mo' : 'yr'}</span>
+                      <span className="text-xl">/{billingCycle === 'monthly' ? t('pricing.billing.mo') : t('pricing.billing.yr')}</span>
                     </div>
                     {billingCycle === 'yearly' && (
                       <p className={`text-sm ${plan.popular ? 'text-white/70' : 'text-gray-500'}`}>
-                        ${Math.round(plan.yearlyPrice / 12)}/month billed annually
+                        ${Math.round(plan.yearlyPrice / 12)}{t('pricing.billing.perMonthBilledAnnually')}
                       </p>
                     )}
                   </div>
@@ -202,7 +202,7 @@ export const Pricing: React.FC = () => {
                         : 'bg-orange-500 text-white hover:bg-orange-600'
                       }`}
                   >
-                    Get Started
+                    {t('pricing.actions.getStarted')}
                   </Link>
                 </motion.div>
               </AnimatedSection>
@@ -215,9 +215,9 @@ export const Pricing: React.FC = () => {
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">Additional Services</h2>
+            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('pricing.addons.title')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Enhance your package with these optional add-ons
+              {t('pricing.addons.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -243,9 +243,9 @@ export const Pricing: React.FC = () => {
       <section className="py-20 bg-white">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">Compare Plans</h2>
+            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('pricing.compare.title')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              See what's included in each package
+              {t('pricing.compare.subtitle')}
             </p>
           </AnimatedSection>
 
@@ -253,22 +253,22 @@ export const Pricing: React.FC = () => {
             <table className="w-full max-w-6xl mx-auto bg-white rounded-2xl shadow-lg overflow-hidden">
               <thead className="bg-gradient-to-r from-orange-500 to-orange-600 text-white">
                 <tr>
-                  <th className="px-6 py-4 text-left">Feature</th>
-                  <th className="px-6 py-4 text-center">Starter</th>
-                  <th className="px-6 py-4 text-center">Professional</th>
-                  <th className="px-6 py-4 text-center">Enterprise</th>
+                  <th className="px-6 py-4 text-left">{t('pricing.compare.header.feature')}</th>
+                  <th className="px-6 py-4 text-center">{t('pricing.compare.header.starter')}</th>
+                  <th className="px-6 py-4 text-center">{t('pricing.compare.header.professional')}</th>
+                  <th className="px-6 py-4 text-center">{t('pricing.compare.header.enterprise')}</th>
                 </tr>
               </thead>
               <tbody className="divide-y divide-gray-200">
                 {[
-                  ['Pages', '5', '15', 'Unlimited'],
-                  ['Responsive Design', '✓', '✓', '✓'],
-                  ['SEO Optimization', 'Basic', 'Advanced', 'Premium'],
-                  ['E-commerce', '✗', '100 products', 'Unlimited'],
-                  ['Custom Features', '✗', 'Limited', 'Unlimited'],
-                  ['Mobile App', '✗', '✗', '✓'],
-                  ['Support', 'Email', 'Email + Phone', '24/7 Priority'],
-                  ['Account Manager', '✗', '✗', '✓'],
+                  [t('pricing.compare.rows.pages'), '5', '15', t('pricing.compare.values.unlimited')],
+                  [t('pricing.compare.rows.responsiveDesign'), '✓', '✓', '✓'],
+                  [t('pricing.compare.rows.seoOptimization'), t('pricing.compare.values.basic'), t('pricing.compare.values.advanced'), t('pricing.compare.values.premium')],
+                  [t('pricing.compare.rows.ecommerce'), '✗', t('pricing.compare.values.products100'), t('pricing.compare.values.unlimited')],
+                  [t('pricing.compare.rows.customFeatures'), '✗', t('pricing.compare.values.limited'), t('pricing.compare.values.unlimited')],
+                  [t('pricing.compare.rows.mobileApp'), '✗', '✗', '✓'],
+                  [t('pricing.compare.rows.support'), t('pricing.compare.values.email'), t('pricing.compare.values.emailPhone'), t('pricing.compare.values.priority247')],
+                  [t('pricing.compare.rows.accountManager'), '✗', '✗', '✓'],
                 ].map((row, index) => (
                   <tr key={index} className="hover:bg-gray-50 transition-colors">
                     <td className="px-6 py-4 text-gray-900">{row[0]}</td>
@@ -287,33 +287,33 @@ export const Pricing: React.FC = () => {
       <section className="py-20 bg-gray-50">
         <div className="container mx-auto px-4">
           <AnimatedSection className="text-center mb-16">
-            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">Pricing FAQs</h2>
+            <h2 className="text-4xl lg:text-5xl text-gray-900 mb-4">{t('pricing.faq.title')}</h2>
             <p className="text-xl text-gray-600 max-w-2xl mx-auto">
-              Common questions about our pricing
+              {t('pricing.faq.subtitle')}
             </p>
           </AnimatedSection>
 
           <div className="max-w-3xl mx-auto space-y-6">
             {[
               {
-                q: 'Can I change my plan later?',
-                a: 'Yes! You can upgrade or downgrade your plan at any time. Changes will be reflected in your next billing cycle.',
+                  q: t('pricing.faq.items.1.q'),
+                  a: t('pricing.faq.items.1.a'),
               },
               {
-                q: 'Is there a setup fee?',
-                a: 'No, there are no hidden setup fees. The price you see is what you pay.',
+                  q: t('pricing.faq.items.2.q'),
+                  a: t('pricing.faq.items.2.a'),
               },
               {
-                q: 'What payment methods do you accept?',
-                a: 'We accept all major credit cards, PayPal, and bank transfers for enterprise clients.',
+                  q: t('pricing.faq.items.3.q'),
+                  a: t('pricing.faq.items.3.a'),
               },
               {
-                q: 'Do you offer refunds?',
-                a: 'Yes, we offer a 30-day money-back guarantee if you\'re not satisfied with our services.',
+                  q: t('pricing.faq.items.4.q'),
+                  a: t('pricing.faq.items.4.a'),
               },
               {
-                q: 'Can I get a custom quote?',
-                a: 'Absolutely! Contact us for a custom quote tailored to your specific needs.',
+                  q: t('pricing.faq.items.5.q'),
+                  a: t('pricing.faq.items.5.a'),
               },
             ].map((item, index) => (
               <AnimatedSection key={index} delay={index * 0.05}>
@@ -332,23 +332,23 @@ export const Pricing: React.FC = () => {
         <div className="container mx-auto px-4">
           <AnimatedSection>
             <div className="bg-gradient-to-r from-orange-500 to-orange-600 rounded-3xl p-12 text-center text-white">
-              <h2 className="text-4xl lg:text-5xl mb-6">Still Have Questions?</h2>
+              <h2 className="text-4xl lg:text-5xl mb-6">{t('pricing.cta.title')}</h2>
               <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90">
-                Our team is here to help you choose the perfect plan for your business
+                {t('pricing.cta.subtitle')}
               </p>
               <div className="flex flex-col sm:flex-row gap-4 justify-center">
                 <Link
                   to="/contact"
                   className="inline-flex items-center justify-center space-x-2 bg-white text-orange-500 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105"
                 >
-                  <span>Contact Sales</span>
+                  <span>{t('pricing.cta.contactSales')}</span>
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <a
                   href="tel:+15551234567"
                   className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-orange-500 transition-all"
                 >
-                  Call Us: +1 (555) 123-4567
+                  {t('pricing.cta.callUs')} +1 (555) 123-4567
                 </a>
               </div>
             </div>
