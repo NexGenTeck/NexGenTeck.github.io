@@ -808,6 +808,7 @@ const translations: Record<Language, Record<string, string>> = {
     'services.blockchain.process3.desc': 'Build, test, and audit the blockchain application',
     'services.blockchain.process4.title': 'Launch',
     'services.blockchain.process4.desc': 'Deploy to mainnet and provide ongoing support',
+    'chatbot.defaultMessage': 'Hello! Welcome to NexGenTeck! I\'m your AI assistant, here to help you learn about our services and answer any questions you may have about transforming your business with reliable remote professionals. How can I assist you today?',
   },
   // Urdu (Pakistan)
   ur: {
@@ -1395,6 +1396,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': 'ہم بہترین نتائج کیسے فراہم کرتے ہیں',
     'service.common.pricing.subtitle': 'اپنی ضروریات کے مطابق پیکج منتخب کریں',
     'service.common.faq.subtitle': 'عام سوالات کے جوابات حاصل کریں',
+    'chatbot.defaultMessage': 'ہیلو! NexGenTeck میں خوش آمدید! میں آپ کا AI اسسٹنٹ ہوں، ہماری خدمات کے بارے میں جاننے اور آپ کے ہر سوال کا جواب دینے میں مدد کے لیے حاضر ہوں تاکہ قابلِ اعتماد ریموٹ پروفیشنلز کے ساتھ آپ کے کاروبار کو بدل سکیں۔ آج میں آپ کی کیسے مدد کر سکتا ہوں؟',
   },
   // Korean (South Korea)
   ko: {
@@ -1976,6 +1978,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': '탁월한 결과를 제공하는 방법',
     'service.common.pricing.subtitle': '필요에 맞는 패키지를 선택하세요',
     'service.common.faq.subtitle': '자주 묻는 질문에 대한 답변',
+    'chatbot.defaultMessage': '안녕하세요! NexGenTeck에 오신 것을 환영합니다! 저는 당신의 AI 어시스턴트로, 신뢰할 수 있는 원격 전문 인력으로 비즈니스를 변화시키는 데 필요한 서비스와 궁금한 점을 안내해 드립니다. 오늘 무엇을 도와드릴까요?',
   },
   // Chinese (Simplified)
   zh: {
@@ -2557,6 +2560,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': '我们如何交付卓越成果',
     'service.common.pricing.subtitle': '选择符合您需求的套餐',
     'service.common.faq.subtitle': '获取常见问题答案',
+    'chatbot.defaultMessage': '你好！欢迎来到 NexGenTeck！我是你的 AI 助手，随时为你介绍我们的服务，并解答你关于凭借可靠的远程专业人士来转型业务的任何问题。今天我能如何帮助你？',
   },
   // Arabic (Saudi Arabia)
   ar: {
@@ -3138,6 +3142,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': 'كيف نقدم نتائج استثنائية',
     'service.common.pricing.subtitle': 'اختر الباقة التي تناسب احتياجاتك',
     'service.common.faq.subtitle': 'احصل على إجابات للأسئلة الشائعة',
+    'chatbot.defaultMessage': 'مرحبًا! أهلاً بك في NexGenTeck! أنا مساعدك الذكي، هنا لأساعدك في التعرف على خدماتنا والإجابة عن أي أسئلة لديك حول تحويل عملك باستخدام محترفين موثوقين عن بُعد. كيف يمكنني مساعدتك اليوم؟',
   },
   // German (Germany)
   de: {
@@ -3719,6 +3724,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': 'So liefern wir hervorragende Ergebnisse',
     'service.common.pricing.subtitle': 'Wählen Sie das Paket, das zu Ihren Anforderungen passt',
     'service.common.faq.subtitle': 'Antworten auf häufige Fragen',
+    'chatbot.defaultMessage': 'Hallo! Willkommen bei NexGenTeck! Ich bin dein KI-Assistent und helfe dir, unsere Leistungen kennenzulernen und alle Fragen zur Transformation deines Unternehmens mit zuverlässigen Remote-Fachkräften zu beantworten. Wie kann ich dir heute helfen?',
   },
   // Spanish (Spain)
   es: {
@@ -4300,6 +4306,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': 'Cómo entregamos resultados excepcionales',
     'service.common.pricing.subtitle': 'Elige el paquete que se adapte a tus necesidades',
     'service.common.faq.subtitle': 'Obtén respuestas a preguntas comunes',
+    'chatbot.defaultMessage': '¡Hola! Bienvenido/a a NexGenTeck. Soy tu asistente de IA, aquí para ayudarte a conocer nuestros servicios y responder cualquier pregunta sobre cómo transformar tu negocio con profesionales remotos confiables. ¿Cómo puedo ayudarte hoy?',
   },
   // French (France)
   fr: {
@@ -4881,6 +4888,7 @@ const translations: Record<Language, Record<string, string>> = {
     'services.blockchain.process2.title': 'Archi', 'services.blockchain.process2.desc': 'Design',
     'services.blockchain.process3.title': 'Dév', 'services.blockchain.process3.desc': 'Build',
     'services.blockchain.process4.title': 'Lancement', 'services.blockchain.process4.desc': 'Deploy',
+    'chatbot.defaultMessage': 'Bonjour ! Bienvenue chez NexGenTeck ! Je suis ton assistant IA, prêt à te présenter nos services et à répondre à toutes tes questions sur la transformation de ton entreprise avec des professionnels à distance fiables. Comment puis-je t\'aider aujourd\'hui ?',
   },
   // Portuguese (Brazil)
   pt: {
@@ -5270,6 +5278,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': 'Como entregamos resultados excepcionais',
     'service.common.pricing.subtitle': 'Escolha o plano que se encaixa nas suas necessidades',
     'service.common.faq.subtitle': 'Encontre respostas para dúvidas comuns',
+    'chatbot.defaultMessage': 'Olá! Bem-vindo(a) à NexGenTeck! Sou seu assistente de IA, pronto para ajudar você a conhecer nossos serviços e responder a quaisquer perguntas sobre como transformar seu negócio com profissionais remotos confiáveis. Como posso ajudar hoje?',
     // Web Development (Portuguese)
     'services.web.description': 'Crie uma presença online poderosa com um site profissionalmente projetado e desenvolvido. Construímos sites rápidos, seguros e otimizados para SEO que não só têm ótima aparência, mas também entregam experiências excepcionais e alcançam seus objetivos de negócio.',
     'services.web.feature1': 'Design responsivo para todos os dispositivos',
@@ -5919,6 +5928,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': 'Olağanüstü sonuçları nasıl sunuyoruz',
     'service.common.pricing.subtitle': 'İhtiyaçlarınıza uygun paketi seçin',
     'service.common.faq.subtitle': 'Sık sorulan soruların yanıtları',
+    'chatbot.defaultMessage': 'Merhaba! NexGenTeck\'e hoş geldiniz! Ben yapay zeka asistanınızım; güvenilir uzaktan profesyonellerle işinizi dönüştürme konusunda hizmetlerimizi anlatmak ve sorularınızı yanıtlamak için buradayım. Bugün size nasıl yardımcı olabilirim?',
     // Web Development (Turkish)
     'services.web.description': 'Profesyonelce tasarlanmış bir web sitesiyle güçlü bir çevrimiçi varlık oluşturun. Hızlı, güvenli ve SEO uyumlu siteler yapıyoruz.',
     'services.web.feature1': 'Duyarlı tasarım', 'services.web.feature2': 'Hızlı yükleme', 'services.web.feature3': 'SEO dostu',
@@ -6539,6 +6549,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': 'Hoe wij uitstekende resultaten leveren',
     'service.common.pricing.subtitle': 'Kies het pakket dat bij je behoeften past',
     'service.common.faq.subtitle': 'Krijg antwoorden op veelgestelde vragen',
+    'chatbot.defaultMessage': 'Hallo! Welkom bij NexGenTeck! Ik ben je AI-assistent en help je graag onze diensten te leren kennen en al je vragen te beantwoorden over het transformeren van je bedrijf met betrouwbare externe professionals. Hoe kan ik je vandaag helpen?',
     // Web Development (Dutch)
     'services.web.description': 'Bouw een sterke online aanwezigheid op met een professioneel ontworpen website. Wij creëren snelle, veilige en SEO-geoptimaliseerde sites.',
     'services.web.feature1': 'Responsief ontwerp', 'services.web.feature2': 'Snelle laadtijden', 'services.web.feature3': 'SEO-vriendelijk',
@@ -7152,6 +7163,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': 'Jak dostarczamy wyjątkowe rezultaty',
     'service.common.pricing.subtitle': 'Wybierz pakiet dopasowany do potrzeb',
     'service.common.faq.subtitle': 'Uzyskaj odpowiedzi na często zadawane pytania',
+    'chatbot.defaultMessage': 'Cześć! Witamy w NexGenTeck! Jestem twoim asystentem AI, aby pomóc ci poznać nasze usługi i odpowiedzieć na wszelkie pytania o transformację firmy z pomocą zaufanych zdalnych specjalistów. Jak mogę ci dziś pomóc?',
     // Web Development (Polish)
     'services.web.title': 'Tworzenie Stron WWW',
     'services.web.subtitle': 'Niestandardowe strony, które angażują i rozwijają biznes',
@@ -7779,6 +7791,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': '卓越した成果を提供する方法',
     'service.common.pricing.subtitle': 'ニーズに合ったプランを選択',
     'service.common.faq.subtitle': 'よくある質問への回答',
+    'chatbot.defaultMessage': 'こんにちは！NexGenTeckへようこそ！私はあなたのAIアシスタントです。信頼できるリモートのプロフェッショナルと共にビジネスを変革するために、当社のサービスをご案内し、ご質問にお答えします。本日はいかがお手伝いできますか？',
     // Web Development (Japanese)
     'services.web.title': 'ウェブ開発',
     'services.web.subtitle': 'ビジネスの成長を促進するカスタムサイト',
@@ -8407,6 +8420,7 @@ const translations: Record<Language, Record<string, string>> = {
       'service.common.process.subtitle': 'আমরা কীভাবে অসাধারণ ফল দিই',
       'service.common.pricing.subtitle': 'আপনার চাহিদা অনুযায়ী প্যাকেজ বেছে নিন',
       'service.common.faq.subtitle': 'সাধারণ প্রশ্নের উত্তর পান',
+      'chatbot.defaultMessage': 'হ্যালো! NexGenTeck-এ স্বাগতম! আমি আপনার AI সহকারী, আমাদের সেবা সম্পর্কে জানাতে এবং নির্ভরযোগ্য রিমোট পেশাদারদের মাধ্যমে আপনার ব্যবসা রূপান্তর নিয়ে যেকোন প্রশ্নের উত্তর দিতে প্রস্তুত। আজ আমি কীভাবে আপনাকে সাহায্য করতে পারি?',
     'services.web.title': 'ওয়েবসাইট ডেভেলপমেন্ট',
     'services.web.subtitle': 'কাস্টম ওয়েবসাইট যা ভিজিটরদের এনগেজ করে এবং ব্যবসার বৃদ্ধি ঘটায়',
     'services.web.description': 'একটি পেশাদারভাবে ডিজাইন করা এবং ডেভেলপ করা ওয়েবসাইটের মাধ্যমে শক্তিশালী অনলাইন উপস্থিতি তৈরি করুন। আমরা দ্রুত, নিরাপদ এবং এসইও-অপ্টিমাইজড ওয়েবসাইট তৈরি করি যা শুধুমাত্র দেখতেই চমৎকার নয়, বরং অসাধারণ ব্যবহারকারীর অভিজ্ঞতা প্রদান করে এবং আপনার ব্যবসায়িক লক্ষ্য অর্জনে সহায়তা করে।',
@@ -8987,6 +9001,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': 'Come forniamo risultati eccellenti',
     'service.common.pricing.subtitle': 'Scegli il pacchetto più adatto alle tue esigenze',
     'service.common.faq.subtitle': 'Trova le risposte alle domande più comuni',
+    'chatbot.defaultMessage': 'Ciao! Benvenuto/a in NexGenTeck! Sono il tuo assistente AI, qui per aiutarti a conoscere i nostri servizi e rispondere a qualsiasi domanda su come trasformare il tuo business con professionisti remoti affidabili. Come posso aiutarti oggi?',
     // Web Development
     'services.web.title': 'Sviluppo Siti Web',
     'services.web.subtitle': 'Siti web personalizzati che guidano il coinvolgimento e la crescita del business',
@@ -9983,6 +9998,7 @@ const translations: Record<Language, Record<string, string>> = {
     'service.common.process.subtitle': 'چگونه نتایج عالی ارائه می‌دهیم',
     'service.common.pricing.subtitle': 'بسته مناسب نیازتان را انتخاب کنید',
     'service.common.faq.subtitle': 'پاسخ سؤالات متداول را دریافت کنید',
+    'chatbot.defaultMessage': 'سلام! به NexGenTeck خوش آمدید! من دستیار هوش مصنوعی شما هستم تا درباره خدمات ما به شما توضیح دهم و به هر پرسشی درباره تحول کسب‌وکارتان با متخصصان دورکار قابل اعتماد پاسخ بدهم. امروز چطور می‌توانم کمکتان کنم؟',
   },
 };
 
