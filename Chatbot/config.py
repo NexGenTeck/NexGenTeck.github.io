@@ -23,7 +23,7 @@ class Config:
     CORS_ORIGINS: list = os.getenv("CORS_ORIGINS", "*").split(",")
     
     # Model Configuration
-    EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3")
+    EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "all-MiniLM-L6-v2")
     LLM_MODEL: str = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
     
     # RAG Configuration
@@ -34,8 +34,8 @@ class Config:
     LLM_TEMPERATURE: float = float(os.getenv("LLM_TEMPERATURE", "0.7"))
     LLM_MAX_TOKENS: int = int(os.getenv("LLM_MAX_TOKENS", "1024"))
     
-    # ChromaDB Configuration
-    CHROMA_PERSIST_DIR: str = os.getenv("CHROMA_PERSIST_DIR", "./chroma_db")
+    # Qdrant Configuration (in-memory by default)
+    QDRANT_URL: str = os.getenv("QDRANT_URL", ":memory:")
     COLLECTION_NAME: str = os.getenv("COLLECTION_NAME", "nexgenteck_knowledge")
     
     @classmethod

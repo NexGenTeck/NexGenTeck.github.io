@@ -4,8 +4,8 @@ fastapi==0.115.6
 uvicorn[standard]==0.34.0
 python-dotenv==1.0.1
 
-# Vector Database
-chromadb==0.5.23
+# Vector Database - Qdrant (pre-built wheels, no C++ compilation)
+qdrant-client==1.12.1
 
 # LangChain & LangGraph for RAG
 langchain==0.3.14
@@ -21,7 +21,6 @@ sentence-transformers==3.3.1
 
 # Sentiment Analysis
 transformers==4.47.1
-torch==2.5.1
 
 # Web Scraping
 beautifulsoup4==4.12.3
@@ -31,3 +30,4 @@ lxml==5.3.0
 # Utilities
 pydantic==2.10.4
 httpx==0.28.1
+numpy
