@@ -31,15 +31,32 @@ class VectorStore:
         return cls._instance
     
     def __init__(self):
-        """Initialize Qdrant client with in-memory storage."""
+        """
+        Initialize Qdrant client.
+        Supports both in-memory storage and external Qdrant server.
+        Set QDRANT_URL environment variable to use an external server.
+        """
         if VectorStore._client is None:
-            logger.info("Initializing Qdrant (in-memory mode)")
+            qdrant_url = config.QDRANT_URL
             
-            # Use in-memory Qdrant - no external server needed
-            VectorStore._client = QdrantClient(":memory:")
+            if qdrant_url == ":memory:" or not qdrant_url:
+                # Use in-memory Qdrant - no external server needed
+                logger.info("Initializing Qdrant (in-memory mode)")
+                VectorStore._client = QdrantClient(":memory:")
+            else:
+                # Connect to external Qdrant server (self-hosted open source)
+                logger.info(f"Connecting to external Qdrant server at {qdrant_url}")
+                try:
+                    VectorStore._client = QdrantClient(url=qdrant_url)
+                    logger.info("Connected to external Qdrant server successfully")
+                except Exception as e:
+                    logger.error(f"Failed to connect to Qdrant server: {e}")
+                    logger.info("Falling back to in-memory mode")
+                    VectorStore._client = QdrantClient(":memory:")
+            
             VectorStore._collection_name = config.COLLECTION_NAME
             
-            # Create collection
+            # Create collection if it doesn't exist
             self._create_collection()
             
             logger.info(f"Qdrant collection '{config.COLLECTION_NAME}' ready")

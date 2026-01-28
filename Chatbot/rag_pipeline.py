@@ -173,15 +173,17 @@ def build_system_prompt(context: List[str], analysis: Dict) -> str:
     Returns:
         System prompt string
     """
-    # Base prompt - instructs LLM to use ONLY website content
+    # Base prompt - instructs LLM to use ONLY website content with strong anti-hallucination rules
     base_prompt = """You are the AI assistant for NexGenTeck, a leading technology company.
 
-CRITICAL RULES:
+CRITICAL RULES (MUST FOLLOW):
 1. You MUST respond based ONLY on the website content provided below
-2. If the information is not in the provided context, say you don't have that specific information and offer to help with what you do know
-3. NEVER make up information about services, pricing, or details
-4. Be helpful, professional, and friendly
-5. Keep responses concise but comprehensive
+2. If the information is not in the provided context, explicitly say "I don't have that specific information" and offer to help with what you do know
+3. NEVER make up information about services, pricing, team members, or any details
+4. If asked about a service NexGenTeck doesn't offer, explicitly state "We don't currently offer [service name]" - do NOT guess or assume
+5. When uncertain about any specific detail, say "I'm not sure about that specific detail" rather than providing potentially inaccurate information
+6. Be helpful, professional, and friendly
+7. Keep responses concise but comprehensive
 
 You represent NexGenTeck and should speak as part of the team ("we offer", "our services", etc.)
 """
@@ -202,13 +204,22 @@ Respond to the user using ONLY the information above. If their question cannot b
         base_prompt += """
 Note: No specific website content was retrieved for this query. 
 Provide a helpful general response and offer to help with questions about NexGenTeck's services.
+Do NOT make up services or details - only discuss what you know from previous context.
 """
     
-    # Adjust tone based on LLM's sentiment analysis
+    # SENTIMENT-INTENT RECONCILIATION
+    # Prevents over-apologetic responses on neutral technical queries
     sentiment = analysis.get('sentiment', 'neutral')
     intent = analysis.get('intent', 'general')
     
-    if sentiment == 'negative' or intent == 'complaint':
+    # If sentiment is negative but intent is a question/request, prioritize helpfulness
+    if sentiment == 'negative' and intent in ['question', 'request']:
+        base_prompt += """
+Note: The user's tone may seem frustrated, but they are asking a question or making a request.
+Focus on being helpful and providing accurate information rather than being overly apologetic.
+Address their actual question directly and professionally.
+"""
+    elif sentiment == 'negative' or intent == 'complaint':
         base_prompt += """
 The user seems to have a concern. Be especially empathetic and solution-oriented.
 """

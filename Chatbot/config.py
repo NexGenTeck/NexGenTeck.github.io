@@ -19,8 +19,12 @@ class Config:
     # Website Configuration
     WEBSITE_URL: str = os.getenv("WEBSITE_URL", "https://nexgenteck.com")
     
-    # CORS Configuration
-    CORS_ORIGINS: list = os.getenv("CORS_ORIGINS", "*").split(",")
+    # CORS Configuration - Restricted to production and local development
+    # Override via environment variable for specific deployments
+    CORS_ORIGINS: list = os.getenv(
+        "CORS_ORIGINS", 
+        "https://nexgenteck.github.io,https://muhammadhasaan82.github.io,https://nexgenteck.com,http://localhost:5173,http://localhost:3000"
+    ).split(",")
     
     # Model Configuration
     EMBEDDING_MODEL: str = os.getenv("EMBEDDING_MODEL", "BAAI/bge-m3")

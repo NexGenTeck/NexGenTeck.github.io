@@ -11,9 +11,11 @@ FULLY SOFTCODED APPROACH:
 
 from fastapi import FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 from contextlib import asynccontextmanager
 import logging
+import asyncio
+import re
 
 from config import config
 from scraper import WebsiteScraper
@@ -27,10 +29,34 @@ logging.basicConfig(
 )
 logger = logging.getLogger(__name__)
 
+# Global reindex lock to prevent concurrent reindex operations
+_reindex_lock = asyncio.Lock()
+_is_reindexing = False
+
 
 class ChatRequest(BaseModel):
-    """Request model for chat endpoint."""
+    """Request model for chat endpoint with input validation."""
     message: str
+    
+    @field_validator('message')
+    @classmethod
+    def validate_message(cls, v: str) -> str:
+        """Validate and sanitize the message input."""
+        if not v or not v.strip():
+            raise ValueError('Message cannot be empty')
+        
+        # Strip whitespace
+        v = v.strip()
+        
+        # Check max length (2000 characters)
+        if len(v) > 2000:
+            raise ValueError('Message too long (max 2000 characters)')
+        
+        # Check min length (at least 1 meaningful character)
+        if len(v) < 1:
+            raise ValueError('Message must contain at least 1 character')
+        
+        return v
 
 
 class ChatResponse(BaseModel):
@@ -144,10 +170,13 @@ async def chat(request: ChatRequest):
     2. Retrieve relevant context from knowledge base
     3. Generate a contextual response using Llama 3.3
     
-    Greetings are handled specially without RAG.
+    Input validation is handled by Pydantic ChatRequest model.
     """
-    if not request.message or not request.message.strip():
-        raise HTTPException(status_code=400, detail="Message cannot be empty")
+    global _is_reindexing
+    
+    # Warn if reindexing is in progress (but still allow chat)
+    if _is_reindexing:
+        logger.warning("Chat request received while reindexing is in progress")
     
     logger.info(f"Received message: {request.message[:100]}...")
     
@@ -168,24 +197,38 @@ async def reindex_knowledge_base():
     """
     Re-scrape website and update knowledge base.
     Useful for updating content after website changes.
+    Uses a lock to prevent concurrent reindex operations.
     """
+    global _is_reindexing
+    
+    # Check if already reindexing
+    if _is_reindexing:
+        return {
+            "status": "busy",
+            "message": "Reindexing is already in progress. Please wait."
+        }
+    
     logger.info("Re-indexing knowledge base")
     
-    try:
-        # Clear existing data
-        vector_store.clear()
-        
-        # Re-scrape and index
-        await initialize_knowledge_base()
-        
-        return {
-            "status": "success",
-            "message": f"Re-indexed {vector_store.count()} documents"
-        }
-        
-    except Exception as e:
-        logger.error(f"Re-indexing failed: {e}")
-        raise HTTPException(status_code=500, detail=str(e))
+    async with _reindex_lock:
+        _is_reindexing = True
+        try:
+            # Clear existing data
+            vector_store.clear()
+            
+            # Re-scrape and index
+            await initialize_knowledge_base()
+            
+            return {
+                "status": "success",
+                "message": f"Re-indexed {vector_store.count()} documents"
+            }
+            
+        except Exception as e:
+            logger.error(f"Re-indexing failed: {e}")
+            raise HTTPException(status_code=500, detail=str(e))
+        finally:
+            _is_reindexing = False
 
 
 if __name__ == "__main__":
