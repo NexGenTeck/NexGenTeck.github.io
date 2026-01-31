@@ -11537,6 +11537,17 @@ export const LanguageProvider: React.FC<{ children: ReactNode }> = ({ children }
       return languageValue;
     }
 
+    const isServiceShortKey = key.startsWith('services.') && key.split('.').length === 2;
+    if (isServiceShortKey) {
+      const serviceTitleKey = `${key}.title`;
+      const serviceTitleValue = serviceTranslations[language]?.[serviceTitleKey]
+        || translations[language]?.[serviceTitleKey]
+        || translations.en[serviceTitleKey];
+      if (serviceTitleValue) {
+        return serviceTitleValue;
+      }
+    }
+
     return translations.en[key] || key;
   };
 
