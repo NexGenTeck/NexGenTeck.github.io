@@ -21,7 +21,7 @@ export const Layout: React.FC = () => {
 
   return (
     <div className={`site-shell ${textColor} transition-colors duration-300`}>
-      {!isHome && <AnimatedBackground />}
+      <AnimatedBackground />
       <div className={`site-content min-h-screen flex flex-col ${contentThemeClass}`}>
         <Header />
         <main className="flex-1">
