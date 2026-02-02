@@ -3,7 +3,7 @@
 FROM python:3.11-slim
 
 # Set working directory
-WORKDIR /app
+WORKDIR /app/Chatbot
 
 # Install system dependencies for ML libraries
 RUN apt-get update && apt-get install -y \
@@ -12,13 +12,15 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 # Copy requirements first for better caching
-COPY requirements.txt .
+COPY Chatbot/requirements.txt ./requirements.txt
 
 # Install Python dependencies
 RUN pip install --no-cache-dir -r requirements.txt
 
 # Copy application code
-COPY . .
+COPY Chatbot/ .
+# Copy frontend source for translation-based ingestion
+COPY src/ ../src/
 
 # Create directory for ChromaDB persistence
 RUN mkdir -p /app/chroma_db
