@@ -25,18 +25,23 @@ export const Contact: React.FC = () => {
       const apiUrl = import.meta.env.VITE_CONTACT_API_URL || 'http://localhost:3001';
       const response = await fetch(`${apiUrl}/api/contact`, {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+        },
         body: JSON.stringify(formData),
       });
 
+      const data = await response.json();
       if (response.ok) {
         setSubmitStatus('success');
         setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
       } else {
         setSubmitStatus('error');
+        console.error('Form submission error:', data.error);
       }
     } catch (error) {
       setSubmitStatus('error');
+      console.error('Network error:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -173,7 +178,7 @@ export const Contact: React.FC = () => {
                       animate={{ opacity: 1, y: 0 }}
                       className="p-4 bg-red-50 text-red-800 rounded-lg border border-red-200"
                     >
-                      Failed to send message. Please try again or contact us directly.
+                      {t('contact.form.error')}
                     </motion.div>
                   )}
 
