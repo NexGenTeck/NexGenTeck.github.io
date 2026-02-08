@@ -7,14 +7,14 @@
  *   2. Stripping Cloudflare-internal headers that confuse origin servers
  *
  * Environment variables (set in wrangler.toml [vars] or dashboard):
- *   BACKEND_ORIGIN  – full origin of the backend, e.g. http://165.245.177.103:8000
- *   BACKEND_HOST    – hostname / IP the backend expects in the Host header
+ *   BACKEND_URL   – full origin of the backend, e.g. http://165.245.177.103:8000
+ *   BACKEND_HOST  – hostname / IP the backend expects in the Host header
  */
 export default {
   async fetch(request, env) {
     // ── Configuration ────────────────────────────────────────────────
-    const BACKEND_ORIGIN = env.BACKEND_ORIGIN || 'http://165.245.177.103:8000';
-    const BACKEND_HOST   = env.BACKEND_HOST   || '165.245.177.103';
+    const BACKEND_URL  = env.BACKEND_URL || 'http://165.245.177.103:8000';
+    const BACKEND_HOST = env.BACKEND_HOST || 'api.nexgenteck.com';
 
     const ALLOWED_ORIGINS = [
       'https://nexgenteck.github.io',
@@ -24,8 +24,9 @@ export default {
     ];
 
     // ── CORS helpers ─────────────────────────────────────────────────
-    const origin    = request.headers.get('Origin') || '';
-    const corsOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : ALLOWED_ORIGINS[0];
+    const origin = request.headers.get('Origin') || '';
+    const defaultOrigin = 'https://muhammadhasaan82.github.io';
+    const corsOrigin = ALLOWED_ORIGINS.includes(origin) ? origin : defaultOrigin;
 
     const corsHeaders = {
       'Access-Control-Allow-Origin':  corsOrigin,
@@ -41,7 +42,7 @@ export default {
 
     // ── Build target URL ─────────────────────────────────────────────
     const incoming  = new URL(request.url);
-    const targetUrl = `${BACKEND_ORIGIN}${incoming.pathname}${incoming.search}`;
+    const targetUrl = `${BACKEND_URL}${incoming.pathname}${incoming.search}`;
 
     // ── Forward headers with explicit Host ───────────────────────────
     //    KEY FIX: *set* the Host header to the backend's address instead

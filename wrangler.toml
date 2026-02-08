@@ -7,9 +7,8 @@ compatibility_date = "2026-02-06"
 workers_dev = true
 
 # Backend environment variables
-# These are readable at runtime as env.BACKEND_ORIGIN / env.BACKEND_HOST.
-# If you later add a DNS A record (e.g. api.nexgenteck.com → 165.245.177.103)
-# update these values to use the hostname instead.
+# These are readable at runtime as env.BACKEND_URL / env.BACKEND_HOST.
+# BACKEND_HOST defaults to a placeholder hostname to satisfy Host headers.
 [vars]
-BACKEND_ORIGIN = "http://165.245.177.103:8000"
-BACKEND_HOST   = "165.245.177.103"
+BACKEND_URL  = "http://165.245.177.103:8000"
+BACKEND_HOST = "api.nexgenteck.com"
