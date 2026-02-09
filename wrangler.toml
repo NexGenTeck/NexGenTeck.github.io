@@ -9,6 +9,6 @@ workers_dev = true
 # Backend environment variables
 # These are readable at runtime as env.BACKEND_IP / env.BACKEND_HOST / env.BACKEND_PORT.
 [vars]
-BACKEND_IP   = "YOUR_DIGITALOCEAN_DROPLET_IP"
+BACKEND_IP   = "165.245.177.103"
 BACKEND_HOST = "api.nexgenteck.com"
 BACKEND_PORT = "8000"
