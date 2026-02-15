@@ -25,7 +25,7 @@ Redesign the Hero section of `src/pages/Home.tsx` to match the NexGenTeck brand 
 - **Subhead:** "Grow without the overhead. We find, vet, and onboard reliable remote professionals who adapt to your workflow."
 - **Buttons:** 
   - "Discover More Today" (Primary)
-  - "Watch a Quick Demo" (Secondary/Outline)
+  - "Watch a Quick Intro" (Secondary/Outline)
 - **Image:** `slider12-1024x571.jpg` (uploaded)
 
 #### Slide 2 (Services)

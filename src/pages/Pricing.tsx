@@ -15,7 +15,7 @@ export const Pricing: React.FC = () => {
     { id: 'mobile', tiers: ['simple', 'mid', 'enterprise'] },
     { id: 'software', tiers: ['custom', 'webapp', 'qa'] },
     { id: 'graphic', tiers: ['social', 'banner', 'brochure'] },
-    { id: 'video', tiers: ['basic', 'advanced'] },
+    { id: 'video', tiers: ['basic', 'medium', 'advanced'] },
   ];
 
   return (
@@ -102,10 +102,10 @@ export const Pricing: React.FC = () => {
                   <ArrowRight className="w-5 h-5" />
                 </Link>
                 <a
-                  href="tel:+15551234567"
+                  href="tel:+923009270131"
                   className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-orange-500 transition-all"
                 >
-                  {t('pricing.cta.callUs')} +1 (555) 123-4567
+                  {t('pricing.cta.callUs')} +92 300 927 0131
                 </a>
               </div>
             </div>

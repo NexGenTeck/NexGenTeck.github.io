@@ -17,6 +17,17 @@ import { ThreeDGraphicsPage } from '../pages/services/ThreeDGraphicsPage';
 import { VideoEditingPage } from '../pages/services/VideoEditingPage';
 import { NotFound } from '../pages/NotFound';
 
+const BLOG_ENABLED = false;
+
+const blogRoutes = BLOG_ENABLED
+  ? [
+    { path: 'blog', Component: Blog },
+    { path: 'blog/:id', Component: Blog },
+    { path: 'blog/category/:category', Component: Blog },
+    { path: 'blog/tag/:tag', Component: Blog },
+  ]
+  : [];
+
 export const router = createBrowserRouter([
   {
     path: '/',
@@ -35,10 +46,7 @@ export const router = createBrowserRouter([
       { path: 'services/video-editing', Component: VideoEditingPage },
       { path: 'portfolio', Component: Portfolio },
       { path: 'portfolio/:id', Component: Portfolio },
-      { path: 'blog', Component: Blog },
-      { path: 'blog/:id', Component: Blog },
-      { path: 'blog/category/:category', Component: Blog },
-      { path: 'blog/tag/:tag', Component: Blog },
+      ...blogRoutes,
       { path: 'pricing', Component: Pricing },
       { path: 'contact', Component: Contact },
       { path: '*', Component: NotFound },

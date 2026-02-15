@@ -17,13 +17,13 @@ class Config:
     GROQ_API_KEY: str = os.getenv("GROQ_API_KEY", "")
     
     # Website Configuration
-    WEBSITE_URL: str = os.getenv("WEBSITE_URL", "https://nexgenteck.github.io/NGT/")
+    WEBSITE_URL: str = os.getenv("WEBSITE_URL", "https://nexgenteck.com")
     
     # CORS Configuration - Restricted to production and local development
     # Override via environment variable for specific deployments
     CORS_ORIGINS: list = os.getenv(
         "CORS_ORIGINS", 
-        "https://nexgenteck.github.io,http://localhost:5173,http://localhost:3000"
+        "https://nexgenteck.github.io,https://muhammadhasaan82.github.io,https://nexgenteck.com,http://localhost:5173,http://localhost:3000"
     ).split(",")
     
     # Model Configuration

@@ -34,6 +34,7 @@ class EmbeddingManager:
         if EmbeddingManager._model is None:
             logger.info(f"Loading embedding model: {config.EMBEDDING_MODEL}")
             try:
+                # Force clean download with cache_folder to avoid corruption
                 EmbeddingManager._model = SentenceTransformer(
                     config.EMBEDDING_MODEL,
                     trust_remote_code=True,

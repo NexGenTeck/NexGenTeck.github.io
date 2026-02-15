@@ -1,28 +1,48 @@
 /**
- * NGT Chatbot Proxy Worker
+ * NGT Backend Proxy Worker
  *
- * Proxies HTTPS requests from GitHub Pages to the Python backend on a VM.
- * Fixes the "1003 Direct IP access not allowed" error by:
- *   1. Setting an explicit Host header on every subrequest
- *   2. Stripping Cloudflare-internal headers that confuse origin servers
+ * Proxies ALL HTTPS requests from GitHub Pages to the backend services on a
+ * DigitalOcean droplet.  The browser talks HTTPS → Worker → HTTP → backend.
+ *
+ * Path-prefix routing:
+ *   /chatbot/*  → FastAPI chatbot on BACKEND_IP:CHATBOT_PORT  (strips /chatbot)
+ *   /contact/*  → Express contact API on BACKEND_IP:CONTACT_PORT (strips /contact)
+ *
+ * Cloudflare Workers block outbound fetch() to raw IP addresses (error 1003).
+ * Workaround: use nip.io wildcard DNS so the Worker fetches a proper hostname
+ * (e.g. 165-245-177-103.nip.io) which resolves to the same IP but bypasses
+ * Cloudflare's "Direct IP access not allowed" check.
  *
  * Environment variables (set in wrangler.toml [vars] or dashboard):
- *   BACKEND_IP    – backend IP address, e.g. 165.245.177.103
- *   BACKEND_HOST  – hostname the backend expects in the Host header
- *   BACKEND_PORT  – backend port, e.g. 8000
+ *   BACKEND_IP    – DigitalOcean droplet public IPv4, e.g. 165.245.177.103
+ *   CHATBOT_PORT  – chatbot backend port, e.g. 8000
+ *   CONTACT_PORT  – contact API port, e.g. 3001
  */
 export default {
   async fetch(request, env) {
     // ── Configuration ────────────────────────────────────────────────
-    const BACKEND_IP = env.BACKEND_IP || '165.245.177.103';
-    const BACKEND_HOST = env.BACKEND_HOST || 'api.nexgenteck.com';
-    const BACKEND_PORT = env.BACKEND_PORT || '8000';
+    const BACKEND_IP   = env.BACKEND_IP   || '165.245.177.103';
+    const CHATBOT_PORT = env.CHATBOT_PORT || '8000';
+    const CONTACT_PORT = env.CONTACT_PORT || '3001';
+
+    // Convert IP to a nip.io hostname so Cloudflare doesn't block it
+    // 165.245.177.103 → 165-245-177-103.nip.io (resolves to same IP)
+    const BACKEND_HOST = BACKEND_IP.replace(/\./g, '-') + '.nip.io';
+
+    // Service routing table: path prefix → backend port
+    const SERVICES = {
+      '/chatbot': CHATBOT_PORT,
+      '/contact': CONTACT_PORT,
+    };
 
     const ALLOWED_ORIGINS = [
       'https://nexgenteck.github.io',
       'https://muhammadhasaan82.github.io',
-      'http://localhost:5173',           // local dev
-      'http://localhost:4173',           // local preview
+      'https://nex-gen-teck-github-io.vercel.app',
+      'https://nexgenteck.com',
+      'https://www.nexgenteck.com',
+      'http://localhost:5173',
+      'http://localhost:4173',
     ];
 
     // ── CORS helpers ─────────────────────────────────────────────────
@@ -42,37 +62,59 @@ export default {
       return new Response(null, { status: 204, headers: corsHeaders });
     }
 
-    // ── Build target URL ─────────────────────────────────────────────
-    const incoming  = new URL(request.url);
-    const targetUrl = `http://${BACKEND_IP}:${BACKEND_PORT}${incoming.pathname}${incoming.search}`;
+    // ── Route to the correct backend service ─────────────────────────
+    const incoming = new URL(request.url);
+    const path     = incoming.pathname;
 
-    // ── Forward headers with explicit Host ───────────────────────────
-    //    KEY FIX: *set* the Host header to the backend's address instead
-    //    of deleting it.  Without a Host header Cloudflare may intercept
-    //    the sub-request and return 1003.
-    const headers = new Headers(request.headers);
-    headers.set('Host', BACKEND_HOST);
+    // Find matching service by path prefix
+    let targetPort  = null;
+    let strippedPath = path;
 
-    // Strip Cloudflare-internal headers the origin doesn't need
-    for (const h of [
-      'cf-connecting-ip', 'cf-ray', 'cf-visitor',
-      'cf-worker', 'cf-ew-via', 'cf-ipcountry',
-      'cdn-loop',
-    ]) {
-      headers.delete(h);
+    for (const [prefix, port] of Object.entries(SERVICES)) {
+      if (path === prefix || path.startsWith(prefix + '/')) {
+        targetPort   = port;
+        strippedPath = path.slice(prefix.length) || '/';
+        break;
+      }
     }
 
-    // Carry the real client IP in a standard header
+    // No matching service prefix → return helpful info
+    if (!targetPort) {
+      return new Response(
+        JSON.stringify({
+          status: 'ok',
+          worker: 'ngt-backend-proxy',
+          services: Object.keys(SERVICES),
+          usage: 'Prefix your request path with /chatbot or /contact',
+        }),
+        {
+          status: 200,
+          headers: { 'Content-Type': 'application/json', ...corsHeaders },
+        },
+      );
+    }
+
+    // ── Build target URL ─────────────────────────────────────────────
+    const targetUrl = `http://${BACKEND_HOST}:${targetPort}${strippedPath}${incoming.search}`;
+
+    // ── Build clean headers ──────────────────────────────────────────
+    //    Only forward the headers the backend actually needs.
+    //    Do NOT set a custom Host header – let it default to the IP:port
+    //    from the URL so Cloudflare passes the request straight through.
+    const headers = new Headers();
+    headers.set('Content-Type', request.headers.get('Content-Type') || 'application/json');
+    headers.set('Accept', request.headers.get('Accept') || 'application/json');
+
+    // Carry the real client IP for logging
     const clientIp = request.headers.get('cf-connecting-ip');
     if (clientIp) headers.set('X-Forwarded-For', clientIp);
 
     // ── Proxy the request ────────────────────────────────────────────
     try {
       const backendResponse = await fetch(targetUrl, {
-        method:   request.method,
-        headers:  headers,
-        body:     ['GET', 'HEAD'].includes(request.method) ? undefined : request.body,
-        redirect: 'manual',
+        method:  request.method,
+        headers: headers,
+        body:    ['GET', 'HEAD'].includes(request.method) ? undefined : request.body,
       });
 
       // Attach CORS headers to the backend's response

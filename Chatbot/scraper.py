@@ -4,13 +4,16 @@ Crawls the entire NexGenTeck website and extracts ALL content for the knowledge 
 This is the ONLY source of information for the chatbot.
 """
 
-import requests
-import os
 from bs4 import BeautifulSoup
 from typing import List, Dict, Set
 from urllib.parse import urljoin, urlparse
 import logging
-import time
+import os
+from selenium import webdriver
+from selenium.webdriver.chrome.service import Service as ChromeService
+from selenium.webdriver.chrome.options import Options as ChromeOptions
+from selenium.webdriver.support.ui import WebDriverWait
+from webdriver_manager.chrome import ChromeDriverManager
 
 from config import config
 from utils import clean_text, chunk_text
@@ -74,37 +77,13 @@ class WebsiteScraper:
             except Exception as e:
                 logger.warning(f"Translation extractor failed: {e}, falling back to source scraping")
         
-        # known routes for the React app (since crawler can't always find links in JS)
-        known_routes = [
-            '/',
-            '/about',
-            '/services',
-            '/portfolio', 
-            '/pricing',
-            '/blog',
-            '/contact',
-            '/services/web-development',
-            '/services/mobile-app-development', 
-            '/services/ecommerce',
-            '/services/seo',
-            '/services/social-media-marketing',
-            '/services/software-development',
-            '/services/3d-graphics',
-            '/services/video-editing'
-        ]
-        
-        # Add all known routes to the visit queue
-        for route in known_routes:
-            # Preserve GitHub Pages subpaths like "/NGT/" when joining routes.
-            # urljoin(base, "/about") would otherwise drop the base path.
-            full_url = urljoin(self.base_url.rstrip('/') + '/', route.lstrip('/'))
-            try:
-                self._crawl_page(full_url, max_pages)
-            except Exception as e:
-                logger.error(f"Failed to scrape {full_url}: {e}")
+        # Crawl with a JS-capable browser so SPA content is rendered
+        try:
+            self._crawl_site(max_pages=max_pages)
+        except Exception as e:
+            logger.error(f"Rendered scraping failed: {e}")
 
-        # If HTML scraping produced nothing (common for SPAs), provide a fallback.
-        # Note: translation-based content requires the frontend source files to be present.
+        # If scraping produced nothing, provide a fallback so the bot still works.
         if not self.documents:
             logger.warning("No documents extracted from scraping; falling back to translation/fallback content")
             try:
@@ -121,110 +100,67 @@ class WebsiteScraper:
         logger.info(f"Scraped {len(self.visited_urls)} pages, created {len(self.documents)} documents")
         return self.documents
     
-    def _crawl_page(self, url: str, max_pages: int):
+    def _crawl_site(self, max_pages: int) -> None:
         """
-        Crawl a page. For local dev (SPA), we fallback to reading source files
-        because scraping localhost React often returns empty HTML.
+        Crawl the site with a JS-capable browser to fully render SPA content.
         """
-        if len(self.visited_urls) >= max_pages:
-            return
-            
-        self.visited_urls.add(url)
-        logger.info(f"Processing: {url}")
-        
-        # 1. Try to map the URL to a local source file
-        # This is much more reliable for a local React app than scraping
-        parsed = urlparse(url)
-        path = parsed.path.strip('/')
-        
-        # Map URL path to file path
-        # Example: services/ecommerce -> src/pages/services/EcommercePage.tsx
-        source_content = self._read_local_source_file(path)
-        
-        if source_content:
-            logger.info(f"Found local source file for {url}")
-            self._process_content(source_content, url, f"Page: {path or 'Home'}")
-            return
+        base_domain = urlparse(self.base_url).netloc
+        queue: List[str] = [self.base_url]
 
-        # 2. Fallback to HTTP scraping (for external links or if file not found)
+        chrome_options = ChromeOptions()
+        chrome_options.add_argument("--headless=new")
+        chrome_options.add_argument("--disable-gpu")
+        chrome_options.add_argument("--no-sandbox")
+        chrome_options.add_argument("--disable-dev-shm-usage")
+
+        driver = webdriver.Chrome(
+            service=ChromeService(ChromeDriverManager().install()),
+            options=chrome_options
+        )
+
         try:
-            response = requests.get(url, timeout=10)
-            if response.status_code == 200:
-                soup = BeautifulSoup(response.text, 'lxml')
-                self._extract_all_content(soup, url)
-        except Exception as e:
-            logger.warning(f"Failed to fetch {url}: {e}")
+            while queue and len(self.visited_urls) < max_pages:
+                url = queue.pop(0)
+                if url in self.visited_urls:
+                    continue
 
-    def _read_local_source_file(self, url_path: str) -> str:
-        """
-        Read the content of fem corresponding React component file.
-        Adjusts path mapping based on project structure.
-        """
-        import os
-        
-        # Base directory for pages
-        # Assuming script runs from Chatbot/, we go up -> src/pages
-        base_dir = os.path.abspath(os.path.join(os.path.dirname(__file__), '..', 'src', 'pages'))
-        
-        if not url_path:
-            # Home page
-            target_files = [os.path.join(base_dir, 'Home.tsx')]
-        else:
-            # Convert URL path to PascalCase for filename match
-            # e.g. services/web-development -> Services/WebDevelopmentPage.tsx or similar
-            parts = url_path.split('/')
-            
-            # Simple heuristic mapping
-            if len(parts) == 1:
-                # Top level pages: about -> About.tsx
-                name = parts[0].capitalize()
-                target_files = [os.path.join(base_dir, f"{name}.tsx")]
-            elif parts[0] == 'services':
-                # Service pages: services/web-development -> services/WebDevelopmentPage.tsx
-                # Need to convert kebab-case to PascalCase
-                service_name = ''.join(word.capitalize() for word in parts[1].split('-'))
-                target_files = [
-                    os.path.join(base_dir, 'services', f"{service_name}Page.tsx"),
-                    os.path.join(base_dir, 'services', f"{service_name}.tsx")
-                ]
-            else:
-                target_files = []
+                self.visited_urls.add(url)
+                logger.info(f"Processing: {url}")
 
-        for fpath in target_files:
-            if os.path.exists(fpath):
                 try:
-                    with open(fpath, 'r', encoding='utf-8') as f:
-                        return f.read()
+                    driver.get(url)
+                    WebDriverWait(driver, 30).until(
+                        lambda d: d.execute_script("return document.readyState") == "complete"
+                    )
+                    html = driver.page_source
                 except Exception as e:
-                    logger.error(f"Error reading file {fpath}: {e}")
-        
-        return None
+                    logger.warning(f"Failed to load {url}: {e}")
+                    continue
 
-    def _process_content(self, raw_text: str, url: str, title: str):
-        """Process raw text (source code or HTML text) into chunks."""
-        # Simple cleanup to remove import statements and noisy code syntax
-        # We want to keep the text content primarily
-        lines = []
-        for line in raw_text.split('\n'):
-            line = line.strip()
-            # Skip imports and pure code lines roughly
-            if line.startswith('import ') or line.startswith('export ') or line == '}' or line == '{':
-                continue
-            if len(line) > 5:
-                lines.append(line)
-        
-        clean_content = '\n'.join(lines)
-        
-        chunks = chunk_text(clean_content, chunk_size=800, overlap=100)
-        for i, chunk in enumerate(chunks):
-            self.documents.append({
-                'content': chunk,
-                'metadata': {
-                    'source': url,
-                    'title': title,
-                    'chunk_index': i
-                }
-            })
+                soup = BeautifulSoup(html, 'lxml')
+                self._extract_all_content(soup, url)
+
+                # Discover new links dynamically from rendered HTML
+                for link in soup.find_all('a', href=True):
+                    href = link.get('href', '').strip()
+                    if not href or href.startswith('mailto:') or href.startswith('tel:'):
+                        continue
+
+                    # Preserve GitHub Pages subpaths like "/NGT/" when joining.
+                    if href.startswith('http://') or href.startswith('https://'):
+                        next_url = href
+                    else:
+                        next_url = urljoin(self.base_url.rstrip('/') + '/', href.lstrip('/'))
+                    parsed = urlparse(next_url)
+                    if parsed.netloc != base_domain:
+                        continue
+
+                    # Remove fragment to avoid duplicates
+                    normalized = parsed._replace(fragment="").geturl()
+                    if normalized not in self.visited_urls:
+                        queue.append(normalized)
+        finally:
+            driver.quit()
     
     def _extract_all_content(self, soup: BeautifulSoup, url: str):
         """

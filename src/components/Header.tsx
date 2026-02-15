@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { Link, useLocation } from 'react-router';
-import { Menu, X, Globe, ChevronDown, Sun, Moon } from 'lucide-react';
+import { Menu, X, Globe, ChevronDown } from 'lucide-react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useLanguage, Language } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
@@ -13,7 +13,7 @@ export const Header: React.FC = () => {
   const [isServicesOpen, setIsServicesOpen] = useState(false);
   const location = useLocation();
   const { language, setLanguage, t } = useLanguage();
-  const { theme, toggleTheme } = useTheme();
+  const { theme } = useTheme();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -64,7 +64,6 @@ export const Header: React.FC = () => {
   const dropdownHover = theme === 'dark' ? 'hover:bg-gray-700' : 'hover:bg-orange-50';
   const borderColor = theme === 'dark' ? 'border-gray-700' : 'border-gray-200';
   const mobileMenuBg = theme === 'dark' ? 'bg-gray-800' : 'bg-gray-100';
-  const themeToggleBg = theme === 'dark' ? 'hover:bg-gray-800' : 'hover:bg-gray-100';
 
   return (
     <motion.header
@@ -78,7 +77,7 @@ export const Header: React.FC = () => {
           <Link to="/" className="flex items-center space-x-3">
             <div className="bg-black px-3 py-2 rounded-md flex items-center space-x-2">
               <img src={logo} alt="NexGenTeck Logo" className="h-8 w-auto object-contain" style={{ maxHeight: '32px', maxWidth: '100px' }} />
-              <span className="text-xl font-bold tracking-wide">
+              <span className="text-2xl font-extrabold tracking-normal">
                 <span className="text-orange-500">NexGen</span>
                 <span className="text-white">Teck</span>
               </span>
@@ -125,7 +124,7 @@ export const Header: React.FC = () => {
             <Link to="/portfolio" className={`hover:text-orange-500 transition-colors ${location.pathname === '/portfolio' ? 'text-orange-500' : textColor}`}>
               {t('nav.portfolio')}
             </Link>
-            <Link to="/blog" className={`hover:text-orange-500 transition-colors ${location.pathname === '/blog' ? 'text-orange-500' : textColor}`}>
+            <Link to="/blog" className={`hidden hover:text-orange-500 transition-colors ${location.pathname === '/blog' ? 'text-orange-500' : textColor}`}>
               {t('nav.blog')}
             </Link>
             <Link to="/pricing" className={`hover:text-orange-500 transition-colors ${location.pathname === '/pricing' ? 'text-orange-500' : textColor}`}>
@@ -150,57 +149,32 @@ export const Header: React.FC = () => {
                     initial={{ opacity: 0, y: 10 }}
                     animate={{ opacity: 1, y: 0 }}
                     exit={{ opacity: 0, y: 10 }}
-                    className={`absolute top-full right-0 mt-2 w-40 ${dropdownBg} rounded-lg shadow-xl py-2`}
+                    className="absolute top-full right-0 mt-2 w-44 z-[70]"
                   >
-                    {languages.map((lang) => (
-                      <button
-                        key={lang.code}
-                        onClick={() => {
-                          setLanguage(lang.code);
-                          setIsLangOpen(false);
-                        }}
-                        className={`w-full text-left px-4 py-2 ${dropdownHover} transition-colors flex items-center space-x-2 ${language === lang.code ? 'text-orange-500' : textColor
-                          }`}
-                      >
-                        <img src={lang.flag} alt={lang.name} className="w-5 h-4 object-cover rounded-sm" />
-                        <span>{lang.name}</span>
-                      </button>
-                    ))}
+                    <div
+                      className={`language-scrollbar ${dropdownBg} rounded-lg shadow-xl py-2 overflow-y-auto overflow-x-hidden`}
+                      style={{ maxHeight: 'min(280px, calc(100vh - 120px))' }}
+                    >
+                      {languages.map((lang) => (
+                        <button
+                          key={lang.code}
+                          onClick={() => {
+                            setLanguage(lang.code);
+                            setIsLangOpen(false);
+                          }}
+                          className={`w-full text-left px-4 py-2 ${dropdownHover} transition-colors flex items-center space-x-2 ${language === lang.code ? 'text-orange-500' : textColor
+                            }`}
+                        >
+                          <img src={lang.flag} alt={lang.name} className="w-5 h-4 object-cover rounded-sm" />
+                          <span>{lang.name}</span>
+                        </button>
+                      ))}
+                    </div>
                   </motion.div>
                 )}
               </AnimatePresence>
             </div>
 
-            {/* Dark Theme Toggle */}
-            <button
-              onClick={toggleTheme}
-              className={`p-2 ${textColor} hover:text-orange-500 transition-colors rounded-lg ${themeToggleBg}`}
-              aria-label="Toggle theme"
-            >
-              <AnimatePresence mode="wait">
-                {theme === 'dark' ? (
-                  <motion.div
-                    key="sun"
-                    initial={{ rotate: -90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: 90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Sun className="w-5 h-5" />
-                  </motion.div>
-                ) : (
-                  <motion.div
-                    key="moon"
-                    initial={{ rotate: 90, opacity: 0 }}
-                    animate={{ rotate: 0, opacity: 1 }}
-                    exit={{ rotate: -90, opacity: 0 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    <Moon className="w-5 h-5" />
-                  </motion.div>
-                )}
-              </AnimatePresence>
-            </button>
           </div>
 
           {/* Mobile Menu Button */}
@@ -254,7 +228,7 @@ export const Header: React.FC = () => {
                 <Link to="/portfolio" onClick={() => setIsMenuOpen(false)} className={`${textColor} hover:text-orange-500 transition-colors py-2`}>
                   {t('nav.portfolio')}
                 </Link>
-                <Link to="/blog" onClick={() => setIsMenuOpen(false)} className={`${textColor} hover:text-orange-500 transition-colors py-2`}>
+                <Link to="/blog" onClick={() => setIsMenuOpen(false)} className={`hidden ${textColor} hover:text-orange-500 transition-colors py-2`}>
                   {t('nav.blog')}
                 </Link>
                 <Link to="/pricing" onClick={() => setIsMenuOpen(false)} className={`${textColor} hover:text-orange-500 transition-colors py-2`}>
@@ -265,20 +239,12 @@ export const Header: React.FC = () => {
                 </Link>
 
                 {/* Mobile Theme Toggle */}
-                <div className={`pt-4 border-t ${borderColor} flex items-center justify-between`}>
-                  <span className={textColor}>Theme</span>
-                  <button
-                    onClick={toggleTheme}
-                    className={`p-2 ${textColor} hover:text-orange-500 transition-colors rounded-lg ${themeToggleBg}`}
-                    aria-label="Toggle theme"
-                  >
-                    {theme === 'dark' ? <Sun className="w-5 h-5" /> : <Moon className="w-5 h-5" />}
-                  </button>
-                </div>
-
                 {/* Mobile Language Selector */}
                 <div className={`pt-4 border-t ${borderColor}`}>
-                  <div className="grid grid-cols-2 gap-2">
+                  <div
+                    className="language-scrollbar grid grid-cols-2 gap-2 overflow-y-auto overflow-x-hidden pr-1"
+                    style={{ maxHeight: 'min(280px, calc(100vh - 220px))' }}
+                  >
                     {languages.map((lang) => (
                       <button
                         key={lang.code}

@@ -26,7 +26,6 @@ from pydantic import BaseModel, field_validator
 from contextlib import asynccontextmanager
 import logging
 import asyncio
-import re
 
 from config import config
 from scraper import WebsiteScraper
@@ -110,7 +109,7 @@ async def lifespan(app: FastAPI):
     logger.info("Shutting down NexGenTeck AI Chatbot")
 
 
-async def initialize_knowledge_base():
+async def initialize_knowledge_base() -> int:
     """
     Scrape the ENTIRE website and populate the vector store.
     This is the ONLY source of information for the chatbot.
@@ -119,18 +118,19 @@ async def initialize_knowledge_base():
         scraper = WebsiteScraper()
         # Scrape up to 100 pages for comprehensive coverage
         documents = scraper.scrape(max_pages=100)
-        
+
         if documents:
             count = vector_store.add_documents(documents)
             logger.info(f"Indexed {count} documents from website")
-        else:
-            logger.warning("No documents scraped, using fallback content")
+            return count
+        
+        logger.warning("No documents scraped, using fallback content")
+        return 0
             
     except Exception as e:
         logger.error(f"Failed to initialize knowledge base: {e}")
         # The fallback content will be used automatically
-
-        # The fallback content will be used automatically
+        return 0
 
 
 # Create FastAPI app
@@ -224,15 +224,23 @@ async def reindex_knowledge_base():
     async with _reindex_lock:
         _is_reindexing = True
         try:
-            # Clear existing data
+            # Scrape first to avoid downtime if scraping fails
+            scraper = WebsiteScraper()
+            documents = scraper.scrape(max_pages=100)
+
+            if not documents:
+                raise HTTPException(
+                    status_code=500,
+                    detail="Scraping failed; keeping existing knowledge base"
+                )
+
+            # Clear existing data only after successful scrape
             vector_store.clear()
-            
-            # Re-scrape and index
-            await initialize_knowledge_base()
-            
+            count = vector_store.add_documents(documents)
+
             return {
                 "status": "success",
-                "message": f"Re-indexed {vector_store.count()} documents"
+                "message": f"Re-indexed {count} documents"
             }
             
         except Exception as e:

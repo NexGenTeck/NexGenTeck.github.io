@@ -1,7 +1,8 @@
 import React from 'react';
+import { createPortal } from 'react-dom';
 import { Link } from 'react-router';
 import { motion } from 'motion/react';
-import { ArrowRight, CheckCircle2, Quote, Star } from 'lucide-react';
+import { ArrowRight, CheckCircle2, Quote, Star, X } from 'lucide-react';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
@@ -16,9 +17,10 @@ import {
 } from '../components/ui/carousel';
 
 export const Home: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [carouselApi, setCarouselApi] = React.useState<CarouselApi>();
   const [currentSlide, setCurrentSlide] = React.useState(0);
+  const [isDemoOpen, setIsDemoOpen] = React.useState(false);
 
   // Typewriter phrases for hero animation - using translations
   const typewriterPhrases = [
@@ -69,6 +71,19 @@ export const Home: React.FC = () => {
     });
   }, [carouselApi]);
 
+  React.useEffect(() => {
+    if (!isDemoOpen) return;
+
+    const handleEscape = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsDemoOpen(false);
+      }
+    };
+
+    window.addEventListener('keydown', handleEscape);
+    return () => window.removeEventListener('keydown', handleEscape);
+  }, [isDemoOpen]);
+
   const services = [
     {
       titleKey: 'services.ecommerce',
@@ -106,19 +121,19 @@ export const Home: React.FC = () => {
       image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzZW8lMjBhbmFseXRpY3N8ZW58MXx8fHwxNzY0NDAyMjQ1fDA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
-      titleKey: 'services.blockchain',
-      descKey: 'services.blockchain.desc',
-      icon: '⛓️',
-      link: '/services/blockchain',
-      image: 'https://images.unsplash.com/photo-1666816943035-15c29931e975?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxibG9ja2NoYWluJTIwdGVjaG5vbG9neXxlbnwxfHx8fDE3NjQ0MzExMDh8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      titleKey: 'services.software',
+      descKey: 'services.software.desc',
+      icon: '⚙️',
+      link: '/services/software',
+      image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2Z0d2FyZSUyMGRldmVsb3BtZW50fGVufDB8fHx8MTczOTU4MDkwNXww&ixlib=rb-4.1.0&q=80&w=1080',
     },
   ];
 
   const stats = [
-    { number: '750+', labelKey: 'stats.projects' },
-    { number: '450+', labelKey: 'stats.clients' },
-    { number: '85+', labelKey: 'stats.team' },
-    { number: '15+', labelKey: 'stats.experience' },
+    { number: '30+', labelKey: 'stats.projects' },
+    { number: '23+', labelKey: 'stats.clients' },
+    { number: '19+', labelKey: 'stats.team' },
+    { number: '3+', labelKey: 'stats.experience' },
   ];
 
   const testimonials = [
@@ -234,19 +249,33 @@ export const Home: React.FC = () => {
                           {/* Primary CTA Button */}
                           <Link
                             to={slide.ctaLink}
-                            className="inline-flex items-center space-x-2 bg-white text-gray-900 px-8 py-3 rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 font-bold text-base shadow-lg"
+                            className="inline-flex items-center space-x-2 bg-white px-8 py-3 rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 text-base shadow-lg"
+                            style={{
+                              color: '#1a1a1a',
+                              fontWeight: 600,
+                              letterSpacing: '0.02em',
+                            }}
                           >
                             <span>{slide.ctaText}</span>
                             <ArrowRight className="w-5 h-5" />
                           </Link>
                           {/* Secondary CTA Button (if exists) */}
-                          {'ctaSecondary' in slide && slide.ctaSecondary && (
-                            <Link
-                              to="/services"
-                              className="inline-flex items-center space-x-2 bg-transparent border-2 border-white text-white px-8 py-3 rounded-full hover:bg-white/10 transition-all font-bold text-base"
+                          {'ctaSecondary' in slide && slide.ctaSecondary && language === 'en' && (
+                            <button
+                              type="button"
+                              onClick={() => setIsDemoOpen(true)}
+                              className="inline-flex items-center space-x-2 px-8 py-3 rounded-full hover:shadow-[0_0_25px_rgba(249,115,22,0.5)] transition-all transform hover:scale-105"
+                              style={{
+                                border: '2px solid #F97316',
+                                color: '#F97316',
+                                backgroundColor: 'transparent',
+                                fontWeight: 600,
+                                fontSize: '1rem',
+                                letterSpacing: '0.02em',
+                              }}
                             >
                               <span>{slide.ctaSecondary}</span>
-                            </Link>
+                            </button>
                           )}
                         </motion.div>
                       </motion.div>
@@ -567,7 +596,12 @@ export const Home: React.FC = () => {
                 <div className="flex flex-col sm:flex-row gap-4 justify-center">
                   <Link
                     to="/contact"
-                    className="bg-white text-orange-500 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105 inline-flex items-center justify-center space-x-2"
+                    className="bg-white px-8 py-4 rounded-full hover:bg-gray-100 transition-all transform hover:scale-105 inline-flex items-center justify-center space-x-2"
+                    style={{
+                      color: '#F97316',
+                      fontWeight: 600,
+                      letterSpacing: '0.02em',
+                    }}
                   >
                     <span>{t('cta.button')}</span>
                     <ArrowRight className="w-5 h-5" />
@@ -584,6 +618,41 @@ export const Home: React.FC = () => {
           </AnimatedSection>
         </div>
       </section>
+
+      {isDemoOpen && typeof document !== 'undefined' && createPortal(
+        <div
+          className="fixed inset-0 flex items-center justify-center bg-black/90 p-4"
+          style={{ zIndex: 99999 }}
+          onClick={() => setIsDemoOpen(false)}
+        >
+          <div
+            className="relative w-full max-w-4xl bg-black rounded-xl p-4 md:p-6 border border-orange-500/30 shadow-2xl"
+            style={{ zIndex: 100000 }}
+            onClick={(event) => event.stopPropagation()}
+          >
+            <button
+              type="button"
+              onClick={() => setIsDemoOpen(false)}
+              className="absolute -top-3 -right-3 z-[100001] p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-colors shadow-lg"
+              aria-label="Close video"
+            >
+              <X className="w-6 h-6" />
+            </button>
+            <div className="relative w-full bg-black rounded-lg overflow-hidden" style={{ paddingBottom: '56.25%' }}>
+              <iframe
+                className="absolute top-0 left-0 w-full h-full"
+                style={{ zIndex: 1 }}
+                src="https://www.youtube.com/embed/MdOanVqkeG8?autoplay=1&rel=0"
+                title="NexGenTeck Quick Demo"
+                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                referrerPolicy="strict-origin-when-cross-origin"
+                allowFullScreen
+              />
+            </div>
+          </div>
+        </div>,
+        document.body,
+      )}
     </div>
   );
 };

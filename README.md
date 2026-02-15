@@ -13,9 +13,7 @@ A comprehensive, production-ready business website template built with React, Ty
 - **Multi-language Support**: Built-in internationalization (i18n) with 15+ languages
 - **Responsive Design**: Mobile-first approach, works flawlessly on all devices
 - **Contact Form with Database**: TypeScript API + PostgreSQL backend for form submissions
-- **AI Chatbot Backend**: FastAPI-based RAG chatbot with intelligent lead generation
-- **Contact Form with Database**: TypeScript API + PostgreSQL backend for form submissions
-- **AI Chatbot Backend**: FastAPI-based RAG chatbot with intelligent lead generation
+- **AI Chatbot Backend**: FastAPI-based RAG chatbot with intelligent lead generation via Cloudflare Worker proxy
 
 ### Technical Highlights
 - ⚡ **Vite** - Lightning-fast build tool and dev server
@@ -75,6 +73,7 @@ npm run build
 | **Backend API** | Express + TypeScript |
 | **Database** | PostgreSQL 16 |
 | **Chatbot** | FastAPI + Qdrant + Groq |
+| **Proxy** | Cloudflare Workers |
 | **CI/CD** | GitHub Actions |
 
 ## 📁 Project Structure
@@ -91,6 +90,8 @@ NGT/
 │   ├── sentiment.py
 │   ├── vector_store.py
 │   └── docker-compose.yml
+├── cloudflare/             # Cloudflare Worker proxy
+│   └── chatbot-proxy-worker.js
 ├── ContactApi/             # TypeScript Express API
 │   ├── src/
 │   │   ├── index.ts
@@ -106,6 +107,7 @@ NGT/
 │   │   ├── Header.tsx
 │   │   ├── Footer.tsx
 │   │   ├── Layout.tsx
+│   │   ├── Chatbot.tsx
 │   │   └── AnimatedSection.tsx
 │   ├── pages/              # Page components
 │   │   ├── Home.tsx
@@ -124,10 +126,30 @@ NGT/
 │   └── index.css           # Global styles
 ├── vite.config.ts          # Vite configuration
 ├── tsconfig.json           # TypeScript config
+├── wrangler.toml           # Cloudflare Worker config
 └── package.json            # Dependencies
 ```
 
 ## 🤖 Backend Services
+
+### Cloudflare Worker Proxy
+HTTPS proxy that enables the chatbot to communicate with the backend API from GitHub Pages.
+
+**Features:**
+- HTTPS → HTTP proxy (GitHub Pages requires HTTPS for all API calls)
+- CORS configuration for allowed origins
+- Uses nip.io wildcard DNS to bypass Cloudflare 1003 restrictions
+- Clean header forwarding
+- Deployed at: `https://ngt-chatbot-proxy.muhammadhasaan82.workers.dev`
+
+**Deployment:**
+```bash
+cd ngt-chatbot-proxy  # or use cloudflare/ in this repo
+npm install wrangler --save-dev
+npx wrangler deploy
+```
+
+See [project_docs/ai_history/026-chatbot-deployment-worker-fix.md](project_docs/ai_history/026-chatbot-deployment-worker-fix.md) for detailed setup.
 
 ### Contact API
 TypeScript/Express API for handling contact form submissions with PostgreSQL storage.
@@ -150,6 +172,7 @@ FastAPI-based RAG chatbot with intelligent conversation and lead generation.
 - Sentiment analysis and intent detection
 - Automated lead generation
 - Website scraping and knowledge ingestion
+- Accessible via Cloudflare Worker proxy
 
 See [Chatbot/README.md](Chatbot/README.md) for setup instructions.
 
@@ -178,7 +201,22 @@ This project includes automated CI/CD pipelines using GitHub Actions:
 ### GitHub Pages (Automated)
 The site automatically deploys to GitHub Pages when you push to the `main` branch.
 
-**Live URL**: `https://muhammadhasaan82.github.io/Startup/`
+**Live URL**: `https://nexgenteck.github.io/NGT/`
+
+### Cloudflare Worker (Chatbot Proxy)
+Deploy the Worker proxy for chatbot functionality:
+
+```bash
+cd ngt-chatbot-proxy  # or muhammadhasaan82/ngt-chatbot-proxy repo
+npm install wrangler --save-dev
+npx wrangler deploy
+```
+
+**Worker URL**: `https://ngt-chatbot-proxy.muhammadhasaan82.workers.dev`
+
+**Environment Variables** (set in `wrangler.toml`):
+- `BACKEND_IP`: Your DigitalOcean droplet IP
+- `BACKEND_PORT`: Backend API port (default: 8000)
 
 ### Backend Deployment (DigitalOcean VM)
 
@@ -199,13 +237,19 @@ docker compose up -d
 ```
 
 3. **Deploy Chatbot**:
-- Scalable backend architecture
 ```bash
 cd Chatbot
 cp .env.example .env
-# Add GROQ_API_KEY
+# Add GROQ_API_KEY and configure Qdrant
 docker compose up -d
+
+# Or run with PM2 (current production setup):
+pm2 start ecosystem.config.js
+pm2 save
+pm2 startup
 ```
+
+**Note**: The chatbot backend is accessed via nip.io hostname (e.g., `165-245-177-103.nip.io`) to bypass Cloudflare's raw IP restrictions. See `026-chatbot-deployment-worker-fix.md` for details.
 
 ## 🎨 Design Philosophy
 
@@ -239,7 +283,17 @@ npx tsc --noEmit
 
 ### Environment Variables
 
-For production builds, the base path is automatically set to `/Startup/` for GitHub Pages. For local development, it uses `/`.
+Create a `.env.production` file for production builds:
+
+```bash
+# Chatbot API (Cloudflare Worker proxy)
+VITE_CHATBOT_API_URL=https://ngt-chatbot-proxy.muhammadhasaan82.workers.dev
+
+# Contact API (optional)
+VITE_CONTACT_API_URL=https://api.yourdomain.com
+```
+
+For production builds, the base path is automatically set to `/NGT/` for GitHub Pages. For local development, it uses `/`.
 
 ## 📄 License
 
@@ -253,13 +307,17 @@ Contributions, issues, and feature requests are welcome!
 2. Create your feature branch (`git checkout -b feature/AmazingFeature`)
 3. Commit your changes (`git commit -m 'Add some AmazingFeature'`)
 4. Push to the branch (`git push origin feature/AmazingFeature`)
-5. Open a Pull RequestNexGenTeck/NGT](https://github.com/NexGenTeck/NGT
+5. Open a Pull Request
 
 ## 📧 Contact
 
 Muhammad Hasaan - [@muhammadhasaan82](https://github.com/muhammadhasaan82)
 
-Project Link: [https://github.com/muhammadhasaan82/Startup](https://github.com/muhammadhasaan82/Startup)
+**Project Links:**
+- Main Site: [https://nexgenteck.github.io/NGT/](https://nexgenteck.github.io/NGT/)
+- Frontend Repo: [https://github.com/NexGenTeck/NGT](https://github.com/NexGenTeck/NGT)
+- Backend Repo: [https://github.com/muhammadhasaan82/Startup](https://github.com/muhammadhasaan82/Startup)
+- Worker Repo: [https://github.com/muhammadhasaan82/ngt-chatbot-proxy](https://github.com/muhammadhasaan82/ngt-chatbot-proxy)
 
 ---
 
