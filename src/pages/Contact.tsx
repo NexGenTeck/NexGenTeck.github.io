@@ -257,12 +257,6 @@ export const Contact: React.FC = () => {
                       <p className="text-gray-300">
                         {t('contact.cards.address.line1')}<br />
                         {t('contact.cards.address.line2')}
-                        {t('contact.cards.address.line3') && (
-                          <>
-                            <br />
-                            {t('contact.cards.address.line3')}
-                          </>
-                        )}
                       </p>
                     </div>
                   </motion.div>
