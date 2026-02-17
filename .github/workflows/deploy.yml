@@ -35,7 +35,10 @@ jobs:
           cache: 'npm'
           
       - name: Install dependencies
-        run: npm install
+        run: npm install --include=optional
+
+      - name: Ensure Rollup Linux binary is present
+        run: npm install @rollup/rollup-linux-x64-gnu --no-save
         
       - name: Build project
         run: npm run build
