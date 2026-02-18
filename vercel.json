@@ -1,6 +1,6 @@
 {
   "installCommand": "npm install --include=optional",
-  "buildCommand": "npm install @rollup/rollup-linux-x64-gnu --no-save || true; npm run build",
+  "buildCommand": "npm run build",
   "outputDirectory": "build",
   "framework": "vite",
   "rewrites": [

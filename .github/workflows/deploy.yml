@@ -45,9 +45,14 @@ jobs:
         env:
           NODE_ENV: production
           
+      - name: Copy CNAME to build output
+        run: cp CNAME build/CNAME
+
       - name: Create 404 page for SPA routing
-        run: cp build/index.html build/404.html
-          
+        run: |
+          # GitHub Pages SPA routing: inject redirect script into 404.html
+          sed 's|</head>|<script>var l=window.location;if(l.pathname!=="/"&&!l.pathname.match(/\\.\\w+$/)){sessionStorage.redirect=l.href};</script></head>|' build/index.html > build/404.html
+
       - name: Upload build artifacts
         uses: actions/upload-artifact@v4
         with:
