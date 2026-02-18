@@ -5,11 +5,18 @@ FROM python:3.11-slim
 # Set working directory
 WORKDIR /app/Chatbot
 
-# Install system dependencies for ML libraries
+# Install system dependencies for ML libraries and headless Chrome
 RUN apt-get update && apt-get install -y \
     gcc \
     g++ \
+    chromium \
+    chromium-driver \
     && rm -rf /var/lib/apt/lists/*
+
+# Tell webdriver-manager / selenium to use the system chromium
+ENV CHROME_BIN=/usr/bin/chromium
+ENV CHROMEDRIVER_PATH=/usr/bin/chromedriver
+ENV WDM_LOCAL=1
 
 # Copy requirements first for better caching
 COPY Chatbot/requirements.txt ./requirements.txt

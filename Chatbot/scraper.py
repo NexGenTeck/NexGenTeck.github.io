@@ -102,11 +102,23 @@ class WebsiteScraper:
         chrome_options.add_argument("--disable-gpu")
         chrome_options.add_argument("--no-sandbox")
         chrome_options.add_argument("--disable-dev-shm-usage")
+        chrome_options.add_argument("--disable-extensions")
+        chrome_options.add_argument("--remote-debugging-port=9222")
 
-        driver = webdriver.Chrome(
-            service=ChromeService(ChromeDriverManager().install()),
-            options=chrome_options
-        )
+        # Use system chromium if available (set via CHROME_BIN env var in Docker),
+        # otherwise fall back to webdriver-manager auto-download for local dev.
+        chrome_bin = os.environ.get("CHROME_BIN")
+        chromedriver_path = os.environ.get("CHROMEDRIVER_PATH")
+
+        if chrome_bin:
+            chrome_options.binary_location = chrome_bin
+
+        if chromedriver_path:
+            service = ChromeService(executable_path=chromedriver_path)
+        else:
+            service = ChromeService(ChromeDriverManager().install())
+
+        driver = webdriver.Chrome(service=service, options=chrome_options)
 
         try:
             while queue and len(self.visited_urls) < max_pages:
