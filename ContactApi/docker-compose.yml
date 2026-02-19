@@ -7,25 +7,4 @@ services:
     env_file: .env
     ports:
       - "127.0.0.1:3001:3001"
-    depends_on:
-      - postgres
-    networks:
-      - contact-network
-
-  postgres:
-    image: postgres:16-alpine
-    restart: unless-stopped
-    env_file: ../Database/.env
-    ports:
-      - "127.0.0.1:${POSTGRES_PORT:-5432}:5432"
-    volumes:
-      - postgres_data:/var/lib/postgresql/data
-      - ../Database/init:/docker-entrypoint-initdb.d:ro
-    networks:
-      - contact-network
-
-volumes:
-  postgres_data:
-
-networks:
-  contact-network:
+    # Database is hosted on Hostinger MySQL — no local DB container needed
