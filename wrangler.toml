@@ -3,12 +3,11 @@ main = "cloudflare/chatbot-proxy-worker.js"
 compatibility_date = "2026-02-06"
 
 # Enable the *.workers.dev subdomain so the Worker is reachable
-# without a custom domain.  Change to false once you add a custom route.
+# without a custom domain. Change to false once you add a custom route.
 workers_dev = true
 
 # Backend environment variables
-# These are readable at runtime as env.BACKEND_IP / env.CHATBOT_PORT / env.CONTACT_PORT.
+# These are readable at runtime as env.BACKEND_IP / env.CHATBOT_PORT.
 [vars]
-BACKEND_IP   = "165.245.177.103"
+BACKEND_IP = "165.245.177.103"
 CHATBOT_PORT = "8000"
-CONTACT_PORT = "3001"

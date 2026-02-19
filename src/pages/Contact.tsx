@@ -4,6 +4,16 @@ import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { useLanguage } from '../contexts/LanguageContext';
 
+type SubmitStatus = 'success' | 'error' | null;
+
+interface ContactResponse {
+  success?: boolean;
+  message?: string;
+  error?: string;
+}
+
+const DEFAULT_ERROR_MESSAGE = 'Unable to send message right now. Please try again later.';
+
 export const Contact: React.FC = () => {
   const { t } = useLanguage();
   const [formData, setFormData] = useState({
@@ -12,18 +22,20 @@ export const Contact: React.FC = () => {
     phone: '',
     subject: '',
     message: '',
+    website: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [submitStatus, setSubmitStatus] = useState<'success' | 'error' | null>(null);
+  const [submitStatus, setSubmitStatus] = useState<SubmitStatus>(null);
+  const [submitMessage, setSubmitMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     setIsSubmitting(true);
     setSubmitStatus(null);
+    setSubmitMessage('');
 
     try {
-      const apiUrl = import.meta.env.VITE_CONTACT_API_URL || 'http://localhost:3001';
-      const response = await fetch(`${apiUrl}/api/contact`, {
+      const response = await fetch('/contact.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -31,17 +43,25 @@ export const Contact: React.FC = () => {
         body: JSON.stringify(formData),
       });
 
-      const data = await response.json();
+      let data: ContactResponse = {};
 
-      if (response.ok) {
+      try {
+        data = (await response.json()) as ContactResponse;
+      } catch (jsonError) {
+        console.error('Failed to parse contact API response:', jsonError);
+      }
+
+      if (response.ok && data.success) {
         setSubmitStatus('success');
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        setSubmitMessage(data.message || t('contact.form.success'));
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '', website: '' });
       } else {
         setSubmitStatus('error');
-        console.error('Form submission error:', data.error);
+        setSubmitMessage(data.error || DEFAULT_ERROR_MESSAGE);
       }
     } catch (error) {
       setSubmitStatus('error');
+      setSubmitMessage(DEFAULT_ERROR_MESSAGE);
       console.error('Network error:', error);
     } finally {
       setIsSubmitting(false);
@@ -88,7 +108,7 @@ export const Contact: React.FC = () => {
                     animate={{ opacity: 1, y: 0 }}
                     className="mb-6 p-4 bg-[#111111] border border-orange-500/50 rounded-lg"
                   >
-                    <p className="text-orange-300 font-medium">{t('contact.form.success')}</p>
+                    <p className="text-orange-300 font-medium">{submitMessage}</p>
                   </motion.div>
                 )}
 
@@ -97,13 +117,27 @@ export const Contact: React.FC = () => {
                   <motion.div
                     initial={{ opacity: 0, y: -10 }}
                     animate={{ opacity: 1, y: 0 }}
-                    className="mb-6 p-4 bg-[#111111] border border-orange-500/50 rounded-lg"
+                    className="mb-6 p-4 bg-[#111111] border border-red-500/50 rounded-lg"
                   >
-                    <p className="text-orange-300 font-medium">{t('contact.form.error')}</p>
+                    <p className="text-red-300 font-medium">{submitMessage}</p>
                   </motion.div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6">
+                <form onSubmit={handleSubmit} className="space-y-6 relative" noValidate>
+                  {/* Honeypot field for spam bots */}
+                  <div className="absolute -left-[9999px] top-auto w-px h-px overflow-hidden" aria-hidden="true">
+                    <label htmlFor="website">Website</label>
+                    <input
+                      type="text"
+                      id="website"
+                      name="website"
+                      value={formData.website}
+                      onChange={handleChange}
+                      autoComplete="off"
+                      tabIndex={-1}
+                    />
+                  </div>
+
                   <div>
                     <label htmlFor="name" className="block text-gray-300 mb-2">
                       {t('contact.name')} *
@@ -153,14 +187,13 @@ export const Contact: React.FC = () => {
 
                   <div>
                     <label htmlFor="subject" className="block text-gray-300 mb-2">
-                      {t('contact.subject')} *
+                      {t('contact.subject')}
                     </label>
                     <select
                       id="subject"
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
-                      required
                       className="contact-subject-select w-full px-4 py-3 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 bg-white text-black"
                     >
                       <option value="" className="bg-white text-black">{t('contact.form.subjectPlaceholder')}</option>
@@ -257,6 +290,12 @@ export const Contact: React.FC = () => {
                       <p className="text-gray-300">
                         {t('contact.cards.address.line1')}<br />
                         {t('contact.cards.address.line2')}
+                        {t('contact.cards.address.line3') && (
+                          <>
+                            <br />
+                            {t('contact.cards.address.line3')}
+                          </>
+                        )}
                       </p>
                     </div>
                   </motion.div>
@@ -279,10 +318,10 @@ export const Contact: React.FC = () => {
                   </motion.div>
                 </div>
 
-                {/* Map - hidden for now, uncomment when ready to integrate */}
-                {/* <div className="bg-[#1a1a1a] border border-white/5 rounded-2xl h-64 flex items-center justify-center">
+                {/* Map */}
+                <div className="bg-[#1a1a1a] border border-white/5 rounded-2xl h-64 flex items-center justify-center">
                   <p className="text-gray-500">{t('contact.map.placeholder')}</p>
-                </div> */}
+                </div>
               </div>
             </AnimatedSection>
           </div>

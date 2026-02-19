@@ -291,7 +291,7 @@ BACKEND_PORT = "8000"
 - Worker Config: `wrangler.toml`
 - Deploy Workflow: `.github/workflows/deploy.yml`
 - API Documentation: `DEPLOYMENT.md`
-- Previous Session: `025-contact-form-database-integration.md`
+- Previous Session: N/A (contact backend migration moved to PHP/MySQL docs)
 
 ## Deployment URLs
 

@@ -1,17 +1,38 @@
-# Database (PostgreSQL)
+# Database Setup (Hostinger MySQL)
 
-This folder runs PostgreSQL on the VM using Docker.
+This project stores Contact form submissions in a Hostinger MySQL/MariaDB database.
 
-## Setup (VM)
+## 1. Create the database
 
-```bash
-cd ~/nexgenteck/NGT/Database
-cp .env.example .env
-# edit .env with strong credentials
+1. Open Hostinger hPanel.
+2. Go to **Databases -> MySQL Databases**.
+3. Create a database and user, then assign the user to the database.
 
-docker compose up -d
+## 2. Create the table
+
+1. Open **phpMyAdmin** from hPanel.
+2. Select your database.
+3. Import `Database/contact_messages.sql`.
+
+## 3. Configure backend credentials
+
+1. Open `public/contact.php`.
+2. Update these constants:
+
+```php
+const DB_HOST = 'localhost';
+const DB_NAME = 'your_database';
+const DB_USER = 'your_user';
+const DB_PASS = 'your_password';
 ```
 
-Postgres will bind to `127.0.0.1:${POSTGRES_PORT:-5432}` on the VM.
+## 4. Verify inserts
 
-The `init/01-schema.sql` script will automatically create the `contact_submissions` table on first startup.
+Run this query in phpMyAdmin:
+
+```sql
+SELECT id, name, email, phone, subject, message, created_at
+FROM contact_messages
+ORDER BY id DESC
+LIMIT 10;
+```
