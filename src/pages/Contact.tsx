@@ -202,6 +202,7 @@ export const Contact: React.FC = () => {
                       <option value="ecommerce" className="bg-white text-black">{t('contact.form.subject.ecommerce')}</option>
                       <option value="marketing" className="bg-white text-black">{t('contact.form.subject.marketing')}</option>
                       <option value="seo" className="bg-white text-black">{t('contact.form.subject.seo')}</option>
+                      <option value="ai" className="bg-white text-black">{t('contact.form.subject.ai')}</option>
                       <option value="other" className="bg-white text-black">{t('contact.form.subject.other')}</option>
                     </select>
                   </div>

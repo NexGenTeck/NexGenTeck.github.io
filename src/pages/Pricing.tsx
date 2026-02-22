@@ -16,6 +16,7 @@ export const Pricing: React.FC = () => {
     { id: 'software', tiers: ['custom', 'webapp', 'qa'] },
     { id: 'graphic', tiers: ['social', 'banner', 'brochure'] },
     { id: 'video', tiers: ['basic', 'advanced'] },
+    { id: 'ai', tiers: ['basic', 'standard', 'enterprise'] },
   ];
 
   return (
