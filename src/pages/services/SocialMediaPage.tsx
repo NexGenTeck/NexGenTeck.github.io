@@ -8,7 +8,7 @@ export const SocialMediaPage: React.FC = () => {
         title: t('services.social.title'),
         subtitle: t('services.social.subtitle'),
         description: t('services.social.description'),
-        image: 'https://images.unsplash.com/photo-1611162616305-c69b3fa7fbe0?q=80&w=1080&auto=format&fit=crop',
+        image: 'https://images.unsplash.com/photo-1611926653458-09294b3142bf?q=80&w=1080&auto=format&fit=crop',
         features: [
             t('services.social.feature1'),
             t('services.social.feature2'),
