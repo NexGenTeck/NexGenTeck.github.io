@@ -127,6 +127,13 @@ export const Home: React.FC = () => {
       link: '/services/software',
       image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2Z0d2FyZSUyMGRldmVsb3BtZW50fGVufDB8fHx8MTczOTU4MDkwNXww&ixlib=rb-4.1.0&q=80&w=1080',
     },
+    {
+      titleKey: 'services.ai',
+      descKey: 'services.ai.desc',
+      icon: '🤖',
+      link: '/services/artificial-intelligence',
+      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlfGVufDF8fHx8MTc2NDQyNjgzNnww&ixlib=rb-4.1.0&q=80&w=1080',
+    },
   ];
 
   const stats = [
