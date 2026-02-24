@@ -313,8 +313,8 @@ export const Contact: React.FC = () => {
                   </motion.div>
                 </div>
 
-                {/* Map */}
-                <div className="bg-[#1a1a1a] border border-white/5 rounded-2xl h-64 flex items-center justify-center">
+                {/* MAP PLACEHOLDER - TEMPORARILY HIDDEN. Remove "hidden" / display:none when ready to enable real map */}
+                <div className="hidden bg-[#1a1a1a] border border-white/5 rounded-2xl h-64 flex items-center justify-center">
                   <p className="text-gray-500">{t('contact.map.placeholder')}</p>
                 </div>
               </div>
