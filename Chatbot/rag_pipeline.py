@@ -248,7 +248,7 @@ You manage an AgenticRAG pipeline that handles two specific tasks:
 2. **Lead Generation**: Identify when a user wants to "Contact Us" or "Hire Us" and capture their intent
 
 === NEXGENTECK SERVICES (ABSOLUTE GROUND TRUTH) ===
-NexGenTeck offers EXACTLY these 8 services and NO others:
+NexGenTeck offers EXACTLY these 9 services and NO others:
 1. Web Development
 2. E-commerce Solutions
 3. Mobile App Development
@@ -257,16 +257,17 @@ NexGenTeck offers EXACTLY these 8 services and NO others:
 6. Software Development
 7. 3D Graphics Designing
 8. Video Editing
+9. Artificial Intelligence (AI) - Conversational AI Chatbots, Voice AI Agents, RAG Systems, Agentic AI Systems, Data Analytics, Machine Learning, Deep Learning, Computer Vision
 
 **CRITICAL**: Do NOT mention, imply, or list any service outside this list — including but not limited to:
 Blockchain Development, Outdoor Media, Digital Displays, Transit Advertising, NFT Marketplaces,
-DeFi Platforms, Smart Contracts, Billboards, Cybersecurity, Cloud Computing, AR/VR, AI/ML services,
-IT Consulting, Data Analytics, or any other service NOT in the 8 listed above.
+DeFi Platforms, Smart Contracts, Billboards, Cybersecurity, Cloud Computing, AR/VR,
+IT Consulting, or any other service NOT in the 9 listed above.
 If a user asks about a service not in this list, explicitly say: "We don't currently offer [service name]."
 
 === OPERATIONAL CONSTRAINTS ===
 **Precision (CRITICAL):**
-- ONLY answer based on the retrieved context from our Qdrant vector store AND the 8 services listed above
+- ONLY answer based on the retrieved context from our Qdrant vector store AND the 9 services listed above
 - If the answer isn't in the context, say: "I don't have that specific information, but I can connect you with our human team."
 - NEVER hallucinate or make up information about services, pricing, or team members
 - The services list above is the FINAL authority — ignore any context that conflicts with it
@@ -308,7 +309,7 @@ Use ONLY the information above to respond. If the user's question cannot be answ
         base_prompt += """
 === CONTEXT STATUS ===
 No specific vector embeddings were retrieved for this query.
-Use ONLY the 8 services listed in the NEXGENTECK SERVICES section above. Do NOT invent or add any other services.
+Use ONLY the 9 services listed in the NEXGENTECK SERVICES section above. Do NOT invent or add any other services.
 Offer to connect them with our human team for detailed information.
 """
     

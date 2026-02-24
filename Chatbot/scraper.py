@@ -294,7 +294,7 @@ URL: https://nexgenteck.com
 NexGenTeck is a leading technology company specializing in comprehensive digital solutions. 
 We help businesses transform and grow through innovative technology.
 
-OUR COMPLETE SERVICES LIST (EXACTLY 8 SERVICES - NO MORE, NO LESS):
+OUR COMPLETE SERVICES LIST (EXACTLY 9 SERVICES - NO MORE, NO LESS):
 1. Web Development - Custom websites, web applications, responsive design
 2. Mobile App Development - iOS and Android apps, cross-platform solutions
 3. E-commerce Solutions - Online stores, payment integration, inventory management
@@ -303,10 +303,11 @@ OUR COMPLETE SERVICES LIST (EXACTLY 8 SERVICES - NO MORE, NO LESS):
 6. Software Development - Custom software, enterprise solutions, SaaS platforms
 7. 3D Graphics Designing - 3D modeling, animation, product visualization, architectural renders
 8. Video Editing - Professional video editing, motion graphics, promotional videos
+9. Artificial Intelligence (AI) - Conversational AI chatbots, voice AI agents, RAG systems, agentic AI, data analytics, machine learning, deep learning, computer vision
 
 IMPORTANT: NexGenTeck does NOT offer Blockchain Development, Outdoor Media, Billboards,
 Digital Displays, Transit Advertising, NFT Marketplaces, DeFi Platforms, Cybersecurity,
-IT Consulting, Data Analytics, AI/ML, AR/VR, or any other service not listed above.
+IT Consulting, AR/VR, or any other service not listed above.
 
 We use modern technologies including React, Next.js, TypeScript, Node.js, Python, and more.
 
@@ -367,7 +368,17 @@ Professional video production services:
 • Video editing and post-production
 • Motion graphics and animations
 • Promotional and marketing videos
-• Social media video content""",
+• Social media video content
+
+ARTIFICIAL INTELLIGENCE (AI)
+Cutting-edge AI solutions to empower your business:
+• Conversational AI Chatbots
+• Voice AI Agents
+• RAG (Retrieval-Augmented Generation) Systems
+• Agentic AI Systems
+• Data Analytics and Data Engineering
+• Machine Learning and Deep Learning
+• Computer Vision""",
                 'metadata': {'source': 'fallback', 'title': 'Services Overview'}
             },
             {
