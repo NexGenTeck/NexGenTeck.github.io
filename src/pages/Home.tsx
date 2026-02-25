@@ -86,13 +86,6 @@ export const Home: React.FC = () => {
 
   const services = [
     {
-      titleKey: 'services.ecommerce',
-      descKey: 'services.ecommerce.desc',
-      icon: '🛒',
-      link: '/services/ecommerce',
-      image: 'https://images.unsplash.com/photo-1727407209320-1fa6ae60ee05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBzaG9wcGluZ3xlbnwxfHx8fDE3NjQzNDQ4NTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
-    },
-    {
       titleKey: 'services.web',
       descKey: 'services.web.desc',
       icon: '💻',
@@ -376,15 +369,15 @@ export const Home: React.FC = () => {
               </p>
             </AnimatedSection>
 
-            <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
-              {services.map((service, index) => (
+            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
+              {services.slice(0, 6).map((service, index) => (
                 <AnimatedSection key={index} delay={index * 0.1}>
                   <Link to={service.link}>
                     <motion.div
                       whileHover={{ y: -10 }}
-                      className="bg-[#1a1a1a] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group border border-white/5"
+                      className="bg-[#1a1a1a] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group border border-white/5 h-full flex flex-col"
                     >
-                      <div className="relative h-48 overflow-hidden">
+                      <div className="relative h-48 overflow-hidden flex-shrink-0">
                         <ImageWithFallback
                           src={service.image}
                           alt={t(service.titleKey)}
