@@ -182,14 +182,18 @@ class LLMAnalyzer:
 Analyze the user's message and determine:
 
 1. **is_greeting**: Is this a greeting or casual hello? (true/false)
-2. **intent**: What does the user want? One of: "greeting", "question", "request", "complaint", "feedback", "contact", "hire", "quote", "general"
+2. **intent**: What does the user want? One of: "greeting", "question", "request", "complaint", "feedback", "contact", "hire", "quote", "general", "off_topic"
 3. **is_lead_intent**: Does this message indicate the user wants to contact us, hire us, get a quote, or work with us? (true/false)
    - Examples: "I want to hire you", "contact me", "get a quote", "I need your services", "how can I work with you"
-4. **needs_context**: Does this message need information from our knowledge base to answer properly? (true/false)
-   - Greetings and casual chat do NOT need context
+4. **is_off_topic**: Is this message completely unrelated to NexGenTeck's business scope? (true/false)
+   - NexGenTeck scope: web dev, mobile apps, e-commerce, SEO, social media, software, 3D graphics, video editing, AI/ML, company info, pricing, contact
+   - OFF-TOPIC: writing code snippets, solving math, general knowledge, weather, jokes, creative writing, explaining unrelated tech
+   - ON-TOPIC: service questions, pricing, project inquiries, contact requests
+5. **needs_context**: Does this message need information from our knowledge base to answer properly? (true/false)
+   - Greetings, casual chat, and off-topic messages do NOT need context
    - Questions about services, pricing, company info DO need context
-5. **context_topics**: If needs_context is true, what topics should we search for? (list of keywords)
-6. **contact_data**: If the user provides name, email, phone, or project details, extract them (or null if none)
+6. **context_topics**: If needs_context is true, what topics should we search for? (list of keywords)
+7. **contact_data**: If the user provides name, email, phone, or project details, extract them (or null if none)
 
 IMPORTANT:
 - Be intelligent about understanding what the user wants
@@ -200,8 +204,9 @@ IMPORTANT:
 Respond ONLY with valid JSON in this exact format:
 {
     "is_greeting": true/false,
-    "intent": "greeting|question|request|complaint|feedback|contact|hire|quote|general",
+    "intent": "greeting|question|request|complaint|feedback|contact|hire|quote|general|off_topic",
     "is_lead_intent": true/false,
+    "is_off_topic": true/false,
     "needs_context": true/false,
     "context_topics": ["topic1", "topic2"],
     "contact_data": null or {"name": "...", "email": "...", "phone": "...", "project": "..."}
@@ -235,6 +240,8 @@ Respond ONLY with valid JSON in this exact format:
             return {
                 "is_greeting": result.get("is_greeting", False),
                 "intent": result.get("intent", "general"),
+                "is_lead_intent": result.get("is_lead_intent", False),
+                "is_off_topic": result.get("is_off_topic", False),
                 "needs_context": result.get("needs_context", True),
                 "context_topics": result.get("context_topics", []),
                 "confidence": 0.9
@@ -249,6 +256,8 @@ Respond ONLY with valid JSON in this exact format:
         return {
             "is_greeting": False,
             "intent": "general",
+            "is_lead_intent": False,
+            "is_off_topic": False,
             "needs_context": True,
             "context_topics": [],
             "confidence": 0.5

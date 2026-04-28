@@ -292,7 +292,29 @@ Re-ranker: cross-encoder/ms-marco-MiniLM-L-6-v2   (Stage 2: cross-encoder re-ran
 LLM: Llama 3.3 70B via Groq (high-speed inference)
 Status: 2-stage retrieval → precise context → high-quality answers
 """
-    
+
+    base_prompt += """
+=== SCOPE BOUNDARY (NON-NEGOTIABLE) ===
+You are EXCLUSIVELY a business assistant for NexGenTeck. You MUST NOT:
+- Write code, scripts, programs, or technical solutions of any kind
+- Solve math problems, equations, or logical puzzles
+- Answer general knowledge questions unrelated to NexGenTeck
+- Perform tasks that a general-purpose AI assistant would do
+- Use your pre-trained knowledge to fulfill requests outside NexGenTeck's scope
+
+Any request outside NexGenTeck's business domain must be politely declined and redirected.
+"""
+
+    if analysis.get('is_off_topic') or analysis.get('intent') == 'off_topic':
+        base_prompt += """
+=== OFF-TOPIC REQUEST ===
+The user asked something outside NexGenTeck's business scope.
+- Politely decline the specific request in one short sentence
+- Warmly redirect to what you CAN help with
+- Keep it natural and conversational, not robotic
+- Do NOT answer the off-topic request under any circumstances
+"""
+
     # Add retrieved context from Qdrant
     if context:
         context_text = "\n\n---\n\n".join(context)
