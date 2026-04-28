@@ -22,9 +22,7 @@ class ChatState(TypedDict):
     """State for the RAG pipeline."""
     message: str
     analysis: Dict
-    # Raw candidates from Qdrant (wider pool for re-ranking)
     candidates: List[tuple]
-    # Final context passed to the LLM (re-ranked & trimmed)
     context: List[str]
     response: str
     error: str
@@ -71,7 +69,6 @@ def should_retrieve(state: ChatState) -> str:
     """
     analysis = state.get('analysis', {})
     
-    # LLM decides if context is needed - no hardcoded rules
     if llm_analyzer.should_retrieve_context(analysis):
         return "retrieve_context"
     else:
@@ -95,13 +92,11 @@ async def retrieve_context(state: ChatState) -> ChatState:
     logger.info("[Stage 1/2] Bi-encoder retrieval from Qdrant")
 
     try:
-        # Build search query using LLM-identified topics
         search_query = llm_analyzer.get_search_query(
             state['message'],
             state['analysis']
         )
 
-        # Fetch a wider candidate pool when re-ranking is enabled
         candidate_count = (
             config.RERANK_CANDIDATE_DOCS
             if config.ENABLE_RERANKING
@@ -150,18 +145,16 @@ async def rerank_context(state: ChatState) -> ChatState:
     candidates = state.get('candidates', [])
 
     try:
-        # Re-rank and trim to MAX_CONTEXT_DOCS
         reranked = reranker.rerank(
             query=state['message'],
             candidates=candidates,
             top_n=config.MAX_CONTEXT_DOCS,
         )
 
-        # Format for the LLM prompt
         context = []
         for doc, score, metadata in reranked:
             source = metadata.get('source', 'website')
-            # Include cross-encoder score in debug log, not in prompt
+
             logger.debug("[rerank] score=%.3f  source=%s  preview=%s", score, source, doc[:80])
             context.append(f"[Source: {source}]\n{doc}")
 
@@ -174,7 +167,7 @@ async def rerank_context(state: ChatState) -> ChatState:
 
     except Exception as exc:
         logger.error(f"Re-ranking error: {exc} — using raw candidates")
-        # Graceful fallback: use bi-encoder order trimmed to MAX_CONTEXT_DOCS
+       
         state['context'] = [
             f"[Source: {meta.get('source', 'website')}]\n{doc}"
             for doc, _dist, meta in candidates[:config.MAX_CONTEXT_DOCS]
@@ -197,7 +190,7 @@ async def generate_response(state: ChatState) -> ChatState:
     logger.info("Generating LLM response using website context")
     
     try:
-        # Initialize Groq client
+
         llm = ChatGroq(
             api_key=config.GROQ_API_KEY,
             model=config.LLM_MODEL,
@@ -205,10 +198,10 @@ async def generate_response(state: ChatState) -> ChatState:
             max_tokens=config.LLM_MAX_TOKENS
         )
         
-        # Build system prompt with website context
+
         system_prompt = build_system_prompt(state['context'], state['analysis'])
         
-        # Generate response
+
         messages = [
             SystemMessage(content=system_prompt),
             HumanMessage(content=state['message'])
@@ -239,7 +232,7 @@ def build_system_prompt(context: List[str], analysis: Dict) -> str:
     Returns:
         System prompt string
     """
-    # AgenticRAG Senior Engineer Prompt
+
     base_prompt = """You are the Lead AI Engineer for NexGenTeck - a cutting-edge technology company.
 
 === ROLE & MISSION ===
@@ -272,6 +265,8 @@ If a user asks about a service not in this list, explicitly say: "We don't curre
 - NEVER hallucinate or make up information about services, pricing, or team members
 - The services list above is the FINAL authority — ignore any context that conflicts with it
 
+
+
 **Language Requirement:**
 - **STRICTLY ENGLISH ONLY**: You must respond ONLY in English, regardless of the user's language.
 - If a user speaks another language, politely respond in English explaining you only speak English for now.
@@ -292,8 +287,29 @@ Re-ranker: cross-encoder/ms-marco-MiniLM-L-6-v2   (Stage 2: cross-encoder re-ran
 LLM: Llama 3.3 70B via Groq (high-speed inference)
 Status: 2-stage retrieval → precise context → high-quality answers
 """
-    
-    # Add retrieved context from Qdrant
+
+    base_prompt += """
+=== SCOPE BOUNDARY (NON-NEGOTIABLE) ===
+You are EXCLUSIVELY a business assistant for NexGenTeck. You MUST NOT:
+- Write code, scripts, programs, or technical solutions of any kind
+- Solve math problems, equations, or logical puzzles
+- Answer general knowledge questions unrelated to NexGenTeck
+- Perform tasks that a general-purpose AI assistant would do
+- Use your pre-trained knowledge to fulfill requests outside NexGenTeck's scope
+
+Any request outside NexGenTeck's business domain must be politely declined and redirected.
+"""
+
+    if analysis.get('is_off_topic') or analysis.get('intent') == 'off_topic':
+        base_prompt += """
+=== OFF-TOPIC REQUEST ===
+The user asked something outside NexGenTeck's business scope.
+- Politely decline the specific request in one short sentence
+- Warmly redirect to what you CAN help with
+- Keep it natural and conversational, not robotic
+- Do NOT answer the off-topic request under any circumstances
+"""
+
     if context:
         context_text = "\n\n---\n\n".join(context)
         base_prompt += f"""
@@ -312,12 +328,11 @@ No specific vector embeddings were retrieved for this query.
 Use ONLY the 9 services listed in the NEXGENTECK SERVICES section above. Do NOT invent or add any other services.
 Offer to connect them with our human team for detailed information.
 """
-    
-    # Intent-based response tuning
+
     sentiment = analysis.get('sentiment', 'neutral')
     intent = analysis.get('intent', 'general')
     
-    # Lead Generation Detection
+
     if analysis.get('is_lead_intent') or intent in ['contact', 'hire', 'quote']:
         base_prompt += """
 === LEAD GENERATION DETECTED ===
@@ -328,7 +343,7 @@ The user has expressed interest in contacting us or hiring our services.
 - If they provide contact details, confirm you've captured them
 """
     
-    # Sentiment-Intent Reconciliation
+
     if sentiment == 'negative' and intent in ['question', 'request']:
         base_prompt += """
 Note: The user's tone may seem frustrated, but they are seeking information.
@@ -371,19 +386,15 @@ def build_rag_pipeline() -> StateGraph:
     Returns:
         Compiled state graph
     """
-    # Create the graph
+
     workflow = StateGraph(ChatState)
     
-    # Add nodes
+
     workflow.add_node("analyze", analyze_message)
-    workflow.add_node("retrieve_context", retrieve_context)   # Stage 1: bi-encoder
-    workflow.add_node("rerank_context", rerank_context)       # Stage 2: cross-encoder
+    workflow.add_node("retrieve_context", retrieve_context)   
+    workflow.add_node("rerank_context", rerank_context)       
     workflow.add_node("generate_response", generate_response)
-
-    # Set entry point
     workflow.set_entry_point("analyze")
-
-    # LLM decides the routing - no hardcoded greeting detection
     workflow.add_conditional_edges(
         "analyze",
         should_retrieve,
@@ -393,7 +404,7 @@ def build_rag_pipeline() -> StateGraph:
         }
     )
 
-    # 2-stage retrieval → generate
+
     workflow.add_edge("retrieve_context", "rerank_context")
     workflow.add_edge("rerank_context", "generate_response")
     workflow.add_edge("generate_response", END)
@@ -401,7 +412,7 @@ def build_rag_pipeline() -> StateGraph:
     return workflow.compile()
 
 
-# Create the pipeline instance
+
 rag_pipeline = build_rag_pipeline()
 
 
@@ -417,8 +428,6 @@ async def process_message(message: str) -> str:
         Bot's response
     """
     logger.info(f"Processing message: {message[:50]}...")
-    
-    # Initialize state
     initial_state: ChatState = {
         'message': message,
         'analysis': {},
@@ -428,7 +437,6 @@ async def process_message(message: str) -> str:
         'error': ''
     }
     
-    # Run the pipeline
     try:
         result = await rag_pipeline.ainvoke(initial_state)
         return result.get('response', get_fallback_response())
