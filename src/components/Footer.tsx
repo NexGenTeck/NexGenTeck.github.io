@@ -1,19 +1,19 @@
 import React, { useState } from 'react';
 import { Link } from 'react-router';
-import { Facebook, Instagram, Youtube, Mail, Phone, MapPin, Send } from 'lucide-react';
+import { Facebook, Instagram, Linkedin, Youtube, Mail, Phone, MapPin, Send } from 'lucide-react';
 import { motion } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import logo from '../nexgentech-01.png';
 
-const XLogo: React.FC<{ className?: string }> = ({ className }) => (
+const WhatsAppLogo: React.FC<{ className?: string }> = ({ className }) => (
   <svg
-    viewBox="0 0 512 512"
+    viewBox="0 0 448 512"
     fill="currentColor"
     aria-hidden="true"
     className={className}
   >
-    <path d="M389.2 48h70.6L305.6 224.2 487 464H345L233.7 318.6 106.5 464H35.8L200.7 275.5 26.8 48H172L272.3 180.9 389.2 48zM364.4 421.8h39.1L150.8 88.3H108.9z" />
+    <path d="M380.9 97.1C339 55.1 283.2 32 223.9 32 101 32 1 132.1 1 255c0 39.2 10.3 77.6 29.9 111.4L-.9 480l116.4-30.5c32.6 17.8 69.4 27.2 106.9 27.2h.1c122.9 0 222.9-100.1 222.9-223 0-59.3-23.1-115.1-64.5-156.6zM222.5 439.1h-.1c-33.4 0-66.1-9-94.6-26l-6.8-4-69 18.1 18.4-67.3-4.4-6.9C47.3 323.4 37.5 289.5 37.5 255 37.5 152.2 121.1 68.5 223.9 68.5c49.6 0 96.3 19.4 131.4 54.5 35.1 35.2 54.4 81.9 54.3 131.5-.1 102.8-83.7 184.6-187.1 184.6zm101.2-138.2c-5.5-2.8-32.8-16.2-37.9-18-5.1-1.9-8.8-2.8-12.5 2.8s-14.3 18-17.6 21.8c-3.2 3.7-6.5 4.2-12 1.4-32.8-16.4-54.3-29.3-76-66.4-5.7-9.9 5.7-9.2 16.4-30.6 1.8-3.7.9-6.9-.5-9.7-1.4-2.8-12.5-30.1-17.1-41.2-4.5-10.8-9.1-9.3-12.5-9.5-3.2-.2-6.9-.2-10.6-.2s-9.7 1.4-14.8 6.9c-5.1 5.6-19.4 19-19.4 46.3s19.9 53.7 22.6 57.4c2.8 3.7 39.1 59.7 94.8 83.7 13.2 5.7 23.6 9.1 31.6 11.7 13.3 4.2 25.4 3.6 35 2.2 10.7-1.6 32.8-13.4 37.4-26.4 4.6-13 4.6-24.1 3.2-26.4-1.4-2.5-5-3.9-10.5-6.7z" />
   </svg>
 );
 
@@ -69,13 +69,22 @@ export const Footer: React.FC = () => {
                   <Facebook className="w-5 h-5" />
                 </a>
                 <a
-                  href="https://x.com/NexGenTeck"
+                  href="https://wa.me/923009270131"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white hover:text-orange-500 transition-colors"
-                  aria-label="X (Twitter)"
+                  aria-label="WhatsApp"
                 >
-                  <XLogo className="w-5 h-5" />
+                  <WhatsAppLogo className="w-5 h-5" />
+                </a>
+                <a
+                  href="https://www.linkedin.com/company/nexgenteck"
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="text-white hover:text-orange-500 transition-colors"
+                  aria-label="LinkedIn"
+                >
+                  <Linkedin className="w-5 h-5" />
                 </a>
                 <a
                   href="https://www.instagram.com/nexgenteck?igsh=MWxhcW93ejM3bjZzcQ=="
