@@ -23,6 +23,7 @@ export const Footer: React.FC = () => {
   const [email, setEmail] = useState('');
   const footerBrandOffset = 52;
   const footerWordmarkWidth = 108;
+  const footerSocialInset = 8;
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,7 +63,10 @@ export const Footer: React.FC = () => {
               </p>
               <div
                 className="flex items-center justify-between"
-                style={{ width: `${footerWordmarkWidth}px` }}
+                style={{
+                  width: `${footerWordmarkWidth - footerSocialInset}px`,
+                  marginLeft: `${footerSocialInset}px`,
+                }}
               >
                 <a
                   href="https://www.facebook.com/profile.php?id=61585558202243"
