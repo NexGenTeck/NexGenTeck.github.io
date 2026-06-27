@@ -14,8 +14,20 @@ interface ContactResponse {
 
 const DEFAULT_ERROR_MESSAGE = 'Unable to send message right now. Please try again later.';
 
+const honeypotStyle: React.CSSProperties = {
+  position: 'absolute',
+  width: 1,
+  height: 1,
+  padding: 0,
+  margin: -1,
+  overflow: 'hidden',
+  clip: 'rect(0, 0, 0, 0)',
+  whiteSpace: 'nowrap',
+  border: 0,
+};
+
 export const Contact: React.FC = () => {
-  const { t } = useLanguage();
+  const { t, language } = useLanguage();
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -125,7 +137,7 @@ export const Contact: React.FC = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6 relative" noValidate>
                   {/* Honeypot field for spam bots */}
-                  <div className="absolute -left-[9999px] top-auto w-px h-px overflow-hidden" aria-hidden="true">
+                  <div style={honeypotStyle} aria-hidden="true">
                     <label htmlFor="website">Website</label>
                     <input
                       type="text"
@@ -149,6 +161,7 @@ export const Contact: React.FC = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
+                      autoComplete="name"
                       className="w-full px-4 py-3 bg-black/40 text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder:text-gray-500"
                       placeholder={t('contact.form.namePlaceholder')}
                     />
@@ -165,6 +178,7 @@ export const Contact: React.FC = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
+                      autoComplete="email"
                       className="w-full px-4 py-3 bg-black/40 text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder:text-gray-500"
                       placeholder={t('contact.form.emailPlaceholder')}
                     />
@@ -180,6 +194,7 @@ export const Contact: React.FC = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
+                      autoComplete="tel"
                       className="w-full px-4 py-3 bg-black/40 text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder:text-gray-500"
                       placeholder={t('contact.form.phonePlaceholder')}
                     />
@@ -190,10 +205,12 @@ export const Contact: React.FC = () => {
                       {t('contact.subject')}
                     </label>
                     <select
+                      key={`contact-subject-${language}`}
                       id="subject"
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
+                      autoComplete="off"
                       className="contact-subject-select w-full px-4 py-3 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 bg-white text-black"
                     >
                       <option value="" className="bg-white text-black">{t('contact.form.subjectPlaceholder')}</option>
