@@ -21,6 +21,8 @@ export const Footer: React.FC = () => {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const [email, setEmail] = useState('');
+  const footerBrandOffset = 52;
+  const footerWordmarkWidth = 108;
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -54,11 +56,14 @@ export const Footer: React.FC = () => {
               </span>
             </div>
             {/* Align motto/icons to left edge of NexGenTeck text (after logo img + gap) */}
-            <div style={{ paddingLeft: '52px' }} className="space-y-3">
+            <div style={{ paddingLeft: `${footerBrandOffset}px` }} className="space-y-3">
               <p className="text-gray-400 text-sm">
                 {t('footer.tagline')}
               </p>
-              <div className="flex space-x-4">
+              <div
+                className="flex items-center justify-between"
+                style={{ width: `${footerWordmarkWidth}px` }}
+              >
                 <a
                   href="https://www.facebook.com/profile.php?id=61585558202243"
                   target="_blank"
