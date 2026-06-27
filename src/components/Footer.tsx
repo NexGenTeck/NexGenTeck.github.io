@@ -22,8 +22,7 @@ export const Footer: React.FC = () => {
   const { theme } = useTheme();
   const [email, setEmail] = useState('');
   const footerBrandOffset = 52;
-  const footerSocialInset = 8;
-  const footerDividerGap = 10;
+  const footerSocialWidth = 104;
 
   const handleSubscribe = (e: React.FormEvent) => {
     e.preventDefault();
@@ -62,9 +61,9 @@ export const Footer: React.FC = () => {
                 {t('footer.tagline')}
               </p>
               <div
-                className="flex items-center gap-x-4"
+                className="flex items-center justify-between"
                 style={{
-                  marginLeft: `${footerSocialInset}px`,
+                  width: `${footerSocialWidth}px`,
                 }}
               >
                 <a
@@ -99,7 +98,6 @@ export const Footer: React.FC = () => {
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-white hover:text-orange-500 transition-colors"
-                  style={{ marginLeft: `${footerDividerGap}px` }}
                   aria-label="Instagram"
                 >
                   <Instagram className="w-5 h-5" />
