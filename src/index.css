@@ -2603,22 +2603,24 @@ html {
 
 .contact-subject-select {
   color: #fff;
-  background-color: rgba(0, 0, 0, 0.4);
+  background-color: #f97316;
+  border-color: #fb923c;
+  color-scheme: dark;
 }
 
 .contact-subject-select option {
-  color: #000;
-  background-color: #fff;
+  color: #fff;
+  background-color: #f97316;
   padding: 12px;
 }
 
 .contact-subject-select option:hover {
-  background-color: #f97316 !important;
+  background-color: #ea580c !important;
   color: #fff !important;
 }
 
 .contact-subject-select option:checked {
-  background-color: #f97316;
+  background-color: #c2410c;
   color: #fff;
 }
 

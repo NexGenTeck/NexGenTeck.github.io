@@ -211,16 +211,16 @@ export const Contact: React.FC = () => {
                       value={formData.subject}
                       onChange={handleChange}
                       autoComplete="off"
-                      className="contact-subject-select w-full px-4 py-3 border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 bg-white text-black"
+                      className="contact-subject-select w-full px-4 py-3 border border-orange-300/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 text-white"
                     >
-                      <option value="" className="bg-white text-black">{t('contact.form.subjectPlaceholder')}</option>
-                      <option value="web" className="bg-white text-black">{t('contact.form.subject.web')}</option>
-                      <option value="mobile" className="bg-white text-black">{t('contact.form.subject.mobile')}</option>
-                      <option value="ecommerce" className="bg-white text-black">{t('contact.form.subject.ecommerce')}</option>
-                      <option value="marketing" className="bg-white text-black">{t('contact.form.subject.marketing')}</option>
-                      <option value="seo" className="bg-white text-black">{t('contact.form.subject.seo')}</option>
-                      {/* <option value="ai" className="bg-white text-black">{t('contact.form.subject.ai')}</option> */}
-                      <option value="other" className="bg-white text-black">{t('contact.form.subject.other')}</option>
+                      <option value="">{t('contact.form.subjectPlaceholder')}</option>
+                      <option value="web">{t('contact.form.subject.web')}</option>
+                      <option value="mobile">{t('contact.form.subject.mobile')}</option>
+                      <option value="ecommerce">{t('contact.form.subject.ecommerce')}</option>
+                      <option value="marketing">{t('contact.form.subject.marketing')}</option>
+                      <option value="seo">{t('contact.form.subject.seo')}</option>
+                      {/* <option value="ai">{t('contact.form.subject.ai')}</option> */}
+                      <option value="other">{t('contact.form.subject.other')}</option>
                     </select>
                   </div>
 
