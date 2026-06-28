@@ -167,7 +167,7 @@ export const About: React.FC = () => {
                 {t('about.cta.subtitle')}
               </p>
               <a
-                href="https://docs.google.com/forms/d/e/1FAIpQLSd5SpUZsZ0Fd6b5E-RS2ZjnuVFEufiNb4GbLvfLzyxbaytO1Q/viewform?pli=1"
+                href="https://docs.google.com/forms/d/e/1FAIpQLSd5SpUZsZ0Fd6b5E-RS2ZjnuVFEufiNb4GbLvfLzyxbaytO1Q/viewform?pli=1" target="_blank"
                 className="inline-block bg-white text-orange-500 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all transform hover:scale-105"
               >
                 {t('about.cta.button')}
