@@ -111,11 +111,21 @@ try {
     $to = $email;
     $mailSubject = "Thank you for contacting NexGenTeck";
     $mailMessage = "Hi $name,\n\nWe have received your message and will get back to you soon.\n\nHere are the details you submitted:\nName: $name\nEmail: $email\nPhone: $phone\nSubject: $subject\nMessage: $message\n\nBest Regards,\nNexGenTeck Team";
-    $headers = "From: no-reply@nexgenteck.com\r\n";
+    $headers = "From: info@nexgenteck.com\r\n";
     $headers .= "Reply-To: info@nexgenteck.com\r\n";
     $headers .= "X-Mailer: PHP/" . phpversion();
 
     @mail($to, $mailSubject, $mailMessage, $headers);
+
+    // Send notification email to admin
+    $adminTo = "info@nexgenteck.com";
+    $adminSubject = "New Contact Form Submission: " . ($subject ? $subject : "No Subject");
+    $adminMessage = "You have received a new message from the contact form.\n\nDetails:\nName: $name\nEmail: $email\nPhone: $phone\nSubject: $subject\nMessage:\n$message";
+    $adminHeaders = "From: info@nexgenteck.com\r\n";
+    $adminHeaders .= "Reply-To: $email\r\n";
+    $adminHeaders .= "X-Mailer: PHP/" . phpversion();
+
+    @mail($adminTo, $adminSubject, $adminMessage, $adminHeaders);
 
     send_json(['success' => true, 'message' => 'Message saved']);
 } catch (Throwable $exception) {

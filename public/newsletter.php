@@ -88,11 +88,21 @@ try {
     $to = $email;
     $mailSubject = "Welcome to NexGenTeck Newsletter!";
     $mailMessage = "Hi there,\n\nThank you for subscribing to the NexGenTeck newsletter! We will keep you updated with our latest articles and insights.\n\nBest Regards,\nNexGenTeck Team";
-    $headers = "From: no-reply@nexgenteck.com\r\n";
+    $headers = "From: info@nexgenteck.com\r\n";
     $headers .= "Reply-To: info@nexgenteck.com\r\n";
     $headers .= "X-Mailer: PHP/" . phpversion();
 
     @mail($to, $mailSubject, $mailMessage, $headers);
+
+    // Send notification email to admin
+    $adminTo = "info@nexgenteck.com";
+    $adminSubject = "New Newsletter Subscriber";
+    $adminMessage = "You have a new newsletter subscriber.\n\nEmail: $email";
+    $adminHeaders = "From: info@nexgenteck.com\r\n";
+    $adminHeaders .= "Reply-To: $email\r\n";
+    $adminHeaders .= "X-Mailer: PHP/" . phpversion();
+
+    @mail($adminTo, $adminSubject, $adminMessage, $adminHeaders);
 
     send_json(['success' => true, 'message' => 'Subscribed successfully']);
 } catch (Throwable $exception) {
