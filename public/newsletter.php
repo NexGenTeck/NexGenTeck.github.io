@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-const DB_HOST = 'localhost';
+const DB_HOST = '127.0.0.1';
 const DB_NAME = 'u864361634_NGT';
 const DB_USER = 'u864361634_NGT123';
 const DB_PASS = 'DIDwho123456';
