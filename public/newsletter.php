@@ -107,5 +107,5 @@ try {
     send_json(['success' => true, 'message' => 'Subscribed successfully']);
 } catch (Throwable $exception) {
     error_log('newsletter.php database insert failed: ' . $exception->getMessage());
-    send_json(['success' => false, 'error' => 'Unable to subscribe right now'], 500);
+    send_json(['success' => false, 'error' => 'DB/Mail Error: ' . $exception->getMessage()], 500);
 }

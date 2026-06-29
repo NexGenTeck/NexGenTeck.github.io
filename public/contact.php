@@ -130,5 +130,5 @@ try {
     send_json(['success' => true, 'message' => 'Message saved']);
 } catch (Throwable $exception) {
     error_log('contact.php database insert failed: ' . $exception->getMessage());
-    send_json(['success' => false, 'error' => 'Unable to save message right now'], 500);
+    send_json(['success' => false, 'error' => 'DB/Mail Error: ' . $exception->getMessage()], 500);
 }
