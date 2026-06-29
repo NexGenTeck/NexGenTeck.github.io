@@ -3,9 +3,9 @@
 declare(strict_types=1);
 
 const DB_HOST = 'localhost';
-const DB_NAME = 'your_database';
-const DB_USER = 'your_user';
-const DB_PASS = 'your_password';
+const DB_NAME = 'u864361634_NGT';
+const DB_USER = 'u864361634_NGT123';
+const DB_PASS = 'DIDwho123456';
 
 header('Content-Type: application/json; charset=utf-8');
 
