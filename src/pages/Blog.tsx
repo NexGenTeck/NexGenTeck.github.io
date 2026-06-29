@@ -9,7 +9,34 @@ import { useLanguage } from '../contexts/LanguageContext';
 export const Blog: React.FC = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedCategory, setSelectedCategory] = useState('all');
+  const [newsletterEmail, setNewsletterEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const { t } = useLanguage();
+
+  const handleNewsletterSubmit = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!newsletterEmail) return;
+
+    setNewsletterStatus('submitting');
+    try {
+      const response = await fetch('/newsletter.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email: newsletterEmail }),
+      });
+
+      if (response.ok) {
+        setNewsletterStatus('success');
+        setNewsletterEmail('');
+      } else {
+        setNewsletterStatus('error');
+      }
+    } catch (error) {
+      setNewsletterStatus('error');
+    }
+  };
 
   const categories = [
     { key: 'all', label: t('blog.categories.all') },
@@ -295,19 +322,29 @@ export const Blog: React.FC = () => {
               <p className="text-xl mb-8 max-w-2xl mx-auto text-white/90">
                 {t('blog.newsletter.subtitle')}
               </p>
-              <form className="max-w-md mx-auto flex gap-4">
+              <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto flex gap-4">
                 <input
                   type="email"
                   placeholder={t('blog.newsletter.placeholder')}
-                  className="flex-1 px-6 py-4 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white/50"
+                  value={newsletterEmail}
+                  onChange={(e) => setNewsletterEmail(e.target.value)}
+                  disabled={newsletterStatus === 'submitting'}
+                  className="flex-1 px-6 py-4 rounded-lg text-gray-900 focus:outline-none focus:ring-2 focus:ring-white/50 disabled:opacity-70"
                 />
                 <button
                   type="submit"
-                  className="bg-white text-orange-500 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all flex items-center space-x-2"
+                  disabled={newsletterStatus === 'submitting'}
+                  className="bg-white text-orange-500 px-8 py-4 rounded-lg hover:bg-gray-100 transition-all flex items-center space-x-2 disabled:opacity-70"
                 >
-                  <span>{t('blog.newsletter.button')}</span>
+                  <span>{newsletterStatus === 'submitting' ? 'Submitting...' : t('blog.newsletter.button')}</span>
                 </button>
               </form>
+              {newsletterStatus === 'success' && (
+                <p className="mt-4 text-green-200 text-sm">Successfully subscribed to the newsletter!</p>
+              )}
+              {newsletterStatus === 'error' && (
+                <p className="mt-4 text-red-200 text-sm">An error occurred. Please try again.</p>
+              )}
             </div>
           </AnimatedSection>
         </div>

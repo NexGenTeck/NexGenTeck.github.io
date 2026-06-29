@@ -21,14 +21,36 @@ export const Footer: React.FC = () => {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const [email, setEmail] = useState('');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
   const footerBrandOffset = 52;
   const footerSocialWidth = 104;
 
-  const handleSubscribe = (e: React.FormEvent) => {
+  const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    // Handle newsletter subscription
-    alert('Thank you for subscribing!');
-    setEmail('');
+    if (!email) return;
+
+    setNewsletterStatus('submitting');
+    try {
+      const response = await fetch('/newsletter.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ email }),
+      });
+
+      if (response.ok) {
+        setNewsletterStatus('success');
+        setEmail('');
+        setTimeout(() => setNewsletterStatus('idle'), 3000);
+      } else {
+        setNewsletterStatus('error');
+        setTimeout(() => setNewsletterStatus('idle'), 3000);
+      }
+    } catch (error) {
+      setNewsletterStatus('error');
+      setTimeout(() => setNewsletterStatus('idle'), 3000);
+    }
   };
 
   // Dark mode classes
@@ -174,11 +196,18 @@ export const Footer: React.FC = () => {
               </div>
               <button
                 type="submit"
-                className="w-full bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center space-x-2"
+                disabled={newsletterStatus === 'submitting'}
+                className="w-full bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center space-x-2 disabled:opacity-70"
               >
-                <span>{t('footer.subscribeButton')}</span>
+                <span>{newsletterStatus === 'submitting' ? 'Submitting...' : t('footer.subscribeButton')}</span>
                 <Send className="w-4 h-4" />
               </button>
+              {newsletterStatus === 'success' && (
+                <p className="text-green-400 text-sm mt-2">Successfully subscribed!</p>
+              )}
+              {newsletterStatus === 'error' && (
+                <p className="text-red-400 text-sm mt-2">An error occurred. Please try again.</p>
+              )}
             </form>
 
             <div className="mt-6 space-y-3">
