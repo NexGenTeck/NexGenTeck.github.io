@@ -7,7 +7,6 @@ const DB_NAME = 'u864361634_NGTWEB';
 const DB_USER = 'u864361634_NGTWEB';
 const DB_PASS = 'DIDwho123456';
 
-
 header('Content-Type: application/json; charset=utf-8');
 
 $allowedOrigins = [
