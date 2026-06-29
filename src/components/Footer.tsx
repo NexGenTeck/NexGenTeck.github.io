@@ -63,7 +63,7 @@ export const Footer: React.FC = () => {
               <div
                 className="flex items-center justify-between"
                 style={{
-                  width: `${footerSocialWidth}0.000000000000001px`,
+                  width: `${footerSocialWidth + 0.5}px`,
                 }}
               >
                 <a
