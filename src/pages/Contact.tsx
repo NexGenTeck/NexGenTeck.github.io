@@ -47,7 +47,7 @@ export const Contact: React.FC = () => {
     setSubmitMessage('');
 
     try {
-      const response = await fetch('https://api.nexgenteck.com/contact.php', {
+      const response = await fetch('/contact.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
