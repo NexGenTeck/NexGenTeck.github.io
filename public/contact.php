@@ -7,6 +7,7 @@ const DB_NAME = 'u864361634_NGT';
 const DB_USER = 'u864361634_NGT123';
 const DB_PASS = 'DIDwho123456';
 
+
 header('Content-Type: application/json; charset=utf-8');
 
 $allowedOrigins = [
@@ -105,6 +106,16 @@ try {
     $stmt->bindValue(':subject', $subject, $subject === null ? PDO::PARAM_NULL : PDO::PARAM_STR);
     $stmt->bindValue(':message', $message, PDO::PARAM_STR);
     $stmt->execute();
+
+    // Send auto-reply email to the user
+    $to = $email;
+    $mailSubject = "Thank you for contacting NexGenTeck";
+    $mailMessage = "Hi $name,\n\nWe have received your message and will get back to you soon.\n\nHere are the details you submitted:\nName: $name\nEmail: $email\nPhone: $phone\nSubject: $subject\nMessage: $message\n\nBest Regards,\nNexGenTeck Team";
+    $headers = "From: no-reply@nexgenteck.com\r\n";
+    $headers .= "Reply-To: info@nexgenteck.com\r\n";
+    $headers .= "X-Mailer: PHP/" . phpversion();
+
+    @mail($to, $mailSubject, $mailMessage, $headers);
 
     send_json(['success' => true, 'message' => 'Message saved']);
 } catch (Throwable $exception) {
