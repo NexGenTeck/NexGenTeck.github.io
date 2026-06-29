@@ -31,7 +31,7 @@ export const Footer: React.FC = () => {
 
     setNewsletterStatus('submitting');
     try {
-      const response = await fetch('/newsletter.php', {
+      const response = await fetch('https://nexgenteck.com/newsletter.php', {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
