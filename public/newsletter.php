@@ -25,7 +25,7 @@ if ($origin !== '' && in_array($origin, $allowedOrigins, true)) {
 header('Access-Control-Allow-Methods: POST, OPTIONS');
 header('Access-Control-Allow-Headers: Content-Type');
 
-function send_json(array $payload, int $statusCode = 200): never
+function send_json(array $payload, int $statusCode = 200): void
 {
     http_response_code($statusCode);
     echo json_encode($payload, JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES);
