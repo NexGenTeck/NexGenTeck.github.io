@@ -43,9 +43,9 @@ export const About: React.FC = () => {
   ];
 
   const partners = [
-    { name: 'Medicare Pharma' },
-    { name: 'Safi Labs' },
-    { name: 'Urban Healthcare' },
+    { nameKey: 'about.partners.partner1' },
+    { nameKey: 'about.partners.partner2' },
+    { nameKey: 'about.partners.partner3' },
   ];
 
   return (
@@ -139,7 +139,7 @@ export const About: React.FC = () => {
                   className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all flex items-center justify-center h-24 w-full max-w-sm mx-auto"
                 >
                   <div className="text-gray-400 text-center">
-                    <div className="text-2xl">{partner.name}</div>
+                    <div className="text-2xl">{t(partner.nameKey)}</div>
                   </div>
                 </motion.div>
               </AnimatedSection>
