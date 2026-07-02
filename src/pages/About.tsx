@@ -43,12 +43,9 @@ export const About: React.FC = () => {
   ];
 
   const partners = [
-    { name: 'Google', logo: 'https://www.google.com/images/branding/googlelogo/2x/googlelogo_color_272x92dp.png' },
-    { name: 'Amazon AWS', logo: 'https://upload.wikimedia.org/wikipedia/commons/9/93/Amazon_Web_Services_Logo.svg' },
-    { name: 'Microsoft', logo: 'https://img-prod-cms-rt-microsoft-com.akamaized.net/cms/api/am/imageFileData/RE1Mu3b?ver=5c31' },
-    { name: 'Meta', logo: 'https://upload.wikimedia.org/wikipedia/commons/7/7b/Meta_Platforms_Inc._logo.svg' },
-    { name: 'Shopify', logo: 'https://cdn.shopify.com/assets2/press/brand-assets/shopify-logo-primary-logo-1057x304-870e8c7cf6ed5a7c0a28b694406f6b67.svg' },
-    { name: 'Stripe', logo: 'https://images.ctfassets.net/fzn2n1nzq965/HTTOloNPhisV9P4hlMPNA/cacf1bb88b9fc492dfad34378d844280/Stripe_icon_-_square.svg' },
+    { name: 'Medicare Pharma' },
+    { name: 'Safi Labs' },
+    { name: 'Urban Healthcare' },
   ];
 
   return (
@@ -134,12 +131,12 @@ export const About: React.FC = () => {
             </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-8 items-center">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-center max-w-5xl mx-auto">
             {partners.map((partner, index) => (
               <AnimatedSection key={index} delay={index * 0.1}>
                 <motion.div
                   whileHover={{ scale: 1.1 }}
-                  className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all flex items-center justify-center h-24"
+                  className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all flex items-center justify-center h-24 w-full max-w-sm mx-auto"
                 >
                   <div className="text-gray-400 text-center">
                     <div className="text-2xl">{partner.name}</div>
