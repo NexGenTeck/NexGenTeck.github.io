@@ -8,7 +8,7 @@ export const ThreeDGraphicsPage: React.FC = () => {
         title: t('services.3dgraphics.title'),
         subtitle: t('services.3dgraphics.subtitle'),
         description: t('services.3dgraphics.description'),
-        image: 'https://images.unsplash.com/photo-1633356122544-f134324a6cee?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHwzZCUyMGdyYXBoaWNzJTIwZGVzaWdufGVufDF8fHx8MTc2NDM4NjIwMnww&ixlib=rb-4.1.0&q=80&w=1080',
+        image: '/assets/3d-graphics-hero.jpg',
         features: [
             t('services.3dgraphics.feature1'),
             t('services.3dgraphics.feature2'),
