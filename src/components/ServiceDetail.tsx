@@ -36,6 +36,27 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
 }) => {
   const [openFaq, setOpenFaq] = React.useState<number | null>(null);
   const { t } = useLanguage();
+  const perMonthSuffix = t('service.common.perMonth');
+
+  const formatPackagePrice = (price: string) => {
+    const slashIndex = price.lastIndexOf(' /');
+
+    if (slashIndex === -1) {
+      return {
+        amount: price,
+        suffix: perMonthSuffix,
+      };
+    }
+
+    const amount = price.slice(0, slashIndex);
+    const rawSuffix = price.slice(slashIndex + 1).trim();
+    const suffix = /^\/mo(?:nth)?$/i.test(rawSuffix) ? perMonthSuffix : rawSuffix;
+
+    return {
+      amount,
+      suffix,
+    };
+  };
 
   return (
     <div className="min-h-screen pt-20">
@@ -185,7 +206,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
                 <motion.div
                   whileHover={{ y: -10 }}
                   className={`rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all flex h-full flex-col ${pkg.popular
-                    ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white border-2 border-orange-500'
+                    ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white border border-orange-300 ring-2 ring-orange-500'
                     : 'bg-white border border-gray-200'
                     }`}
                 >
@@ -197,9 +218,9 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
                   <h3 className={`text-2xl mb-2 ${pkg.popular ? 'text-white' : 'text-gray-900'}`}>
                     {pkg.name}
                   </h3>
-                  <div className={`text-4xl mb-6 ${pkg.popular ? 'text-white' : 'text-orange-500'}`}>
-                    {pkg.price}
-                    <span className="text-lg">{t('service.common.perMonth')}</span>
+                  <div className={`mb-6 flex items-baseline gap-1 whitespace-nowrap ${pkg.popular ? 'text-white' : 'text-orange-500'}`}>
+                    <span className="text-3xl lg:text-4xl leading-none">{formatPackagePrice(pkg.price).amount}</span>
+                    <span className="text-base lg:text-lg leading-none">{formatPackagePrice(pkg.price).suffix}</span>
                   </div>
                   <ul className="space-y-3 mb-8 flex-1">
                     {pkg.features.map((feature, idx) => (
