@@ -185,7 +185,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
                 <motion.div
                   whileHover={{ y: -10 }}
                   className={`rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all flex h-full flex-col ${pkg.popular
-                    ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white border-4 border-orange-500'
+                    ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white border-2 border-orange-500'
                     : 'bg-white border border-gray-200'
                     }`}
                 >
