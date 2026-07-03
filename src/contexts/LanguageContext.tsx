@@ -284,7 +284,7 @@ const translations: Record<Language, Record<string, string>> = {
     'pricing.services.ecommerce.tier.standard.price': 'USD 357 – 1,072+',
     'pricing.services.ecommerce.tier.enterprise.label': 'Enterprise / Custom',
     'pricing.services.ecommerce.tier.enterprise.price': 'USD 1,200 – 2,200+',
-    'pricing.services.ecommerce.note': 'Pricing varies by product count, custom features, payment gateways, and mobile integration.',
+    'pricing.services.ecommerce.note': 'Pricing depends on products, features, payments, and app integration.',
     'pricing.services.website.title': 'Website Development',
     'pricing.services.website.subtitle': 'Marketing websites and business presence',
     'pricing.services.website.tier.simple.label': 'Simple / Brochure Website',
