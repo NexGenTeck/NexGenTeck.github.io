@@ -179,12 +179,12 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
             </p>
           </AnimatedSection>
 
-          <div className="grid md:grid-cols-3 gap-8 max-w-6xl mx-auto">
+          <div className="grid md:grid-cols-3 gap-8 items-stretch max-w-6xl mx-auto">
             {packages.map((pkg, index) => (
-              <AnimatedSection key={index} delay={index * 0.1}>
+              <AnimatedSection key={index} delay={index * 0.1} className="h-full">
                 <motion.div
                   whileHover={{ y: -10 }}
-                  className={`rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all ${pkg.popular
+                  className={`rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all flex h-full flex-col ${pkg.popular
                     ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white border-4 border-yellow-400'
                     : 'bg-white border border-gray-200'
                     }`}
@@ -201,7 +201,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
                     {pkg.price}
                     <span className="text-lg">{t('service.common.perMonth')}</span>
                   </div>
-                  <ul className="space-y-3 mb-8">
+                  <ul className="space-y-3 mb-8 flex-1">
                     {pkg.features.map((feature, idx) => (
                       <li key={idx} className="flex items-start space-x-3">
                         <CheckCircle className={`w-5 h-5 flex-shrink-0 mt-0.5 ${pkg.popular ? 'text-white' : 'text-orange-500'}`} />
@@ -211,7 +211,7 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
                   </ul>
                   <Link
                     to="/contact"
-                    className={`block text-center px-8 py-4 rounded-lg transition-all ${pkg.popular
+                    className={`block text-center px-8 py-4 rounded-lg transition-all mt-auto ${pkg.popular
                       ? 'bg-white text-orange-500 hover:bg-gray-100'
                       : 'bg-orange-500 text-white hover:bg-orange-600'
                       }`}
