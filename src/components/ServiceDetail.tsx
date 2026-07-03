@@ -185,12 +185,12 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
                 <motion.div
                   whileHover={{ y: -10 }}
                   className={`rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all flex h-full flex-col ${pkg.popular
-                    ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white border-4 border-yellow-400'
+                    ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white border-4 border-orange-500'
                     : 'bg-white border border-gray-200'
                     }`}
                 >
                   {pkg.popular && (
-                    <div className="bg-yellow-400 text-gray-900 px-4 py-1 rounded-full inline-block mb-4 text-sm">
+                    <div className="bg-orange-500 text-white px-4 py-1 rounded-full inline-block mb-4 text-sm font-bold">
                       {t('service.common.mostPopular')}
                     </div>
                   )}
