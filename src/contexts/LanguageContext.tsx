@@ -435,7 +435,7 @@ const translations: Record<Language, Record<string, string>> = {
     'contact.faq.items.1.a': 'We typically respond to all inquiries within 24 hours during business days.',
     'contact.faq.items.2.q': 'Do you offer free consultations?',
     'contact.faq.items.2.a': 'Yes! We offer a free initial consultation to discuss your project requirements.',
-    'contact.faq.items.3.q': 'What information should I include in my message?',
+    'contact.faq.items.3.q': 'What should I write in my message?',
     'contact.faq.items.3.a': 'Include your project goals, timeline, budget range, and any specific requirements.',
     'contact.faq.items.4.q': 'Do you work with international clients?',
     'contact.faq.items.4.a': 'Absolutely! We work with clients worldwide and offer flexible communication options.',
