@@ -204,7 +204,16 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
             {packages.map((pkg, index) => (
               <AnimatedSection key={index} delay={index * 0.1} className="h-full">
                 <motion.div
-                  whileHover={{ y: -10 }}
+                   whileHover={{ y: -10 }}
+                   style={
+                    pkg.popular
+                      ? {
+                          border: '3px solid #ff6b00',
+                          boxShadow:
+                            '0 0 0 2px rgba(255, 107, 0, 0.35), 0 0 24px rgba(255, 107, 0, 0.25)',
+                        }
+                      : undefined
+                  }
                   className={`rounded-2xl p-8 shadow-lg hover:shadow-2xl transition-all flex h-full flex-col ${pkg.popular
                     ? 'bg-gradient-to-br from-orange-500 to-orange-600 text-white border border-orange-300 ring-2 ring-orange-500'
                     : 'bg-white border border-gray-200'
