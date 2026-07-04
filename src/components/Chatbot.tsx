@@ -122,7 +122,7 @@ export const Chatbot: React.FC = () => {
                                     <Bot />
                                 </div>
                                 <div className="header-text">
-                                    <h4>AI Assistant (Beta)</h4>
+                                    <h4>NGT – AI Assistant</h4>
                                     <span className="status">Online • {messages.length} messages</span>
                                 </div>
                             </div>
