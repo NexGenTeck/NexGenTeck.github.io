@@ -2553,8 +2553,9 @@ html {
   flex-direction: column;
   gap: 15px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.02), rgba(255, 255, 255, 0)),
-    linear-gradient(180deg, rgba(17, 17, 17, 0.92), rgba(26, 18, 13, 0.98));
+    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
+    linear-gradient(180deg, rgba(17, 17, 17, 0.72), rgba(26, 18, 13, 0.82)),
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.08), transparent 42%);
   min-height: 0;
 }
 
@@ -2727,7 +2728,13 @@ html {
 }
 
 .bot-message .message-content {
-  background: linear-gradient(160deg, rgba(36, 18, 8, 0.96), rgba(17, 17, 17, 0.96));
+  border: 1px solid rgba(249, 115, 22, 0.25);
+  background:
+    linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
+    linear-gradient(160deg, rgba(36, 18, 8, 0.78), rgba(17, 17, 17, 0.78));
+  box-shadow:
+    0 10px 22px rgba(0, 0, 0, 0.24),
+    0 0 12px rgba(249, 115, 22, 0.12);
 }
 
 .user-message .message-content {
