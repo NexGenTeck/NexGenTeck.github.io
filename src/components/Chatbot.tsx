@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef } from 'react';
-import { Bot, MessageSquare, Send, X } from 'lucide-react';
+import { Bot, MessageSquare, Send, User, X } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
 
 interface Message {
@@ -116,82 +116,97 @@ export const Chatbot: React.FC = () => {
 
                 {isOpen && (
                     <div className="ai-chatbot-popover">
-                        <div className="chatbot-header">
-                            <div className="header-info">
-                                <div className="avatar">
-                                    <Bot />
-                                </div>
-                                <div className="header-text">
-                                    <h4>NGT – AI Assistant</h4>
-                                    <span className="status">Online • {messages.length} messages</span>
-                                </div>
-                            </div>
-                            <button
-                                className="close-btn"
-                                onClick={() => setIsOpen(false)}
-                                aria-label="Close Chat"
-                            >
-                                <X />
-                            </button>
-                        </div>
-
-                        <div className="chatbot-messages">
-                            {messages.length === 0 && !isTyping && (
-                                <div className="empty-state">
-                                    <MessageSquare className="empty-icon" />
-                                    <p className="empty-text">Start a conversation!</p>
-                                </div>
-                            )}
-
-                            {messages.map((message) => (
-                                <div
-                                    key={message.id}
-                                    className={`message ${message.isBot ? 'bot-message' : 'user-message'}`}
-                                >
-                                    <div className="message-content">
-                                        <p>{message.text}</p>
-                                        <span className="message-time">
-                                            {message.timestamp.toLocaleTimeString([], {
-                                                hour: '2-digit',
-                                                minute: '2-digit'
-                                            })}
-                                        </span>
+                        <div className="chatbot-surface">
+                            <div className="chatbot-header">
+                                <div className="header-info">
+                                    <div className="avatar">
+                                        <Bot />
+                                    </div>
+                                    <div className="header-text">
+                                        <h4>NGT – AI Assistant</h4>
+                                        <span className="status">Online • {messages.length} messages</span>
                                     </div>
                                 </div>
-                            ))}
+                                <button
+                                    className="close-btn"
+                                    onClick={() => setIsOpen(false)}
+                                    aria-label="Close Chat"
+                                >
+                                    <X />
+                                </button>
+                            </div>
 
-                            {isTyping && (
-                                <div className="message bot-message typing">
-                                    <div className="message-content">
-                                        <div className="typing-indicator">
-                                            <span></span>
-                                            <span></span>
-                                            <span></span>
+                            <div className="chatbot-messages">
+                                {messages.length === 0 && !isTyping && (
+                                    <div className="empty-state">
+                                        <MessageSquare className="empty-icon" />
+                                        <p className="empty-text">Start a conversation!</p>
+                                    </div>
+                                )}
+
+                                {messages.map((message) => (
+                                    <div
+                                        key={message.id}
+                                        className={`message ${message.isBot ? 'bot-message' : 'user-message'}`}
+                                    >
+                                        {message.isBot && (
+                                            <div className="message-avatar" aria-hidden="true">
+                                                <Bot />
+                                            </div>
+                                        )}
+                                        <div className="message-content">
+                                            <p>{message.text}</p>
+                                            <span className="message-time">
+                                                {message.timestamp.toLocaleTimeString([], {
+                                                    hour: '2-digit',
+                                                    minute: '2-digit'
+                                                })}
+                                            </span>
+                                        </div>
+                                        {!message.isBot && (
+                                            <div className="message-avatar" aria-hidden="true">
+                                                <User />
+                                            </div>
+                                        )}
+                                    </div>
+                                ))}
+
+                                {isTyping && (
+                                    <div className="message bot-message typing">
+                                        <div className="message-avatar" aria-hidden="true">
+                                            <Bot />
+                                        </div>
+                                        <div className="message-content">
+                                            <div className="typing-indicator">
+                                                <span></span>
+                                                <span></span>
+                                                <span></span>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
-                            )}
-                            <div ref={messagesEndRef} />
-                        </div>
+                                )}
+                                <div ref={messagesEndRef} />
+                            </div>
 
-                        <div className="chatbot-input">
-                            <div className="input-group">
-                                <input
-                                    type="text"
-                                    value={inputMessage}
-                                    onChange={(e) => setInputMessage(e.target.value)}
-                                    onKeyDown={handleKeyPress}
-                                    placeholder="Type your message..."
-                                    className="message-input"
-                                />
-                                <button
-                                    onClick={handleSendMessage}
-                                    disabled={!inputMessage.trim()}
-                                    className="send-btn"
-                                    aria-label="Send message"
-                                >
-                                    <Send />
-                                </button>
+                            <div className="chatbot-input">
+                                <div className="input-group">
+                                    <input
+                                        type="text"
+                                        value={inputMessage}
+                                        onChange={(e) => setInputMessage(e.target.value)}
+                                        onKeyDown={handleKeyPress}
+                                        placeholder="Type your message..."
+                                        className="message-input"
+                                    />
+                                    <button
+                                        onClick={handleSendMessage}
+                                        disabled={!inputMessage.trim()}
+                                        className="send-btn"
+                                        aria-label="Send message"
+                                    >
+                                        <Send />
+                                    </button>
+                                </div>
                             </div>
                         </div>
                     </div>
