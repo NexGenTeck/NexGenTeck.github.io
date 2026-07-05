@@ -2503,11 +2503,20 @@ html {
   display: flex;
   align-items: center;
   justify-content: center;
+  overflow: hidden;
 }
 
 .avatar svg {
   width: 18px;
   height: 18px;
+}
+
+.avatar img,
+.message-avatar img {
+  width: 72%;
+  height: 72%;
+  object-fit: contain;
+  filter: drop-shadow(0 0 8px rgba(249, 115, 22, 0.2));
 }
 
 .header-text h4 {
@@ -2553,9 +2562,11 @@ html {
   flex-direction: column;
   gap: 15px;
   background:
-    linear-gradient(180deg, rgba(255, 255, 255, 0.03), rgba(255, 255, 255, 0)),
-    linear-gradient(180deg, rgba(17, 17, 17, 0.72), rgba(26, 18, 13, 0.82)),
-    radial-gradient(circle at top right, rgba(249, 115, 22, 0.08), transparent 42%);
+    linear-gradient(180deg, rgba(255, 255, 255, 0.035), rgba(255, 255, 255, 0.01)),
+    linear-gradient(180deg, rgba(17, 17, 17, 0.48), rgba(26, 18, 13, 0.58)),
+    radial-gradient(circle at top right, rgba(249, 115, 22, 0.07), transparent 42%);
+  backdrop-filter: blur(12px);
+  -webkit-backdrop-filter: blur(12px);
   min-height: 0;
 }
 

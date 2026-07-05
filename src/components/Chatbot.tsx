@@ -1,6 +1,7 @@
 import React, { useState, useEffect, useRef } from 'react';
 import { Bot, MessageSquare, Send, User, X } from 'lucide-react';
 import { useLanguage } from '../contexts/LanguageContext';
+import logo from '../nexgentech-01.png';
 
 interface Message {
     id: number;
@@ -120,7 +121,7 @@ export const Chatbot: React.FC = () => {
                             <div className="chatbot-header">
                                 <div className="header-info">
                                     <div className="avatar">
-                                        <Bot />
+                                        <img src={logo} alt="NexGenTeck Logo" className="bot-logo" />
                                     </div>
                                     <div className="header-text">
                                         <h4>NGT – AI Assistant</h4>
@@ -151,7 +152,7 @@ export const Chatbot: React.FC = () => {
                                     >
                                         {message.isBot && (
                                             <div className="message-avatar" aria-hidden="true">
-                                                <Bot />
+                                                <img src={logo} alt="NexGenTeck Logo" className="bot-logo" />
                                             </div>
                                         )}
                                         <div className="message-content">
@@ -174,7 +175,7 @@ export const Chatbot: React.FC = () => {
                                 {isTyping && (
                                     <div className="message bot-message typing">
                                         <div className="message-avatar" aria-hidden="true">
-                                            <Bot />
+                                            <img src={logo} alt="NexGenTeck Logo" className="bot-logo" />
                                         </div>
                                         <div className="message-content">
                                             <div className="typing-indicator">

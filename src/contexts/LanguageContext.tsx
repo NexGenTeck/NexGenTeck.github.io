@@ -369,7 +369,7 @@ const translations: Record<Language, Record<string, string>> = {
     // About page
     'about.title': 'About Us',
     'about.subtitle': 'Leading the digital transformation',
-    'about.team': 'Our Team',
+    'about.team': 'Meet Our Team',
     'about.partners': 'Our Partners',
     'about.story': 'Our Story',
     'about.story.p1': 'Founded in 2023, NexGenTeck started with a simple mission: to help businesses harness the power of digital technology to achieve their goals.',
@@ -385,7 +385,7 @@ const translations: Record<Language, Record<string, string>> = {
     'about.values.excellence.desc': 'We maintain the highest standards of quality in everything we do.',
     'about.values.passion': 'Passion',
     'about.values.passion.desc': 'We love what we do and it shows in the exceptional results we deliver.',
-    'about.team.subtitle': 'Meet the talented people behind NexGenTeck',
+    'about.team.subtitle': 'The passionate people behind NexGenTeck.',
     'about.partners.subtitle': 'Trusted by industry leaders worldwide',
     'about.partners.text': "We're proud to collaborate with trusted partners to deliver reliable, innovative, and client-focused solutions.",
     'about.partners.partner1': 'Medicare Pharma',

@@ -1,7 +1,7 @@
 import React, { useEffect } from 'react';
 import { useLocation } from 'react-router';
 import { motion } from 'motion/react';
-import { Users, Target, Award, Heart } from 'lucide-react';
+import { Users, Target, Award, Heart, User } from 'lucide-react';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
@@ -47,6 +47,8 @@ export const About: React.FC = () => {
     { nameKey: 'about.partners.partner2' },
     { nameKey: 'about.partners.partner3' },
   ];
+
+  const teamMembers = Array.from({ length: 8 }, (_, index) => index);
 
   return (
     <div className="min-h-screen pt-20">
@@ -151,6 +153,48 @@ export const About: React.FC = () => {
               {t('about.partners.text')}
             </p>
           </AnimatedSection>
+        </div>
+      </section>
+
+      {/* Team Section */}
+      <section id="team" className="py-16 bg-gray-950">
+        <div className="container mx-auto px-4">
+          <AnimatedSection className="text-center mb-10">
+            <h2 className="text-4xl lg:text-5xl text-white mb-4">{t('about.team')}</h2>
+            <p className="text-xl text-gray-400 max-w-2xl mx-auto">
+              {t('about.team.subtitle')}
+            </p>
+          </AnimatedSection>
+
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4 md:gap-5 items-stretch justify-items-center max-w-5xl mx-auto">
+            {teamMembers.map((index) => (
+              <AnimatedSection key={index} delay={index * 0.06} className="h-full w-full max-w-[200px]">
+                <motion.div
+                  whileHover={{
+                    y: -6,
+                    rotate: index % 2 === 0 ? 1.5 : -1.5,
+                  }}
+                  transition={{ type: 'spring', stiffness: 320, damping: 22 }}
+                  className="group relative h-full flex flex-col items-center bg-gray-900/90 rounded-xl border border-orange-500/15 p-4 text-center shadow-md shadow-orange-500/5 hover:shadow-lg hover:shadow-orange-500/30 hover:border-orange-500/50 transition-colors duration-300"
+                >
+                  <div className="relative mb-3 w-20 h-20 rounded-full bg-gray-800 border border-orange-500/25 flex items-center justify-center overflow-hidden shrink-0">
+                    <User className="w-8 h-8 text-gray-600 group-hover:text-orange-500/60 transition-colors duration-300" />
+                    <div className="absolute inset-0 bg-gradient-to-br from-orange-500/10 to-transparent pointer-events-none" />
+                  </div>
+
+                  <div
+                    className="h-3.5 w-24 mb-2 rounded bg-gray-800 border border-gray-700/50"
+                    aria-hidden="true"
+                  />
+
+                  <div
+                    className="h-3 w-16 rounded bg-gray-800/60 border border-gray-700/30"
+                    aria-hidden="true"
+                  />
+                </motion.div>
+              </AnimatedSection>
+            ))}
+          </div>
         </div>
       </section>
 
