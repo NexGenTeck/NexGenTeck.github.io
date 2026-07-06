@@ -1,6 +1,6 @@
 # NexGenTeck AI Chatbot - GCP Deployment
-# Use Python 3.11 slim image for smaller size
-FROM python:3.11-slim
+# Match the Python version declared by pyproject.toml.
+FROM python:3.12-slim
 
 # Set working directory
 WORKDIR /app/Chatbot
@@ -21,13 +21,12 @@ ENV WDM_LOCAL=1
 # Copy requirements first for better caching
 COPY Chatbot/requirements.txt ./requirements.txt
 
-# Install Python dependencies
-RUN pip install --no-cache-dir -r requirements.txt
+# Install Python dependencies.
+RUN pip install --no-cache-dir -r requirements.txt \
+    && python -c "import torch; import sentence_transformers; print(torch.__version__)"
 
 # Copy application code
 COPY Chatbot/ .
-# Copy frontend source for translation-based ingestion
-COPY src/ ../src/
 
 # Create directory for ChromaDB persistence
 RUN mkdir -p /app/chroma_db
@@ -41,7 +40,7 @@ ENV CHROMA_PERSIST_DIR=/app/chroma_db
 
 # Health check
 HEALTHCHECK --interval=30s --timeout=10s --start-period=60s --retries=3 \
-    CMD python -c "import requests; requests.get('http://localhost:8000/health', timeout=5)" || exit 1
+    CMD python -c "import urllib.request; urllib.request.urlopen('http://localhost:8000/health', timeout=5).read()" || exit 1
 
 # Run the application
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8000"]
