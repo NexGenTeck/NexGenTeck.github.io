@@ -77,7 +77,7 @@ try {
     $mail->Host       = 'smtp.hostinger.com';
     $mail->SMTPAuth   = true;
     $mail->Username   = 'info@nexgenteck.com'; // 1. COMPANY EMAIL
-    $mail->Password   = 'YOUR_EMAIL_PASSWORD'; // 2. USKA PASSWORD YAHAN DALO
+    $mail->Password   = 'Karachi@3130'; // 2. USKA PASSWORD YAHAN DALO
     $mail->SMTPSecure = 'ssl';
     $mail->Port       = 465;
     $mail->CharSet    = 'UTF-8';
