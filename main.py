@@ -1,5 +1,5 @@
 def main():
-    print("Hello from ngt!")
+    print("Hello from NGT!")
 
 
 if __name__ == "__main__":
