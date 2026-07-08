@@ -33,6 +33,8 @@ jobs:
         run: npm run build
         env:
           NODE_ENV: production
+          VITE_SUPABASE_URL: https://owmgcguwmqdxerorgzje.supabase.co
+          VITE_SUPABASE_ANON_KEY: sb_publishable_1gLOmZn2nkwpMnmVR36Q0g_1XxPBmH0
 
       - name: Add CNAME and 404.html
         run: |
