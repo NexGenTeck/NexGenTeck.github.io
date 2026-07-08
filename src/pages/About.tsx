@@ -208,7 +208,7 @@ export const About: React.FC = () => {
       {/* Team Section */}
       <section id="team" className="py-16 bg-gray-950">
         <div className="container mx-auto px-4">
-          <AnimatedSection className="text-center mb-10">
+          <AnimatedSection className="text-center mb-16 md:mb-20">
             <h2 className="text-4xl lg:text-5xl text-white mb-4">Meet Our Team</h2>
             <p className="text-xl text-gray-400 max-w-2xl mx-auto">
               {t('about.team.subtitle')}
