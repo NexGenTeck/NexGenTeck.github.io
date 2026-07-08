@@ -3,28 +3,12 @@ import { motion } from 'motion/react';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { useLanguage } from '../contexts/LanguageContext';
+import { supabase } from '../lib/supabase';
 
 type SubmitStatus = 'success' | 'error' | null;
 
-interface ContactResponse {
-  success?: boolean;
-  message?: string;
-  error?: string;
-}
-
 const DEFAULT_ERROR_MESSAGE = 'Unable to send message right now. Please try again later.';
 
-const honeypotStyle: React.CSSProperties = {
-  position: 'absolute',
-  width: 1,
-  height: 1,
-  padding: 0,
-  margin: -1,
-  overflow: 'hidden',
-  clip: 'rect(0, 0, 0, 0)',
-  whiteSpace: 'nowrap',
-  border: 0,
-};
 
 export const Contact: React.FC = () => {
   const { t, language } = useLanguage();
@@ -34,7 +18,6 @@ export const Contact: React.FC = () => {
     phone: '',
     subject: '',
     message: '',
-    website: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>(null);
@@ -42,39 +25,39 @@ export const Contact: React.FC = () => {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
+
+
     setIsSubmitting(true);
     setSubmitStatus(null);
     setSubmitMessage('');
 
     try {
-      const response = await fetch('https://nexgenteck.com/contact.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
+      const { data, error } = await supabase.functions.invoke('submit-contact', {
+        body: {
+          name: formData.name,
+          email: formData.email,
+          phone: formData.phone || null,
+          subject: formData.subject || null,
+          message: formData.message,
         },
-        body: JSON.stringify(formData),
       });
 
-      let data: ContactResponse = {};
-
-      try {
-        data = (await response.json()) as ContactResponse;
-      } catch (jsonError) {
-        console.error('Failed to parse contact API response:', jsonError);
-      }
-
-      if (response.ok && data.success) {
+      if (error) {
+        console.error('Edge Function error:', error);
+        setSubmitStatus('error');
+        setSubmitMessage(DEFAULT_ERROR_MESSAGE);
+      } else if (data?.success) {
         setSubmitStatus('success');
-        setSubmitMessage(data.message || t('contact.form.success'));
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '', website: '' });
+        setSubmitMessage(t('contact.form.success'));
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
       } else {
         setSubmitStatus('error');
-        setSubmitMessage(data.error || DEFAULT_ERROR_MESSAGE);
+        setSubmitMessage(data?.error || DEFAULT_ERROR_MESSAGE);
       }
     } catch (error) {
       setSubmitStatus('error');
       setSubmitMessage(DEFAULT_ERROR_MESSAGE);
-      console.error('Network error:', error);
+      console.error('Unexpected error:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -136,19 +119,7 @@ export const Contact: React.FC = () => {
                 )}
 
                 <form onSubmit={handleSubmit} className="space-y-6 relative" noValidate>
-                  {/* Honeypot field for spam bots */}
-                  <div style={honeypotStyle} aria-hidden="true">
-                    <label htmlFor="website">Website</label>
-                    <input
-                      type="text"
-                      id="website"
-                      name="website"
-                      value={formData.website}
-                      onChange={handleChange}
-                      autoComplete="off"
-                      tabIndex={-1}
-                    />
-                  </div>
+
 
                   <div>
                     <label htmlFor="name" className="block text-gray-300 mb-2">
