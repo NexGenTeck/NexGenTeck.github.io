@@ -459,3 +459,36 @@ html {
   50% { transform: translateX(-20px) translateY(-10px); }
   100% { transform: translateX(0) translateY(0); }
 }
+
+/* Team Member Cards Custom Styling */
+.team-card {
+  width: 240px !important;
+  height: 330px !important;
+  overflow: hidden !important;
+}
+
+.team-image-wrapper {
+  height: 260px !important;
+  background: #050505 !important;
+  display: flex !important;
+  align-items: center !important;
+  justify-content: center !important;
+  overflow: hidden !important;
+}
+
+.team-image {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: contain !important;
+  object-position: center center !important;
+}
+
+.team-info {
+  height: 70px !important;
+  padding: 10px 12px !important;
+  display: flex !important;
+  flex-direction: column !important;
+  align-items: center !important;
+  justify-content: center !important;
+}
+
