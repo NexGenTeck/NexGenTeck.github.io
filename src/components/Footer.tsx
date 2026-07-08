@@ -5,6 +5,7 @@ import { motion } from 'motion/react';
 import { useLanguage } from '../contexts/LanguageContext';
 import { useTheme } from '../contexts/ThemeContext';
 import logo from '../nexgentech-01.png';
+import { subscribeToNewsletter } from '../lib/newsletterService';
 
 const WhatsAppLogo: React.FC<{ className?: string }> = ({ className }) => (
   <svg
@@ -21,35 +22,42 @@ export const Footer: React.FC = () => {
   const { t } = useLanguage();
   const { theme } = useTheme();
   const [email, setEmail] = useState('');
-  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitting' | 'success' | 'error'>('idle');
+  const [newsletterStatus, setNewsletterStatus] = useState<'idle' | 'submitting' | 'success' | 'duplicate' | 'invalid' | 'error'>('idle');
+  const [statusMessage, setStatusMessage] = useState('');
   const footerBrandOffset = 52;
   const footerSocialWidth = 104;
 
   const handleSubscribe = async (e: React.FormEvent) => {
     e.preventDefault();
-    if (!email) return;
+    if (!email.trim() || newsletterStatus === 'submitting') return;
 
     setNewsletterStatus('submitting');
-    try {
-      const response = await fetch('https://nexgenteck.com/newsletter.php', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ email }),
-      });
+    setStatusMessage('');
 
-      if (response.ok) {
-        setNewsletterStatus('success');
-        setEmail('');
-        setTimeout(() => setNewsletterStatus('idle'), 3000);
-      } else {
-        setNewsletterStatus('error');
-        setTimeout(() => setNewsletterStatus('idle'), 3000);
-      }
-    } catch (error) {
+    const result = await subscribeToNewsletter(email);
+
+    if (result.success) {
+      setNewsletterStatus('success');
+      setStatusMessage(result.message);
+      setEmail('');
+      setTimeout(() => {
+        setNewsletterStatus('idle');
+        setStatusMessage('');
+      }, 6000);
+    } else if (result.isDuplicate) {
+      setNewsletterStatus('duplicate');
+      setStatusMessage(result.message);
+      setTimeout(() => {
+        setNewsletterStatus('idle');
+        setStatusMessage('');
+      }, 5000);
+    } else {
       setNewsletterStatus('error');
-      setTimeout(() => setNewsletterStatus('idle'), 3000);
+      setStatusMessage(result.message);
+      setTimeout(() => {
+        setNewsletterStatus('idle');
+        setStatusMessage('');
+      }, 5000);
     }
   };
 
@@ -199,14 +207,41 @@ export const Footer: React.FC = () => {
                 disabled={newsletterStatus === 'submitting'}
                 className="w-full bg-orange-500 text-white px-6 py-3 rounded-lg hover:bg-orange-600 transition-colors flex items-center justify-center space-x-2 disabled:opacity-70"
               >
-                <span>{newsletterStatus === 'submitting' ? 'Submitting...' : t('footer.subscribeButton')}</span>
+                <span>{newsletterStatus === 'submitting' ? 'Subscribing...' : t('footer.subscribeButton')}</span>
                 <Send className="w-4 h-4" />
               </button>
+
+              {/* Success */}
               {newsletterStatus === 'success' && (
-                <p className="text-green-400 text-sm mt-2">Successfully subscribed!</p>
+                <motion.p
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-green-400 text-sm mt-2 leading-relaxed"
+                >
+                  ✓ {statusMessage}
+                </motion.p>
               )}
-              {newsletterStatus === 'error' && (
-                <p className="text-red-400 text-sm mt-2">An error occurred. Please try again.</p>
+
+              {/* Already subscribed */}
+              {newsletterStatus === 'duplicate' && (
+                <motion.p
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-orange-400 text-sm mt-2"
+                >
+                  ℹ {statusMessage}
+                </motion.p>
+              )}
+
+              {/* Validation or server error */}
+              {(newsletterStatus === 'error' || newsletterStatus === 'invalid') && (
+                <motion.p
+                  initial={{ opacity: 0, y: -6 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  className="text-red-400 text-sm mt-2"
+                >
+                  ✕ {statusMessage}
+                </motion.p>
               )}
             </form>
 
