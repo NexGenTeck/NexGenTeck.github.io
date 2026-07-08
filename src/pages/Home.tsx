@@ -130,9 +130,9 @@ export const Home: React.FC = () => {
   ];
 
   const stats = [
-    { number: '30+', labelKey: 'stats.projects' },
-    { number: '23+', labelKey: 'stats.clients' },
-    { number: '19+', labelKey: 'stats.team' },
+    { number: '15+', labelKey: 'stats.projects' },
+    { number: '10+', labelKey: 'stats.clients' },
+    { number: '10+', labelKey: 'stats.team' },
     { number: '3+', labelKey: 'stats.experience' },
   ];
 
@@ -155,7 +155,7 @@ export const Home: React.FC = () => {
       name: 'Emma Williams',
       role: 'Marketing Director, BrandBoost',
       image: 'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      quote: 'Their digital marketing strategies doubled our social media engagement and tripled our conversion rates. True professionals!',
+      quote: 'Their digital marketing strategies doubled our social media engagement and tripled our conversion rates. True professionals!', appreciated
       rating: 5,
     },
   ];
@@ -164,7 +164,7 @@ export const Home: React.FC = () => {
     {
       title: 'Global E-commerce Platform',
       category: 'services.ecommerce',
-      image: 'https://images.unsplash.com/photo-1727407209320-1fa6ae60ee05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBzaG9wcGluZ3xlbnwxfHx8fDE3NjQzNDQ4NTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      image: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080',
       link: '/portfolio/global-ecommerce',
     },
     {
