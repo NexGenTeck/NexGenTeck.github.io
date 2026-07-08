@@ -37,13 +37,11 @@ class TranslationExtractor:
         """
         documents = []
         
-        # Load English translations (primary language)
         self._load_language_context_translations()
         self._load_service_translations()
         
         logger.info(f"Loaded {len(self.translations)} translation keys")
         
-        # Create structured documents from translations
         documents.extend(self._create_service_documents())
         documents.extend(self._create_general_documents())
         documents.extend(self._create_company_documents())
@@ -65,12 +63,8 @@ class TranslationExtractor:
             with open(lang_context_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # Find the English translations section (first translations object)
-            # Pattern: 'key': 'value' or "key": "value"
             pattern = r"['\"]([a-zA-Z0-9_.]+)['\"]:\s*['\"]([^'\"]+)['\"]"
             
-            # Find the English block - it's the first `const translations` or similar
-            # We'll extract from start until we hit another language marker
             english_section = self._extract_english_section(content)
             
             matches = re.findall(pattern, english_section)
@@ -85,10 +79,7 @@ class TranslationExtractor:
     
     def _extract_english_section(self, content: str) -> str:
         """Extract the English translations section from the file."""
-        # Look for common patterns that indicate the English/default translations
-        # Usually it's the first block before any language-specific sections
-        
-        # Find start of translations object
+
         start_patterns = [
             r"const\s+translations\s*[=:]\s*{",
             r"translations\s*=\s*{",
@@ -102,8 +93,6 @@ class TranslationExtractor:
                 start_idx = match.end()
                 break
         
-        # Find the end - either next language block or closing brace
-        # Look for patterns like "ur:", "ko:", "zh:", etc.
         end_patterns = [
             r"\n\s*ur:\s*{",
             r"\n\s*ko:\s*{", 
@@ -135,17 +124,13 @@ class TranslationExtractor:
             with open(service_trans_path, 'r', encoding='utf-8') as f:
                 content = f.read()
             
-            # The English translations might be in a separate file or we use fallback
-            # For now, we'll use the first language block which should have good content
+
             pattern = r"['\"]([a-zA-Z0-9_.]+)['\"]:\s*['\"]([^'\"]+)['\"]"
-            
-            # Extract from the first language block (usually ur: or similar)
-            # But we want English content, so we'll check for 'en:' first
+
             if 'en:' in content or 'en :' in content:
                 section = self._extract_section_by_lang(content, 'en')
             else:
-                # Use our translations dict to build content from what we have
-                # The service detail content in English is in LanguageContext.tsx
+
                 pass
                 
         except Exception as e:
@@ -242,26 +227,22 @@ class TranslationExtractor:
         service_id = service['id']
         prefix = f"services.{service_id}"
         
-        # Get translated values or use defaults
         title = self._get_translation(f'{prefix}.title', service['name'])
         subtitle = self._get_translation(f'{prefix}.subtitle', service['description'])
         description = self._get_translation(f'{prefix}.description', '')
         
-        # Build features list
         features = []
         for i in range(1, 13):
             feat = self._get_translation(f'{prefix}.feature{i}', '')
             if feat:
                 features.append(f"• {feat}")
         
-        # Build benefits list
         benefits = []
         for i in range(1, 7):
             ben = self._get_translation(f'{prefix}.benefit{i}', '')
             if ben:
                 benefits.append(f"• {ben}")
         
-        # Build packages info
         packages = []
         for i in range(1, 4):
             pkg_name = self._get_translation(f'{prefix}.package{i}.name', '')
@@ -269,7 +250,6 @@ class TranslationExtractor:
             if pkg_name:
                 packages.append(f"{pkg_name}: {pkg_features}")
         
-        # Build FAQ
         faqs = []
         for i in range(1, 6):
             q = self._get_translation(f'{prefix}.faq{i}.q', '')
@@ -277,7 +257,6 @@ class TranslationExtractor:
             if q and a:
                 faqs.append(f"Q: {q}\nA: {a}")
         
-        # Build process steps
         process_steps = []
         for i in range(1, 5):
             step_title = self._get_translation(f'{prefix}.process{i}.title', '')
@@ -285,7 +264,6 @@ class TranslationExtractor:
             if step_title:
                 process_steps.append(f"{i}. {step_title}: {step_desc}")
         
-        # Compose the document
         content_parts = [
             f"SERVICE: {title}",
             f"URL: https://nexgenteck.com/services/{service['slug']}",
@@ -331,7 +309,6 @@ class TranslationExtractor:
         """Create documents for general website content."""
         documents = []
         
-        # Services Overview
         services_overview = """
 PAGE: Our Services - NexGenTeck
 URL: https://nexgenteck.com/services
@@ -381,7 +358,6 @@ Contact us today for a free consultation!
         """Create documents about the company."""
         documents = []
         
-        # About document
         about_content = f"""
 PAGE: About NexGenTeck
 URL: https://nexgenteck.com/about
@@ -413,7 +389,6 @@ React, Next.js, TypeScript, Node.js, Python, PostgreSQL, MongoDB, AWS, Google Cl
             'metadata': {'source': 'about_page', 'title': 'About NexGenTeck', 'type': 'page'}
         })
         
-        # Contact document
         contact_content = f"""
 PAGE: Contact NexGenTeck
 URL: https://nexgenteck.com/contact
@@ -447,7 +422,6 @@ We serve clients worldwide and our website is available in 17 languages includin
             'metadata': {'source': 'contact_page', 'title': 'Contact Us', 'type': 'page'}
         })
         
-        # Pricing document
         pricing_content = """
 PAGE: Pricing - NexGenTeck
 URL: https://nexgenteck.com/pricing
@@ -496,7 +470,6 @@ def get_translation_based_content() -> List[Dict[str, str]]:
 
 
 if __name__ == "__main__":
-    # Test the extractor
     logging.basicConfig(level=logging.INFO)
     docs = get_translation_based_content()
     print(f"\nExtracted {len(docs)} documents")

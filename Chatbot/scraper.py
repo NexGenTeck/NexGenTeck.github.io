@@ -52,8 +52,7 @@ class WebsiteScraper:
         """
         logger.info(f"Starting comprehensive scrape of {self.base_url}")
         
-        # Optional local-source ingestion (disabled by default in production).
-        # This avoids stale local content overriding live website updates.
+
         if config.USE_TRANSLATION_EXTRACTOR:
             project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), '..'))
             lang_context = os.path.join(project_root, 'src', 'contexts', 'LanguageContext.tsx')
@@ -67,13 +66,11 @@ class WebsiteScraper:
                 except Exception as e:
                     logger.warning(f"Translation extractor failed: {e}, falling back to source scraping")
         
-        # Crawl with a JS-capable browser so SPA content is rendered
         try:
             self._crawl_site(max_pages=max_pages)
         except Exception as e:
             logger.error(f"Rendered scraping failed: {e}")
 
-        # If scraping produced nothing, provide a fallback so the bot still works.
         if not self.documents:
             logger.warning("No documents extracted from scraping; falling back to safe defaults")
             if config.USE_TRANSLATION_EXTRACTOR:
@@ -105,8 +102,6 @@ class WebsiteScraper:
         chrome_options.add_argument("--disable-extensions")
         chrome_options.add_argument("--remote-debugging-port=9222")
 
-        # Use system chromium if available (set via CHROME_BIN env var in Docker),
-        # otherwise fall back to webdriver-manager auto-download for local dev.
         chrome_bin = os.environ.get("CHROME_BIN")
         chromedriver_path = os.environ.get("CHROMEDRIVER_PATH")
 
@@ -142,13 +137,11 @@ class WebsiteScraper:
                 soup = BeautifulSoup(html, 'lxml')
                 self._extract_all_content(soup, url)
 
-                # Discover new links dynamically from rendered HTML
                 for link in soup.find_all('a', href=True):
                     href = link.get('href', '').strip()
                     if not href or href.startswith('mailto:') or href.startswith('tel:'):
                         continue
 
-                    # Preserve GitHub Pages subpaths like "/NGT/" when joining.
                     if href.startswith('http://') or href.startswith('https://'):
                         next_url = href
                     else:
@@ -157,7 +150,6 @@ class WebsiteScraper:
                     if parsed.netloc != base_domain:
                         continue
 
-                    # Remove fragment to avoid duplicates
                     normalized = parsed._replace(fragment="").geturl()
                     if normalized not in self.visited_urls:
                         queue.append(normalized)
@@ -173,51 +165,42 @@ class WebsiteScraper:
             soup: BeautifulSoup object
             url: URL of the page
         """
-        # Remove elements that don't contain useful content
         for element in soup(['script', 'style', 'noscript', 'iframe']):
             element.decompose()
         
-        # Extract page title
         title = soup.find('title')
         title_text = clean_text(title.get_text()) if title else ""
         
-        # Extract meta description
         meta_desc = soup.find('meta', {'name': 'description'})
         meta_desc_text = meta_desc.get('content', '') if meta_desc else ''
         
-        # Extract all headings
         headings = []
         for h in soup.find_all(['h1', 'h2', 'h3', 'h4', 'h5', 'h6']):
             text = clean_text(h.get_text())
             if text and len(text) > 2:
-                level = h.name  # h1, h2, etc.
+                level = h.name 
                 headings.append(f"[{level.upper()}] {text}")
         
-        # Extract all paragraphs
         paragraphs = []
         for p in soup.find_all('p'):
             text = clean_text(p.get_text())
-            if text and len(text) > 15:  # Skip very short paragraphs
+            if text and len(text) > 15: 
                 paragraphs.append(text)
         
-        # Extract list items (services, features, benefits, etc.)
         list_items = []
         for li in soup.find_all('li'):
             text = clean_text(li.get_text())
             if text and len(text) > 10:
                 list_items.append(f"• {text}")
         
-        # Extract spans and divs with substantial text (for modern websites)
         other_content = []
         for elem in soup.find_all(['span', 'div', 'section', 'article']):
-            # Only direct text, not nested
             direct_text = elem.find(string=True, recursive=False)
             if direct_text:
                 text = clean_text(str(direct_text))
                 if text and len(text) > 30:
                     other_content.append(text)
         
-        # Extract table content
         tables = []
         for table in soup.find_all('table'):
             rows = []
@@ -228,46 +211,37 @@ class WebsiteScraper:
             if rows:
                 tables.append('\n'.join(rows))
         
-        # Build comprehensive document for this page
         content_parts = []
         
-        # Page identification
         content_parts.append(f"PAGE: {title_text}")
         content_parts.append(f"URL: {url}")
         
         if meta_desc_text:
             content_parts.append(f"DESCRIPTION: {meta_desc_text}")
         
-        # All headings provide structure
         if headings:
             content_parts.append("SECTIONS:")
             content_parts.extend(headings)
         
-        # Main content
         if paragraphs:
             content_parts.append("CONTENT:")
             content_parts.extend(paragraphs)
         
-        # Lists contain important features/services
         if list_items:
             content_parts.append("FEATURES/ITEMS:")
-            content_parts.extend(list_items[:30])  # Limit to prevent too much
+            content_parts.extend(list_items[:30]) 
         
-        # Other content
         if other_content:
             unique_other = list(set(other_content))[:20]
             content_parts.extend(unique_other)
         
-        # Tables
         if tables:
             content_parts.append("TABLE DATA:")
             content_parts.extend(tables[:5])
         
-        # Combine all content
         full_content = "\n\n".join(content_parts)
         
         if full_content and len(full_content) > 50:
-            # Chunk the content for better retrieval
             chunks = chunk_text(full_content, chunk_size=800, overlap=100)
             
             for i, chunk in enumerate(chunks):

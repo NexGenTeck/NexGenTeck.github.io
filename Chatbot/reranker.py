@@ -60,9 +60,6 @@ class CrossEncoderReranker:
         if CrossEncoderReranker._model is None:
             self._load_model()
 
-    # ------------------------------------------------------------------
-    # Initialisation
-    # ------------------------------------------------------------------
 
     def _load_model(self) -> None:
         """Load the cross-encoder model (lazy, singleton)."""
@@ -82,9 +79,6 @@ class CrossEncoderReranker:
             logger.warning("Re-ranking will be skipped — pipeline falls back to bi-encoder order")
             CrossEncoderReranker._model = None
 
-    # ------------------------------------------------------------------
-    # Public API
-    # ------------------------------------------------------------------
 
     def rerank(
         self,
@@ -115,30 +109,25 @@ class CrossEncoderReranker:
         if not candidates:
             return []
 
-        # -- Fallback: re-ranking disabled or model unavailable --------
         if not config.ENABLE_RERANKING or CrossEncoderReranker._model is None:
             logger.debug("Re-ranking skipped — returning bi-encoder top-%d", top_n)
             return candidates[:top_n]
 
         try:
-            # Build (query, document) sentence pairs for the cross-encoder
             pairs: List[Tuple[str, str]] = [
                 (query, content) for content, _dist, _meta in candidates
             ]
 
-            # Batch-score all pairs in a single forward pass
             scores: List[float] = CrossEncoderReranker._model.predict(
                 pairs,
                 show_progress_bar=False,
             ).tolist()
 
-            # Attach scores back to candidates
             scored: List[Tuple[str, float, Dict]] = [
                 (content, float(score), metadata)
                 for (content, _dist, metadata), score in zip(candidates, scores)
             ]
 
-            # Sort by cross-encoder relevance score (descending)
             scored.sort(key=lambda x: x[1], reverse=True)
 
             top_results = scored[:top_n]
@@ -156,9 +145,6 @@ class CrossEncoderReranker:
             logger.error("Re-ranking failed (%s) — falling back to bi-encoder order", exc)
             return candidates[:top_n]
 
-    # ------------------------------------------------------------------
-    # Utility
-    # ------------------------------------------------------------------
 
     @property
     def is_available(self) -> bool:
@@ -176,5 +162,4 @@ class CrossEncoderReranker:
         }
 
 
-# Singleton instance — import this everywhere
 reranker = CrossEncoderReranker()

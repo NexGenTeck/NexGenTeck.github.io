@@ -1,11 +1,8 @@
-# Windows multiprocessing compatibility - MUST be at the very start
 import multiprocessing
 import os
 
-# Set environment variables BEFORE any other imports
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
-# Enable freeze_support for Windows
 if __name__ == "__main__":
     multiprocessing.freeze_support()
 
@@ -33,14 +30,12 @@ from vector_store import vector_store
 from rag_pipeline import process_message
 from reranker import reranker
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
 )
 logger = logging.getLogger(__name__)
 
-# Global reindex lock to prevent concurrent reindex operations
 _reindex_lock = asyncio.Lock()
 _is_reindexing = False
 
@@ -56,14 +51,11 @@ class ChatRequest(BaseModel):
         if not v or not v.strip():
             raise ValueError('Message cannot be empty')
         
-        # Strip whitespace
         v = v.strip()
         
-        # Check max length (2000 characters)
         if len(v) > 2000:
             raise ValueError('Message too long (max 2000 characters)')
         
-        # Check min length (at least 1 meaningful character)
         if len(v) < 1:
             raise ValueError('Message must contain at least 1 character')
         
@@ -92,14 +84,12 @@ async def lifespan(app: FastAPI):
     """
     logger.info("Starting NexGenTeck AI Chatbot (Fully Softcoded)")
     
-    # Validate configuration
     try:
         config.validate()
     except ValueError as e:
         logger.error(f"Configuration error: {e}")
         raise
     
-    # Initialize knowledge base if empty - scrape entire website
     if not vector_store.is_initialized():
         logger.info("Knowledge base is empty, scraping ENTIRE website...")
         await initialize_knowledge_base()
@@ -118,7 +108,6 @@ async def initialize_knowledge_base() -> int:
     """
     try:
         scraper = WebsiteScraper()
-        # Scrape up to 100 pages for comprehensive coverage
         documents = scraper.scrape(max_pages=100)
 
         if documents:
@@ -131,11 +120,9 @@ async def initialize_knowledge_base() -> int:
             
     except Exception as e:
         logger.error(f"Failed to initialize knowledge base: {e}")
-        # The fallback content will be used automatically
         return 0
 
 
-# Create FastAPI app
 app = FastAPI(
     title="NexGenTeck AI Chatbot",
     description="Intelligent chatbot with RAG-based responses",
@@ -143,7 +130,6 @@ app = FastAPI(
     lifespan=lifespan
 )
 
-# Configure CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=config.CORS_ORIGINS,
@@ -188,7 +174,6 @@ async def chat(request: ChatRequest):
     """
     global _is_reindexing
     
-    # Warn if reindexing is in progress (but still allow chat)
     if _is_reindexing:
         logger.warning("Chat request received while reindexing is in progress")
     
@@ -215,7 +200,6 @@ async def reindex_knowledge_base():
     """
     global _is_reindexing
     
-    # Check if already reindexing
     if _is_reindexing:
         return {
             "status": "busy",
@@ -227,7 +211,6 @@ async def reindex_knowledge_base():
     async with _reindex_lock:
         _is_reindexing = True
         try:
-            # Scrape first to avoid downtime if scraping fails
             scraper = WebsiteScraper()
             documents = scraper.scrape(max_pages=100)
 
@@ -237,7 +220,6 @@ async def reindex_knowledge_base():
                     detail="Scraping failed; keeping existing knowledge base"
                 )
 
-            # Clear existing data only after successful scrape
             vector_store.clear()
             count = vector_store.add_documents(documents)
 

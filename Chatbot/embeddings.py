@@ -4,7 +4,6 @@ Uses BGE-M3 for multilingual embeddings.
 """
 
 import os
-# Disable tokenizers parallelism to avoid multiprocessing issues on Windows
 os.environ["TOKENIZERS_PARALLELISM"] = "false"
 
 from sentence_transformers import SentenceTransformer
@@ -34,7 +33,6 @@ class EmbeddingManager:
         if EmbeddingManager._model is None:
             logger.info(f"Loading embedding model: {config.EMBEDDING_MODEL}")
             try:
-                # Force clean download with cache_folder to avoid corruption
                 EmbeddingManager._model = SentenceTransformer(
                     config.EMBEDDING_MODEL,
                     trust_remote_code=True,
@@ -86,10 +84,8 @@ class EmbeddingManager:
     
     def get_embedding_dimension(self) -> int:
         """Get the dimension of embeddings produced by the model."""
-        # Generate a test embedding to get dimension
         test_embedding = self.embed_text("test")
         return len(test_embedding)
 
 
-# Singleton instance
 embedding_manager = EmbeddingManager()

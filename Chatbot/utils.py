@@ -6,7 +6,6 @@ Fully softcoded - no hardcoded patterns or regex.
 import logging
 from typing import List
 
-# Configure logging
 logging.basicConfig(
     level=logging.INFO,
     format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
@@ -35,9 +34,7 @@ def chunk_text(text: str, chunk_size: int = 500, overlap: int = 50) -> List[str]
     while start < len(text):
         end = start + chunk_size
         
-        # Try to break at a sentence boundary
         if end < len(text):
-            # Look for sentence endings
             for sep in ['. ', '! ', '? ', '\n\n', '\n']:
                 last_sep = text[start:end].rfind(sep)
                 if last_sep != -1:
@@ -48,7 +45,6 @@ def chunk_text(text: str, chunk_size: int = 500, overlap: int = 50) -> List[str]
         if chunk:
             chunks.append(chunk)
 
-        # Ensure forward progress even if overlap or separators cause regression
         next_start = end - overlap
         if next_start <= start:
             next_start = end
@@ -68,7 +64,6 @@ def clean_text(text: str) -> str:
     Returns:
         Cleaned text
     """
-    # Remove extra whitespace by splitting and joining
     words = text.split()
     text = ' '.join(words)
     
