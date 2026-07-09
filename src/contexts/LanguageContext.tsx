@@ -654,13 +654,13 @@ const translations: Record<Language, Record<string, string>> = {
     'services.seo.faq5.q': 'Is SEO a one-time service?',
     'services.seo.faq5.a': 'No, SEO requires ongoing work. Search algorithms constantly change, and competitors are always optimizing. Continuous optimization is essential for maintaining and improving rankings.',
     'services.seo.process1.title': 'Audit',
-    'services.seo.process1.desc': 'Analyze your current SEO performance and identify opportunities',
+    'services.seo.process1.desc': 'Analyze your current SEO performance and identify',
     'services.seo.process2.title': 'Strategy',
     'services.seo.process2.desc': 'Develop a customized SEO strategy for your business',
     'services.seo.process3.title': 'Implementation',
     'services.seo.process3.desc': 'Execute on-page, technical, and off-page optimizations',
     'services.seo.process4.title': 'Monitor',
-    'services.seo.process4.desc': 'Track progress and continuously optimize for better results',
+    'services.seo.process4.desc': 'Track progress and continuously optimize',
 
     // Google Ads
     'services.google.title': 'Google Ads (PPC)',
