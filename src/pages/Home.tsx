@@ -172,7 +172,7 @@ export const Home: React.FC = () => {
       image: '/partners/medicare-pharma.jpg',
       avatarScale: 1.35,
       quote:
-        'Their digital marketing strategies doubled our social media engagement and tripled our conversion rates. True professionals!',
+        'Their digital marketing strategies doubled our social media engagement and tripled our conversion rates. True professionals, Appreciated!',
       rating: 5,
     },
   ];

@@ -7952,7 +7952,7 @@ const translations: Record<Language, Record<string, string>> = {
     'blog.posts.digital-marketing-strategies.readTime': '10 min czytania',
     'blog.posts.seo-best-practices.title': 'Najlepsze praktyki SEO na 2025: kompletny przewodnik',
     'blog.posts.seo-best-practices.excerpt': 'Bądź na bieżąco z najnowszymi technikami i najlepszymi praktykami SEO, aby poprawić pozycje w wyszukiwarce.',
-    'blog.posts.seo-best-practices.author': 'Urban Healthcare',
+    'blog.posts.seo-best-practices.author': 'Zespół NexGenTeck',
     'blog.posts.seo-best-practices.date': '18 listopada 2025',
     'blog.posts.seo-best-practices.readTime': '12 min czytania',
     'blog.posts.blockchain-business.title': 'Jak blockchain zmienia operacje biznesowe',
