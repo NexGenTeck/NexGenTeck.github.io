@@ -382,7 +382,7 @@ const translations: Record<Language, Record<string, string>> = {
     'about.values.collaboration': 'Collaboration',
     'about.values.collaboration.desc': 'We work closely with our clients as partners, ensuring their vision becomes reality.',
     'about.values.excellence': 'Excellence',
-    'about.values.excellence.desc': 'We maintain the highest standards of quality in everything, with precision and care.',
+    'about.values.excellence.desc': 'We maintain the highest standards of quality in everything with care.',
     'about.values.passion': 'Passion',
     'about.values.passion.desc': 'We love what we do, and it shows in the exceptional results we consistently convey.',
     'about.team.subtitle': 'The passionate people behind NexGenTeck.',
