@@ -560,7 +560,7 @@ const translations: Record<Language, Record<string, string>> = {
     'services.ecommerce.faq5.q': 'What kind of support do you offer?',
     'services.ecommerce.faq5.a': 'We provide ongoing technical support, maintenance, security updates, and feature enhancements based on your selected package.',
     'services.ecommerce.process1.title': 'Discovery',
-    'services.ecommerce.process1.desc': 'We analyze your business model, target audience, and competition',
+    'services.ecommerce.process1.desc': 'We analyze your business, audience, and competition',
     'services.ecommerce.process2.title': 'Design',
     'services.ecommerce.process2.desc': 'Create user-friendly interfaces that drive conversions',
     'services.ecommerce.process3.title': 'Development',
