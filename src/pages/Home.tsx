@@ -35,16 +35,17 @@ export const Home: React.FC = () => {
     {
       id: 1,
       image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
+      imageFilter: 'brightness(0.82) contrast(1.18) saturate(1.08)',
       titlePrefix: t('hero.slide1.title'),
       useTypewriter: true,
       subtitle: t('hero.slide1.subtitle'),
       ctaText: t('hero.slide1.cta'),
       ctaSecondary: t('hero.slide1.cta2'),
-      ctaLink: '/contact',
-    },
+      ctaLink: '/contact',    },
     {
       id: 2,
       image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
+      imageFilter: 'brightness(0.82) contrast(1.18) saturate(1.08)',
       title: t('hero.slide2.title'),
       subtitle: t('hero.slide2.subtitle'),
       ctaText: t('hero.slide2.cta'),
@@ -52,7 +53,8 @@ export const Home: React.FC = () => {
     },
     {
       id: 3,
-      image: 'https://images.unsplash.com/photo-1451187580459-43490279c0fa?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
+      image: '/hero/home-slide-3.jpg',
+      imageFilter: 'brightness(0.82) contrast(1.18) saturate(1.08)',
       title: t('hero.slide3.title'),
       subtitle: t('hero.slide3.subtitle'),
       ctaText: t('hero.slide3.cta'),
@@ -202,11 +204,12 @@ export const Home: React.FC = () => {
                     <div className="absolute inset-0">
                       <img
                         src={slide.image}
-                        alt={slide.title}
+                        alt={'title' in slide ? slide.title : slide.titlePrefix}
                         className="w-full h-full object-cover"
+                        style={{ filter: slide.imageFilter }}
                       />
                       {/* Gradient Overlay - NexGenTeck Dark Brand */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/80 via-black/50 to-transparent" />
+                      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-orange-950/35" />
                     </div>
 
                     {/* Content Overlay */}
