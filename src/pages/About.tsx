@@ -148,11 +148,18 @@ export const About: React.FC = () => {
               </p>
             </AnimatedSection>
             <AnimatedSection direction="right">
-              <ImageWithFallback
-                src="https://images.unsplash.com/photo-1702047135360-e549c2e1f7df?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNoJTIwc3RhcnR1cCUyMHdvcmtzcGFjZXxlbnwxfHx8fDE3NjQ0MTI5Mzh8MA&ixlib=rb-4.1.0&q=80&w=1080"
-                alt="Tech Workspace"
-                className="rounded-2xl shadow-2xl"
-              />
+              <div className="rounded-2xl shadow-2xl overflow-hidden bg-[#e3b186] p-6">
+                <div className="w-full h-[420px] rounded-xl overflow-hidden flex items-center justify-center bg-[#e3b186]">
+                  <ImageWithFallback
+                    src="https://images.unsplash.com/photo-1702047135360-e549c2e1f7df?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx0ZWNoJTIwc3RhcnR1cCUyMHdvcmtzcGFjZXxlbnwxfHx8fDE3NjQ0MTI5Mzh8MA&ixlib=rb-4.1.0&q=80&w=1080"
+                    alt="Tech Workspace"
+                    className="w-full h-full rounded-xl object-contain"
+                    style={{
+                      transform: 'scale(0.82)',
+                    }}
+                  />
+                </div>
+              </div>
             </AnimatedSection>
           </div>
         </div>
