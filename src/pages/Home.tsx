@@ -149,28 +149,28 @@ export const Home: React.FC = () => {
 
   const testimonials = [
     {
-      name: 'Sarah Johnson',
-      role: 'CEO, TechStart Inc',
-      image:
-        'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      name: 'Saifee Healthcare',
+      role: 'Director',
+      image: '/partners/saifee-healthcare.png',
+      avatarScale: 1,
       quote:
         'NexGenTeck transformed our digital presence. Their expertise in web development and SEO helped us achieve 300% growth in online revenue.',
       rating: 5,
     },
     {
-      name: 'Michael Chen',
-      role: 'Founder, E-Shop Global',
-      image:
-        'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      name: 'Urban Healthcare',
+      role: 'Manager',
+      image: '/partners/urban-healthcare.png',
+      avatarScale: 1,
       quote:
         'Outstanding e-commerce solution! The platform they built handles thousands of daily transactions flawlessly. Highly recommended!',
       rating: 5,
     },
     {
-      name: 'Emma Williams',
-      role: 'Marketing Director, BrandBoost',
-      image:
-        'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      name: 'Medicare Pharma',
+      role: 'Marketing Director',
+      image: '/partners/medicare-pharma.jpg',
+      avatarScale: 1.35,
       quote:
         'Their digital marketing strategies doubled our social media engagement and tripled our conversion rates. True professionals!',
       rating: 5,
@@ -622,11 +622,16 @@ export const Home: React.FC = () => {
                     <Quote className="w-12 h-12 text-orange-500/40 mb-4" />
                     <p className="text-gray-300 mb-6">{testimonial.quote}</p>
                     <div className="flex items-center space-x-4">
-                      <ImageWithFallback
-                        src={testimonial.image}
-                        alt={testimonial.name}
-                        className="w-12 h-12 rounded-full object-cover"
-                      />
+                      <div className="w-12 h-12 rounded-full bg-white p-1 overflow-hidden flex items-center justify-center">
+                        <ImageWithFallback
+                          src={testimonial.image}
+                          alt={`${testimonial.name} logo`}
+                          className="w-full h-full object-contain rounded-full"
+                          style={{
+                            transform: `scale(${testimonial.avatarScale ?? 1})`,
+                          }}
+                        />
+                      </div>
                       <div>
                         <div className="text-white">{testimonial.name}</div>
                         <div className="text-gray-500 text-sm">{testimonial.role}</div>
