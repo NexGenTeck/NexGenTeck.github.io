@@ -104,7 +104,7 @@ const translations: Record<Language, Record<string, string>> = {
     'services.3dgraphics.process1.title': 'Concept & Planning',
     'services.3dgraphics.process1.desc': 'Understand vision, gather references, create initial concept sketches',
     'services.3dgraphics.process2.title': 'Modeling & Sculpting',
-    'services.3dgraphics.process2.desc': 'Build detailed 3D models using industry-leading software',
+    'services.3dgraphics.process2.desc': 'Build detailed 3D models using industry-leading software and advanced techniques',
     'services.3dgraphics.process3.title': 'Texturing & Lighting',
     'services.3dgraphics.process3.desc': 'Apply realistic materials, textures, and professional lighting',
     'services.3dgraphics.process4.title': 'Rendering & Delivery',
