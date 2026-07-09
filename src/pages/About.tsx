@@ -97,17 +97,20 @@ export const About: React.FC = () => {
     {
       name: 'Medicare Pharma',
       logo: '/partners/medicare-pharma.jpg',
-      logoClassName: 'max-h-40 max-w-[125%] scale-135 rounded-xl',
+      logoScale: 1.45,
+      imageFit: 'cover',
     },
     {
-      name: 'Saifee Healthcare',
+      name: 'Saifee Labs',
       logo: '/partners/saifee-healthcare.png',
-      logoClassName: 'max-h-28 max-w-full rounded-xl',
+      logoScale: 1,
+      imageFit: 'contain',
     },
     {
       name: 'Urban Healthcare',
       logo: '/partners/urban-healthcare.png',
-      logoClassName: 'max-h-28 max-w-full rounded-xl',
+      logoScale: 1,
+      imageFit: 'contain',
     },
   ] as const;
 
@@ -201,13 +204,17 @@ export const About: React.FC = () => {
                   whileHover={{ y: -8, scale: 1.03 }}
                   transition={{ type: 'spring', stiffness: 260, damping: 20 }}
                   className="group h-full rounded-2xl border border-orange-500/20 bg-white p-6 shadow-lg hover:shadow-2xl hover:border-orange-500/50 transition-all flex flex-col items-center justify-between"
-                  style={{ minHeight: '220px' }}
+                  style={{ minHeight: '300px' }}
                 >
-                  <div className="w-full h-32 flex items-center justify-center rounded-xl bg-white overflow-hidden">
+                  <div className="w-full h-44 flex items-center justify-center rounded-xl bg-white overflow-hidden">
                     <img
                       src={partner.logo}
                       alt={`${partner.name} logo`}
-                      className={`${partner.logoClassName} object-contain transition-transform duration-300`}
+                      className="w-full h-full rounded-xl transition-transform duration-300"
+                      style={{
+                        objectFit: partner.imageFit,
+                        transform: `scale(${partner.logoScale})`,
+                      }}
                     />
                   </div>
 
