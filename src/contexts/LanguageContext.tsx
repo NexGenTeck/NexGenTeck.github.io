@@ -797,7 +797,7 @@ const translations: Record<Language, Record<string, string>> = {
     'services.software.process1.title': 'Discovery',
     'services.software.process1.desc': 'Understand your requirements, challenges, and business objectives',
     'services.software.process2.title': 'Design',
-    'services.software.process2.desc': 'Create detailed specifications and system architecture',
+    'services.software.process2.desc': 'Create detailed specifications and system architecture documentation',
     'services.software.process3.title': 'Develop',
     'services.software.process3.desc': 'Build your software using agile methodology with regular updates',
     'services.software.process4.title': 'Deploy',
