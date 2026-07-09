@@ -618,7 +618,7 @@ const translations: Record<Language, Record<string, string>> = {
     // SEO
     'services.seo.title': 'Search Engine Optimization',
     'services.seo.subtitle': 'Boost your visibility and drive organic traffic',
-    'services.seo.description': 'Improve your search engine rankings and attract more qualified traffic with our comprehensive SEO services.',
+    'services.seo.description': 'Improve your search engine rankings and attract more qualified traffic with our comprehensive SEO and digital marketing services.',
     'services.seo.feature1': 'Comprehensive SEO audit',
     'services.seo.feature2': 'Keyword research',
     'services.seo.feature3': 'On-page optimization',
