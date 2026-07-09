@@ -748,13 +748,13 @@ const translations: Record<Language, Record<string, string>> = {
     'services.social.faq5.q': 'Can you help with paid social advertising?',
     'services.social.faq5.a': 'Absolutely! Paid social is included in our Pro and Enterprise packages. We create and manage campaigns on Facebook, Instagram, LinkedIn, TikTok, and other platforms.',
     'services.social.process1.title': 'Audit',
-    'services.social.process1.desc': 'Analyze your current social presence and competitor landscape',
+    'services.social.process1.desc': 'Analyze your current social presence and competitor',
     'services.social.process2.title': 'Strategy',
     'services.social.process2.desc': 'Develop a tailored social media strategy for each platform',
     'services.social.process3.title': 'Create',
     'services.social.process3.desc': 'Produce engaging content that resonates with your audience',
     'services.social.process4.title': 'Grow',
-    'services.social.process4.desc': 'Execute campaigns and continuously optimize for growth',
+    'services.social.process4.desc': 'Execute campaigns and continuously optimize growth',
 
     // Software Development
     'services.software.title': 'Software Development',
