@@ -155,7 +155,7 @@ const translations: Record<Language, Record<string, string>> = {
     'services.videoediting.process3.title': 'Editing & Enhancement',
     'services.videoediting.process3.desc': 'Cut, arrange, color grade, add effects and enhance audio',
     'services.videoediting.process4.title': 'Review & Delivery',
-    'services.videoediting.process4.desc': 'Present draft for feedback, implement revisions, and deliver final video',
+    'services.videoediting.process4.desc': 'Present draft for feedback and deliver final video',
 
     // Why Choose Us
     'whyus.title': 'Why Choose NexGenTeck?',
