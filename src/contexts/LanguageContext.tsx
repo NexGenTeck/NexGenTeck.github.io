@@ -823,7 +823,7 @@ const translations: Record<Language, Record<string, string>> = {
     'services.ai.benefit5': 'Deep Insights: Gain powerful visibility into customer needs via conversation analytics.',
     'services.ai.benefit6': 'Future-Ready Technology: Stay ahead with state-of-the-art AI implementations.',
     'services.ai.process1.title': 'Discovery & Analysis',
-    'services.ai.process1.desc': 'Understand your business needs and identify AI opportunities',
+    'services.ai.process1.desc': 'Understand your business needs & identify AI opportunities',
     'services.ai.process2.title': 'Solution Design',
     'services.ai.process2.desc': 'Architect custom AI systems tailored to your requirements',
     'services.ai.process3.title': 'Development & Training',
