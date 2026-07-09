@@ -181,8 +181,7 @@ export const Home: React.FC = () => {
     {
       title: 'Global E-commerce Platform',
       category: 'services.ecommerce',
-      image:
-        'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080',
+      image: '/services/ecommerce-hero.png',
       link: '/portfolio/global-ecommerce',
     },
     {
