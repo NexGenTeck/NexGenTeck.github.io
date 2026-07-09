@@ -146,14 +146,9 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
               <AnimatedSection key={index} delay={index * 0.1}>
                 <motion.div
                   whileHover={{ x: 10 }}
-                  className="flex items-start space-x-4 p-6 bg-gray-50 rounded-xl"
+                  className="p-6 bg-gray-50 rounded-xl"
                 >
-                  <div className="w-12 h-12 bg-gradient-to-r from-orange-500 to-orange-600 rounded-lg flex items-center justify-center flex-shrink-0 text-white">
-                    {index + 1}
-                  </div>
-                  <div>
-                    <p className="text-gray-700">{benefit}</p>
-                  </div>
+                  <p className="text-gray-700">{benefit}</p>
                 </motion.div>
               </AnimatedSection>
             ))}
@@ -227,9 +222,21 @@ export const ServiceDetail: React.FC<ServiceDetailProps> = ({
                   <h3 className={`text-2xl mb-2 ${pkg.popular ? 'text-white' : 'text-gray-900'}`}>
                     {pkg.name}
                   </h3>
-                  <div className={`mb-6 flex items-baseline gap-1 whitespace-nowrap ${pkg.popular ? 'text-white' : 'text-orange-500'}`}>
-                    <span className="text-3xl lg:text-4xl leading-none">{formatPackagePrice(pkg.price).amount}</span>
-                    <span className="text-base lg:text-lg leading-none">{formatPackagePrice(pkg.price).suffix}</span>
+                  <div
+                    className={`mb-6 w-full overflow-visible ${
+                      pkg.popular ? 'text-white' : 'text-orange-500'
+                    }`}
+                    style={{
+                      whiteSpace: 'nowrap',
+                      fontSize: 'clamp(1rem, 1.45vw, 1.45rem)',
+                      lineHeight: 1.1,
+                      letterSpacing: '-0.04em',
+                    }}
+                  >
+                    {`${formatPackagePrice(pkg.price).amount}${formatPackagePrice(pkg.price).suffix}`.replace(
+                      /\s+/g,
+                      '\u00A0',
+                    )}
                   </div>
                   <ul className="space-y-3 mb-8 flex-1">
                     {pkg.features.map((feature, idx) => (
