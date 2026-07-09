@@ -94,10 +94,22 @@ export const About: React.FC = () => {
   ];
 
   const partners = [
-    { nameKey: 'about.partners.partner1' },
-    { nameKey: 'about.partners.partner2' },
-    { nameKey: 'about.partners.partner3' },
-  ];
+    {
+      name: 'Medicare Pharma',
+      logo: '/partners/medicare-pharma.jpg',
+      logoClassName: 'max-h-40 max-w-[125%] scale-135 rounded-xl',
+    },
+    {
+      name: 'Saifee Healthcare',
+      logo: '/partners/saifee-healthcare.png',
+      logoClassName: 'max-h-28 max-w-full rounded-xl',
+    },
+    {
+      name: 'Urban Healthcare',
+      logo: '/partners/urban-healthcare.png',
+      logoClassName: 'max-h-28 max-w-full rounded-xl',
+    },
+  ] as const;
 
   return (
     <div className="min-h-screen pt-20">
@@ -182,16 +194,26 @@ export const About: React.FC = () => {
             </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-center max-w-5xl mx-auto">
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-8 items-stretch max-w-5xl mx-auto">
             {partners.map((partner, index) => (
-              <AnimatedSection key={index} delay={index * 0.1}>
+              <AnimatedSection key={partner.name} delay={index * 0.1}>
                 <motion.div
-                  whileHover={{ scale: 1.1 }}
-                  className="bg-white rounded-xl p-6 shadow-lg hover:shadow-xl transition-all flex items-center justify-center h-24 w-full max-w-sm mx-auto"
+                  whileHover={{ y: -8, scale: 1.03 }}
+                  transition={{ type: 'spring', stiffness: 260, damping: 20 }}
+                  className="group h-full rounded-2xl border border-orange-500/20 bg-white p-6 shadow-lg hover:shadow-2xl hover:border-orange-500/50 transition-all flex flex-col items-center justify-between"
+                  style={{ minHeight: '220px' }}
                 >
-                  <div className="text-gray-400 text-center">
-                    <div className="text-2xl">{t(partner.nameKey)}</div>
+                  <div className="w-full h-32 flex items-center justify-center rounded-xl bg-white overflow-hidden">
+                    <img
+                      src={partner.logo}
+                      alt={`${partner.name} logo`}
+                      className={`${partner.logoClassName} object-contain transition-transform duration-300`}
+                    />
                   </div>
+
+                  <h3 className="mt-6 text-xl font-semibold text-gray-900 text-center">
+                    {partner.name}
+                  </h3>
                 </motion.div>
               </AnimatedSection>
             ))}

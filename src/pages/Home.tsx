@@ -34,17 +34,20 @@ export const Home: React.FC = () => {
   const heroSlides = [
     {
       id: 1,
-      image: 'https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
+      image:
+        'https://images.unsplash.com/photo-1522071820081-009f0129c71c?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
       imageFilter: 'brightness(0.82) contrast(1.18) saturate(1.08)',
       titlePrefix: t('hero.slide1.title'),
       useTypewriter: true,
       subtitle: t('hero.slide1.subtitle'),
       ctaText: t('hero.slide1.cta'),
       ctaSecondary: t('hero.slide1.cta2'),
-      ctaLink: '/contact',    },
+      ctaLink: '/contact',
+    },
     {
       id: 2,
-      image: 'https://images.unsplash.com/photo-1552664730-d307ca884978?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
+      image:
+        'https://images.unsplash.com/photo-1552664730-d307ca884978?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1920&q=80',
       imageFilter: 'brightness(0.82) contrast(1.18) saturate(1.08)',
       title: t('hero.slide2.title'),
       subtitle: t('hero.slide2.subtitle'),
@@ -92,49 +95,55 @@ export const Home: React.FC = () => {
       descKey: 'services.web.desc',
       icon: '💻',
       link: '/services/web-development',
-      image: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZ3xlbnwxfHx8fDE3NjQzODYyMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      image:
+        'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZ3xlbnwxfHx8fDE3NjQzODYyMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
       titleKey: 'services.mobile',
       descKey: 'services.mobile.desc',
       icon: '📱',
       link: '/services/mobile-app',
-      image: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      image:
+        'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
       titleKey: 'services.social',
       descKey: 'services.social.desc',
       icon: '📊',
       link: '/services/social-media',
-      image: 'https://images.unsplash.com/photo-1557838923-2985c318be48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDF8fHx8MTc2NDQyNjgzNnww&ixlib=rb-4.1.0&q=80&w=1080',
+      image:
+        'https://images.unsplash.com/photo-1557838923-2985c318be48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDF8fHx8MTc2NDQyNjgzNnww&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
       titleKey: 'services.seo',
       descKey: 'services.seo.desc',
       icon: '🔍',
       link: '/services/seo',
-      image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzZW8lMjBhbmFseXRpY3N8ZW58MXx8fHwxNzY0NDAyMjQ1fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      image:
+        'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzZW8lMjBhbmFseXRpY3N8ZW58MXx8fHwxNzY0NDAyMjQ1fDA&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
       titleKey: 'services.software',
       descKey: 'services.software.desc',
       icon: '⚙️',
       link: '/services/software',
-      image: 'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2Z0d2FyZSUyMGRldmVsb3BtZW50fGVufDB8fHx8MTczOTU4MDkwNXww&ixlib=rb-4.1.0&q=80&w=1080',
+      image:
+        'https://images.unsplash.com/photo-1555949963-ff9fe0c870eb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzb2Z0d2FyZSUyMGRldmVsb3BtZW50fGVufDB8fHx8MTczOTU4MDkwNXww&ixlib=rb-4.1.0&q=80&w=1080',
     },
     {
       titleKey: 'services.ai',
       descKey: 'services.ai.desc',
       icon: '🤖',
       link: '/services/artificial-intelligence',
-      image: 'https://images.unsplash.com/photo-1677442136019-21780ecad995?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlfGVufDF8fHx8MTc2NDQyNjgzNnww&ixlib=rb-4.1.0&q=80&w=1080',
+      image:
+        'https://images.unsplash.com/photo-1677442136019-21780ecad995?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxhcnRpZmljaWFsJTIwaW50ZWxsaWdlbmNlfGVufDF8fHx8MTc2NDQyNjgzNnww&ixlib=rb-4.1.0&q=80&w=1080',
     },
   ];
 
   const stats = [
     { number: '15+', labelKey: 'stats.projects' },
     { number: '10+', labelKey: 'stats.clients' },
-    { number: '10+', labelKey: 'stats.team' },
+    { number: '9+', labelKey: 'stats.team' },
     { number: '3+', labelKey: 'stats.experience' },
   ];
 
@@ -142,22 +151,28 @@ export const Home: React.FC = () => {
     {
       name: 'Sarah Johnson',
       role: 'CEO, TechStart Inc',
-      image: 'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      quote: 'NexGenTeck transformed our digital presence. Their expertise in web development and SEO helped us achieve 300% growth in online revenue.',
+      image:
+        'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      quote:
+        'NexGenTeck transformed our digital presence. Their expertise in web development and SEO helped us achieve 300% growth in online revenue.',
       rating: 5,
     },
     {
       name: 'Michael Chen',
       role: 'Founder, E-Shop Global',
-      image: 'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      quote: 'Outstanding e-commerce solution! The platform they built handles thousands of daily transactions flawlessly. Highly recommended!',
+      image:
+        'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      quote:
+        'Outstanding e-commerce solution! The platform they built handles thousands of daily transactions flawlessly. Highly recommended!',
       rating: 5,
     },
     {
       name: 'Emma Williams',
       role: 'Marketing Director, BrandBoost',
-      image: 'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      quote: 'Their digital marketing strategies doubled our social media engagement and tripled our conversion rates. True professionals!', appreciated
+      image:
+        'https://images.unsplash.com/photo-1762341118883-13bbd9d79927?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxwcm9mZXNzaW9uYWwlMjBidXNpbmVzcyUyMHBlcnNvbnxlbnwxfHx8fDE3NjQ0MzcwMTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      quote:
+        'Their digital marketing strategies doubled our social media engagement and tripled our conversion rates. True professionals!',
       rating: 5,
     },
   ];
@@ -166,19 +181,22 @@ export const Home: React.FC = () => {
     {
       title: 'Global E-commerce Platform',
       category: 'services.ecommerce',
-      image: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080',
+      image:
+        'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&w=1080',
       link: '/portfolio/global-ecommerce',
     },
     {
       title: 'Corporate Website Redesign',
       category: 'services.web',
-      image: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZ3xlbnwxfHx8fDE3NjQzODYyMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      image:
+        'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZ3xlbnwxfHx8fDE3NjQzODYyMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
       link: '/portfolio/corporate-redesign',
     },
     {
       title: 'Fitness Mobile App',
       category: 'services.mobile',
-      image: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      image:
+        'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
       link: '/portfolio/fitness-app',
     },
   ];
@@ -198,8 +216,15 @@ export const Home: React.FC = () => {
           >
             <CarouselContent className="ml-0">
               {heroSlides.map((slide) => (
-                <CarouselItem key={slide.id} className="pl-0 min-w-0 shrink-0 grow-0" style={{ flexBasis: '100%' }}>
-                  <div className="relative w-full flex items-center justify-center" style={{ height: '600px' }}>
+                <CarouselItem
+                  key={slide.id}
+                  className="pl-0 min-w-0 shrink-0 grow-0"
+                  style={{ flexBasis: '100%' }}
+                >
+                  <div
+                    className="relative w-full flex items-center justify-center"
+                    style={{ height: '600px' }}
+                  >
                     {/* Background Image */}
                     <div className="absolute inset-0">
                       <img
@@ -208,8 +233,28 @@ export const Home: React.FC = () => {
                         className="w-full h-full object-cover"
                         style={{ filter: slide.imageFilter }}
                       />
-                      {/* Gradient Overlay - NexGenTeck Dark Brand */}
-                      <div className="absolute inset-0 bg-gradient-to-r from-black/90 via-black/65 to-orange-950/35" />
+
+                      {/* NexGenTeck Orange Contrast Overlay */}
+                      <div className="absolute inset-0 pointer-events-none">
+                        {/* Dark readable overlay */}
+                        <div
+                          className="absolute inset-0"
+                          style={{
+                            background:
+                              'linear-gradient(90deg, rgba(0,0,0,0.92) 0%, rgba(0,0,0,0.70) 48%, rgba(67,27,5,0.48) 100%)',
+                          }}
+                        />
+
+                        {/* Soft orange screen blend - keep this */}
+                        <div
+                          className="absolute inset-0"
+                          style={{
+                            background:
+                              'radial-gradient(circle at 72% 38%, rgba(249,115,22,0.20), transparent 34%), radial-gradient(circle at 18% 82%, rgba(251,146,60,0.14), transparent 36%)',
+                            mixBlendMode: 'screen',
+                          }}
+                        />
+                      </div>
                     </div>
 
                     {/* Content Overlay */}
@@ -231,10 +276,13 @@ export const Home: React.FC = () => {
                               {slide.titlePrefix}{' '}
                               <TypewriterText phrases={typewriterPhrases} />
                             </>
+                          ) : 'title' in slide ? (
+                            slide.title
                           ) : (
-                            'title' in slide ? slide.title : ''
+                            ''
                           )}
                         </motion.h1>
+
                         <motion.p
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -243,6 +291,7 @@ export const Home: React.FC = () => {
                         >
                           {slide.subtitle}
                         </motion.p>
+
                         <motion.div
                           initial={{ opacity: 0, y: 20 }}
                           animate={{ opacity: 1, y: 0 }}
@@ -262,7 +311,8 @@ export const Home: React.FC = () => {
                             <span>{slide.ctaText}</span>
                             <ArrowRight className="w-5 h-5" />
                           </Link>
-                          {/* Secondary CTA Button (if exists) */}
+
+                          {/* Secondary CTA Button */}
                           {'ctaSecondary' in slide && slide.ctaSecondary && language === 'en' && (
                             <button
                               type="button"
@@ -288,26 +338,40 @@ export const Home: React.FC = () => {
               ))}
             </CarouselContent>
 
-            {/* Navigation Arrows - Minimal style, just arrows */}
+            {/* Navigation Arrows */}
             <CarouselPrevious
               className="absolute left-4 lg:left-12 top-1/2 -translate-y-1/2 bg-transparent hover:bg-white/20 border-0 text-white rounded-full flex items-center justify-center transition-all"
               style={{ width: '48px', height: '48px', fontSize: 0 }}
             />
+
             <CarouselNext
               className="absolute right-4 lg:right-12 top-1/2 -translate-y-1/2 bg-transparent hover:bg-white/20 border-0 text-white rounded-full flex items-center justify-center transition-all"
               style={{ width: '48px', height: '48px', fontSize: 0 }}
             />
 
-            {/* Dot Indicators - Positioned higher to be visible within slide */}
-            <div className="absolute left-1/2 -translate-x-1/2 flex gap-3 z-20" style={{ bottom: '80px' }}>
+            {/* Dot Indicators */}
+            <div
+              className="absolute left-1/2 -translate-x-1/2 flex gap-3 z-20"
+              style={{ bottom: '80px' }}
+            >
               {heroSlides.map((_, index) => (
                 <button
                   key={index}
                   onClick={() => carouselApi?.scrollTo(index)}
                   className="rounded-full transition-all duration-300 hover:opacity-100"
-                  style={index === currentSlide
-                    ? { width: '12px', height: '12px', backgroundColor: 'white', boxShadow: '0 0 0 4px transparent, 0 0 0 5px white' }
-                    : { width: '12px', height: '12px', backgroundColor: 'rgba(255, 255, 255, 0.5)' }
+                  style={
+                    index === currentSlide
+                      ? {
+                          width: '12px',
+                          height: '12px',
+                          backgroundColor: 'white',
+                          boxShadow: '0 0 0 4px transparent, 0 0 0 5px white',
+                        }
+                      : {
+                          width: '12px',
+                          height: '12px',
+                          backgroundColor: 'rgba(255, 255, 255, 0.5)',
+                        }
                   }
                   aria-label={`Go to slide ${index + 1}`}
                 />
@@ -440,9 +504,7 @@ export const Home: React.FC = () => {
               </AnimatedSection>
               <AnimatedSection direction="right">
                 <h2 className="text-4xl lg:text-5xl text-white mb-6">{t('whyus.title')}</h2>
-                <p className="text-xl text-white/80 mb-8">
-                  {t('whyus.subtitle')}
-                </p>
+                <p className="text-xl text-white/80 mb-8">{t('whyus.subtitle')}</p>
                 <div className="space-y-4">
                   {[
                     t('whyus.point1'),
@@ -505,7 +567,9 @@ export const Home: React.FC = () => {
                         />
                         <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
                         <div className="absolute bottom-4 left-4 right-4">
-                          <div className="text-sm text-orange-400 mb-2">{t(project.category)}</div>
+                          <div className="text-sm text-orange-400 mb-2">
+                            {t(project.category)}
+                          </div>
                           <h3 className="text-xl text-white">{project.title}</h3>
                         </div>
                       </div>
@@ -540,7 +604,9 @@ export const Home: React.FC = () => {
           {/* Black Card Container */}
           <div className="bg-black/60 backdrop-blur-sm border border-white/10 rounded-3xl p-8 md:p-12">
             <AnimatedSection className="text-center mb-16">
-              <h2 className="text-4xl lg:text-5xl text-white mb-4">{t('testimonials.title')}</h2>
+              <h2 className="text-4xl lg:text-5xl text-white mb-4">
+                {t('testimonials.title')}
+              </h2>
               <p className="text-xl text-gray-300 max-w-2xl mx-auto">
                 {t('testimonials.subtitle')}
               </p>
@@ -622,40 +688,45 @@ export const Home: React.FC = () => {
         </div>
       </section>
 
-      {isDemoOpen && typeof document !== 'undefined' && createPortal(
-        <div
-          className="fixed inset-0 flex items-center justify-center bg-black/90 p-4"
-          style={{ zIndex: 99999 }}
-          onClick={() => setIsDemoOpen(false)}
-        >
+      {isDemoOpen &&
+        typeof document !== 'undefined' &&
+        createPortal(
           <div
-            className="relative w-full max-w-4xl bg-black rounded-xl p-4 md:p-6 border border-orange-500/30 shadow-2xl"
-            style={{ zIndex: 100000 }}
-            onClick={(event) => event.stopPropagation()}
+            className="fixed inset-0 flex items-center justify-center bg-black/90 p-4"
+            style={{ zIndex: 99999 }}
+            onClick={() => setIsDemoOpen(false)}
           >
-            <button
-              type="button"
-              onClick={() => setIsDemoOpen(false)}
-              className="absolute -top-3 -right-3 z-[100001] p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-colors shadow-lg"
-              aria-label="Close video"
+            <div
+              className="relative w-full max-w-4xl bg-black rounded-xl p-4 md:p-6 border border-orange-500/30 shadow-2xl"
+              style={{ zIndex: 100000 }}
+              onClick={(event) => event.stopPropagation()}
             >
-              <X className="w-6 h-6" />
-            </button>
-            <div className="relative w-full bg-black rounded-lg overflow-hidden" style={{ paddingBottom: '56.25%' }}>
-              <iframe
-                className="absolute top-0 left-0 w-full h-full"
-                style={{ zIndex: 1 }}
-                src="https://www.youtube.com/embed/MdOanVqkeG8?autoplay=1&rel=0"
-                title="NexGenTeck Quick Demo"
-                allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-                referrerPolicy="strict-origin-when-cross-origin"
-                allowFullScreen
-              />
+              <button
+                type="button"
+                onClick={() => setIsDemoOpen(false)}
+                className="absolute -top-3 -right-3 z-[100001] p-2 rounded-full bg-orange-500 text-white hover:bg-orange-600 transition-colors shadow-lg"
+                aria-label="Close video"
+              >
+                <X className="w-6 h-6" />
+              </button>
+              <div
+                className="relative w-full bg-black rounded-lg overflow-hidden"
+                style={{ paddingBottom: '56.25%' }}
+              >
+                <iframe
+                  className="absolute top-0 left-0 w-full h-full"
+                  style={{ zIndex: 1 }}
+                  src="https://www.youtube.com/embed/MdOanVqkeG8?autoplay=1&rel=0"
+                  title="NexGenTeck Quick Demo"
+                  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
+                  referrerPolicy="strict-origin-when-cross-origin"
+                  allowFullScreen
+                />
+              </div>
             </div>
-          </div>
-        </div>,
-        document.body,
-      )}
+          </div>,
+          document.body,
+        )}
     </div>
   );
 };
