@@ -8,7 +8,7 @@ export const EcommercePage: React.FC = () => {
     title: t('services.ecommerce.title'),
     subtitle: t('services.ecommerce.subtitle'),
     description: t('services.ecommerce.description'),
-    image: 'https://images.unsplash.com/photo-1727407209320-1fa6ae60ee05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBzaG9wcGluZ3xlbnwxfHx8fDE3NjQzNDQ4NTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+    image: '/services/ecommerce-hero.png',
     features: [
       t('services.ecommerce.feature1'),
       t('services.ecommerce.feature2'),
