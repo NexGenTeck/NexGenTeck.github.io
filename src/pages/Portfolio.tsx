@@ -36,7 +36,7 @@ export const Portfolio: React.FC = () => {
       image: '/portfolio/swift-translate-pro.jpeg',
       description:
         'AI-powered multilingual translation via fast, API-based language processing. Streamlines cross-team communication with accurate, real-time translations.',
-      tags: ['AI', 'API Integration', 'Translation'],
+      tags: ['AI', 'API Integration', '<b>Translation</b>'],
     },
     {
       id: 'tiktok-downloader',
