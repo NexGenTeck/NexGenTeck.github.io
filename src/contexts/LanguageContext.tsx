@@ -618,7 +618,7 @@ const translations: Record<Language, Record<string, string>> = {
     // SEO
     'services.seo.title': 'Search Engine Optimization',
     'services.seo.subtitle': 'Boost your visibility and drive organic traffic',
-    'services.seo.description': 'Improve your search engine rankings and attract more qualified traffic with our comprehensive SEO services.',
+    'services.seo.description': 'Improve your search engine rankings and attract more qualified traffic with our comprehensive SEO and digital marketing services.',
     'services.seo.feature1': 'Comprehensive SEO audit',
     'services.seo.feature2': 'Keyword research',
     'services.seo.feature3': 'On-page optimization',
@@ -654,13 +654,13 @@ const translations: Record<Language, Record<string, string>> = {
     'services.seo.faq5.q': 'Is SEO a one-time service?',
     'services.seo.faq5.a': 'No, SEO requires ongoing work. Search algorithms constantly change, and competitors are always optimizing. Continuous optimization is essential for maintaining and improving rankings.',
     'services.seo.process1.title': 'Audit',
-    'services.seo.process1.desc': 'Analyze your current SEO performance and identify opportunities',
+    'services.seo.process1.desc': 'Analyze your current SEO performance and identify',
     'services.seo.process2.title': 'Strategy',
     'services.seo.process2.desc': 'Develop a customized SEO strategy specifically for your business',
     'services.seo.process3.title': 'Implementation',
     'services.seo.process3.desc': 'We execute on-page, technical, and off-page SEO optimizations',
     'services.seo.process4.title': 'Monitor',
-    'services.seo.process4.desc': 'Track progress and continuously optimize for better results',
+    'services.seo.process4.desc': 'Track progress and continuously optimize',
 
     // Google Ads
     'services.google.title': 'Google Ads (PPC)',
@@ -748,13 +748,13 @@ const translations: Record<Language, Record<string, string>> = {
     'services.social.faq5.q': 'Can you help with paid social advertising?',
     'services.social.faq5.a': 'Absolutely! Paid social is included in our Pro and Enterprise packages. We create and manage campaigns on Facebook, Instagram, LinkedIn, TikTok, and other platforms.',
     'services.social.process1.title': 'Audit',
-    'services.social.process1.desc': 'Analyze your current social presence and competitor landscape',
+    'services.social.process1.desc': 'Analyze your current social presence and competitor',
     'services.social.process2.title': 'Strategy',
     'services.social.process2.desc': 'Develop a tailored social media strategy for each platform',
     'services.social.process3.title': 'Create',
     'services.social.process3.desc': 'Produce engaging content that resonates with your audience',
     'services.social.process4.title': 'Grow',
-    'services.social.process4.desc': 'Execute campaigns and continuously optimize for growth',
+    'services.social.process4.desc': 'Execute campaigns and continuously optimize growth',
 
     // Software Development
     'services.software.title': 'Software Development',

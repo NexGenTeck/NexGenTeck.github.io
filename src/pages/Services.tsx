@@ -30,7 +30,7 @@ export const Services: React.FC = () => {
       title: 'Search Engine Optimization',
       slug: 'seo',
       icon: <Search className="w-12 h-12" />,
-      description: 'Improve your search rankings and organic visibility with comprehensive SEO strategies.',
+      description: 'Improve your search engine rankings and attract more qualified traffic with our comprehensive SEO and digital marketing services.',
       features: ['Technical SEO', 'Content Optimization', 'Link Building', 'Local SEO', 'SEO Audits'],
       image: 'https://images.unsplash.com/photo-1560472354-b33ff0c44a43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxzZW8lMjBhbmFseXRpY3N8ZW58MXx8fHwxNzY0NDAyMjQ1fDA&ixlib=rb-4.1.0&q=80&w=1080',
     },
