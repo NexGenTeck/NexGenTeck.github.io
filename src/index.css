@@ -2878,6 +2878,7 @@ html {
     0 0 20px rgba(249, 115, 22, 0.24);
 }
 
+
 .send-btn:disabled {
   opacity: 0.5;
   cursor: not-allowed;
@@ -2889,4 +2890,23 @@ html {
     height: 450px;
     right: -10px;
   }
+}
+
+.phone-call-button {
+  background-color: transparent;
+}
+
+.phone-call-button span {
+  color: #ffffff !important;
+  font-weight: 400;
+  transition: color 0.3s ease, font-weight 0.3s ease;
+}
+
+.phone-call-button:hover {
+  background-color: #ffffff !important;
+}
+
+.phone-call-button:hover span {
+  color: #ea580c !important;
+  font-weight: 700;
 }

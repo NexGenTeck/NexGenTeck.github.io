@@ -10,77 +10,75 @@ export const Portfolio: React.FC = () => {
   const { t } = useLanguage();
 
   const categories = [
-    { key: 'all', label: t('portfolio.filters.all') },
-    { key: 'web', label: t('portfolio.filters.web') },
-    { key: 'mobile', label: t('portfolio.filters.mobile') },
-    { key: 'ecommerce', label: t('portfolio.filters.ecommerce') },
-    { key: 'marketing', label: t('portfolio.filters.marketing') },
+    { key: 'all', label: 'All Projects' },
+    { key: 'ecommerce', label: 'E-commerce' },
+    { key: 'mobile', label: 'Mobile Applications' },
+    { key: 'ai', label: 'Artificial Intelligence' },
+    { key: 'marketing', label: 'Digital Marketing' },
   ];
 
   const projects = [
     {
-      id: 'global-ecommerce',
-      title: t('portfolio.projects.global-ecommerce.title'),
+      id: 'trackit',
+      title: 'TrackIT',
       category: 'ecommerce',
-      client: 'RetailCo',
-      image: 'https://images.unsplash.com/photo-1727407209320-1fa6ae60ee05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBzaG9wcGluZ3xlbnwxfHx8fDE3NjQzNDQ4NTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      description: t('portfolio.projects.global-ecommerce.description'),
-      tags: [
-        t('portfolio.projects.global-ecommerce.tag1'),
-        t('portfolio.projects.global-ecommerce.tag2'),
-        t('portfolio.projects.global-ecommerce.tag3'),
-      ],
+      type: 'E-commerce Platform',
+      image: '/portfolio/trackit.jpeg',
+      description:
+        'A data-driven e-commerce platform designed to help sellers launch, manage, and grow their TikTok Shop by tracking products, creators, sales performance, and market trends.',
+      tags: ['E-commerce', 'Product Analytics', 'TikTok Shop'],
     },
     {
-      id: 'corporate-redesign',
-      title: t('portfolio.projects.corporate-redesign.title'),
-      category: 'web',
-      client: 'TechCorp Inc',
-      image: 'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZ3xlbnwxfHx8fDE3NjQzODYyMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      description: t('portfolio.projects.corporate-redesign.description'),
-      tags: [
-        t('portfolio.projects.corporate-redesign.tag1'),
-        t('portfolio.projects.corporate-redesign.tag2'),
-        t('portfolio.projects.corporate-redesign.tag3'),
-      ],
+      id: 'swift-translate-pro',
+      title: 'Swift Translate Pro',
+      category: 'ai',
+      type: 'AI Translation System',
+      image: '/portfolio/swift-translate-pro.jpeg',
+      description:
+        'An AI-powered multilingual translation platform with API-based language processing, fast responses, and support for multiple languages.',
+      tags: ['Artificial Intelligence', 'API Integration', 'Translation'],
     },
     {
-      id: 'fitness-app',
-      title: t('portfolio.projects.fitness-app.title'),
+      id: 'tiktok-downloader',
+      title: 'TikTok Downloader – Flagship SaaS',
       category: 'mobile',
-      client: 'FitLife',
-      image: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-      description: t('portfolio.projects.fitness-app.description'),
-      tags: [
-        t('portfolio.projects.fitness-app.tag1'),
-        t('portfolio.projects.fitness-app.tag2'),
-        t('portfolio.projects.fitness-app.tag3'),
-      ],
+      type: 'Mobile and SaaS Application',
+      image: '/portfolio/tiktok-downloader.jpeg',
+      description:
+        'A scalable SaaS platform for downloading TikTok videos efficiently with responsive interfaces, API integration, and multi-device support.',
+      tags: ['Next.js', 'Node.js', 'API Integration'],
+    },
+    {
+      id: 't-downloader-app',
+      title: 'T Downloader App',
+      category: 'mobile',
+      type: 'Mobile Application',
+      image: '/portfolio/t-downloader-app.jpeg',
+      description:
+        'A mobile-first Android application for fast, watermark-free social media video downloads with a clean and responsive user experience.',
+      tags: ['Flutter', 'Android', 'Mobile Application'],
+    },
+    {
+      id: 'ai-property-booking-concierge',
+      title: 'AI Property Booking Concierge',
+      category: 'ai',
+      type: 'Multi-Agent AI System',
+      image: '/portfolio/ai-booking-concierge.jpg',
+      description:
+        'A multi-agent AI property booking system featuring intelligent search, booking workflows, memory, recommendations, retrieval, and conversational support.',
+      tags: ['Multi-Agent AI', 'RAG', 'FastAPI'],
     },
     {
       id: 'digital-campaign',
       title: t('portfolio.projects.digital-campaign.title'),
       category: 'marketing',
-      client: 'BrandBoost',
+      type: 'Digital Marketing',
       image: 'https://images.unsplash.com/photo-1557838923-2985c318be48?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxkaWdpdGFsJTIwbWFya2V0aW5nfGVufDF8fHx8MTc2NDQyNjgzNnww&ixlib=rb-4.1.0&q=80&w=1080',
       description: t('portfolio.projects.digital-campaign.description'),
       tags: [
         t('portfolio.projects.digital-campaign.tag1'),
         t('portfolio.projects.digital-campaign.tag2'),
         t('portfolio.projects.digital-campaign.tag3'),
-      ],
-    },
-    {
-      id: 'food-delivery',
-      title: t('portfolio.projects.food-delivery.title'),
-      category: 'mobile',
-      client: 'QuickEats',
-      image: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-      description: t('portfolio.projects.food-delivery.description'),
-      tags: [
-        t('portfolio.projects.food-delivery.tag1'),
-        t('portfolio.projects.food-delivery.tag2'),
-        t('portfolio.projects.food-delivery.tag3'),
       ],
     },
   ];
@@ -133,39 +131,37 @@ export const Portfolio: React.FC = () => {
         <div className="container mx-auto px-4">
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {filteredProjects.map((project, index) => (
-              <AnimatedSection key={project.id} delay={index * 0.1}>
-                <Link to={`/portfolio/${project.id}`}>
-                  <motion.div
-                    whileHover={{ y: -10 }}
-                    className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group"
-                  >
-                    <div className="relative h-64 overflow-hidden">
-                      <ImageWithFallback
-                        src={project.image}
-                        alt={project.title}
-                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                      />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                      <div className="absolute bottom-4 left-4 right-4">
-                        <div className="text-sm text-blue-400 mb-2">{project.client}</div>
-                        <h3 className="text-xl text-white mb-2">{project.title}</h3>
-                      </div>
+              <AnimatedSection key={project.id} delay={index * 0.1} className="h-full">
+                <motion.div
+                  whileHover={{ y: -10 }}
+                  className="bg-white rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group h-full flex flex-col"
+                >
+                  <div className="relative h-64 overflow-hidden">
+                    <ImageWithFallback
+                      src={project.image}
+                      alt={project.title}
+                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                    <div className="absolute bottom-4 left-4 right-4">
+                      <div className="text-sm text-orange-400 mb-2">{project.type}</div>
+                      <h3 className="text-xl text-white mb-2">{project.title}</h3>
                     </div>
-                    <div className="p-6">
-                      <p className="text-gray-600 mb-4">{project.description}</p>
-                      <div className="flex flex-wrap gap-2">
-                        {project.tags.map((tag, idx) => (
-                          <span
-                            key={idx}
-                            className="px-3 py-1 bg-orange-50 text-orange-500 rounded-full text-sm"
-                          >
-                            {tag}
-                          </span>
-                        ))}
-                      </div>
+                  </div>
+                  <div className="p-6 flex flex-col flex-1">
+                    <p className="text-gray-600 mb-4">{project.description}</p>
+                    <div className="flex flex-wrap gap-2">
+                      {project.tags.map((tag, idx) => (
+                        <span
+                          key={idx}
+                          className="px-3 py-1 bg-orange-50 text-orange-500 rounded-full text-sm"
+                        >
+                          {tag}
+                        </span>
+                      ))}
                     </div>
-                  </motion.div>
-                </Link>
+                  </div>
+                </motion.div>
               </AnimatedSection>
             ))}
           </div>

@@ -104,9 +104,11 @@ export const Pricing: React.FC = () => {
                 </Link>
                 <a
                   href="tel:+923009270131"
-                  className="inline-flex items-center justify-center border-2 border-white text-white px-8 py-4 rounded-lg hover:bg-white hover:text-orange-500 transition-all"
+                  className="phone-call-button inline-flex items-center justify-center border-2 border-white bg-transparent px-8 py-4 rounded-lg transition-all duration-300"
                 >
-                  {t('pricing.cta.callUs')} +92 300 927 0131
+                  <span>
+                    {t('pricing.cta.callUs')} +92 300 927 0131
+                  </span>
                 </a>
               </div>
             </div>
