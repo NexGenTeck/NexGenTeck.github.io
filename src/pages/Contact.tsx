@@ -31,7 +31,9 @@ export const Contact: React.FC = () => {
     setSubmitMessage('');
 
     try {
-      const response = await fetch('/contact.php', {
+      const response = await fetch(
+      'https://api.nexgenteck.com/contact.php',
+      {
         method: 'POST',
         headers: {
           'Content-Type': 'application/json',
@@ -45,7 +47,19 @@ export const Contact: React.FC = () => {
         }),
       });
 
-      const data = await response.json();
+      const responseText = await response.text();
+
+      let data: {
+        success?: boolean;
+        message?: string;
+        error?: string;
+      } | null = null;
+
+      try {
+        data = responseText ? JSON.parse(responseText) : null;
+      } catch {
+        console.error('Non-JSON server response:', responseText);
+      }
 
       if (!response.ok || !data?.success) {
         setSubmitStatus('error');
