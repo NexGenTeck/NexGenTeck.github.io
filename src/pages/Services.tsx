@@ -16,7 +16,7 @@ export const Services: React.FC = () => {
       icon: <ShoppingCart className="w-12 h-12" />,
       description: 'Create powerful online stores with seamless shopping experiences, secure payment processing, and inventory management.',
       features: ['Custom Shopping Cart', 'Payment Gateway Integration', 'Product Management', 'Order Tracking', 'Analytics Dashboard'],
-      image: 'https://images.unsplash.com/photo-1727407209320-1fa6ae60ee05?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxlY29tbWVyY2UlMjBzaG9wcGluZ3xlbnwxfHx8fDE3NjQzNDQ4NTV8MA&ixlib=rb-4.1.0&q=80&w=1080',
+      image: '/services/ecommerce-hero.png',
     },
     {
       title: 'Website Development',
@@ -162,7 +162,7 @@ export const Services: React.FC = () => {
               { step: '01', title: 'Discovery', description: 'We analyze your needs and goals to create a strategic plan' },
               { step: '02', title: 'Design', description: 'Our team creates beautiful, user-centric designs' },
               { step: '03', title: 'Development', description: 'We build your solution using cutting-edge technologies' },
-              { step: '04', title: 'Launch', description: 'We deploy and provide ongoing support and optimization' },
+              { step: '04', title: 'Launch', description: 'We deploy with ongoing support and optimization' },
             ].map((item, index) => (
               <AnimatedSection key={index} delay={index * 0.1}>
                 <motion.div

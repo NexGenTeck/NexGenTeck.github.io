@@ -466,7 +466,7 @@ const translations: Record<Language, Record<string, string>> = {
     'services.web.benefit1': 'Establish credibility and trust with professional design',
     'services.web.benefit2': 'Reach more customers with mobile-friendly design',
     'services.web.benefit3': 'Improve search engine rankings with SEO',
-    'services.web.feature5': 'Contact forms and lead generation',
+    'services.web.feature5': 'Contact forms & lead generation',
     'services.web.feature6': 'Social media integration',
     'services.web.feature7': 'Google Analytics setup',
     'services.web.feature8': 'Security features and SSL',
