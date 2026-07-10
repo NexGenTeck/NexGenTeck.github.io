@@ -35,7 +35,7 @@ export const Portfolio: React.FC = () => {
       type: 'AI Translation System',
       image: '/portfolio/swift-translate-pro.jpeg',
       description:
-        'An AI-powered multilingual translation platform with API-based language processing, fast responses, and support for multiple languages. It streamlines communication across teams and real-time translations at scale.',
+        'AI-powered multilingual translation via fast, API-based language processing. Streamlines cross-team communication with accurate, real-time translations.',
       tags: ['Artificial Intelligence', 'API Integration', 'Translation'],
     },
     {
@@ -45,7 +45,7 @@ export const Portfolio: React.FC = () => {
       type: 'Mobile and SaaS Application',
       image: '/portfolio/tiktok-downloader.jpeg',
       description:
-        'A scalable SaaS platform for downloading TikTok videos efficiently with responsive interfaces, API integration, and multi-device support.',
+        'A scalable SaaS platform for downloading TikTok videos, built for speed and reliability. Featuring responsive interfaces, API integration, and seamless multi-device support.',
       tags: ['Next.js', 'Node.js', 'API Integration'],
     },
     {
