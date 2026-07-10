@@ -193,7 +193,7 @@ const translations: Record<Language, Record<string, string>> = {
     'portfolio.projects.fitness-app.tag2': 'React Native',
     'portfolio.projects.fitness-app.tag3': 'Health',
     'portfolio.projects.digital-campaign.title': 'Digital Marketing Campaign',
-    'portfolio.projects.digital-campaign.description': 'Integrated marketing campaign resulting in 250% ROI increase',
+    'portfolio.projects.digital-campaign.description': 'Integrated marketing campaign resulting in 250% ROI increase across all channels. Delivered through targeted strategy, creative execution, and continuous optimization.',
     'portfolio.projects.digital-campaign.tag1': 'Marketing',
     'portfolio.projects.digital-campaign.tag2': 'SEO',
     'portfolio.projects.digital-campaign.tag3': 'Social Media',
