@@ -26,7 +26,7 @@ export const Portfolio: React.FC = () => {
       image: '/portfolio/trackit.jpeg',
       description:
         'A data-driven e-commerce platform designed to help sellers launch, manage, and grow their TikTok Shop by tracking products, creators, sales performance, and market trends.',
-      tags: ['E-commerce', 'Product Analytics', 'TikTok Shop'],
+      tags: ['E-commerce', 'Data Analytics', 'TikTok Shop'],
     },
     {
       id: 'swift-translate-pro',
@@ -36,7 +36,7 @@ export const Portfolio: React.FC = () => {
       image: '/portfolio/swift-translate-pro.jpeg',
       description:
         'AI-powered multilingual translation via fast, API-based language processing. Streamlines cross-team communication with accurate, real-time translations.',
-      tags: ['Artificial Intelligence', 'API Integration', 'Translation'],
+      tags: ['AI', 'API Integration', 'Translation'],
     },
     {
       id: 'tiktok-downloader',
