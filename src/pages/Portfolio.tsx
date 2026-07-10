@@ -55,7 +55,7 @@ export const Portfolio: React.FC = () => {
       type: 'Mobile Application',
       image: '/portfolio/t-downloader-app.jpeg',
       description:
-        'A mobile-first Android application for fast, watermark-free social media video downloads with a clean and responsive user experience.',
+        'A mobile-first Android application for fast, watermark-free social media video downloads with a clean, intuitive, and highly responsive user experience.',
       tags: ['Flutter', 'Android', 'Mobile Application'],
     },
     {
