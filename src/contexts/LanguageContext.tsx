@@ -164,7 +164,7 @@ const translations: Record<Language, Record<string, string>> = {
     'whyus.point2': 'Cutting-edge technologies and best practices',
     'whyus.point3': '24/7 support and maintenance services',
     'whyus.point4': 'Transparent communication and project management',
-    'whyus.point5': 'Proven track record with 30+ successful projects',
+    'whyus.point5': 'Proven track record with 15+ successful projects',
     'whyus.point6': 'Competitive pricing with no hidden costs',
     // Portfolio
     'portfolio.title': 'Our Recent Work',
