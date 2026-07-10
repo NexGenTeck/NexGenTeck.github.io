@@ -35,7 +35,7 @@ export const Portfolio: React.FC = () => {
       type: 'AI Translation System',
       image: '/portfolio/swift-translate-pro.jpeg',
       description:
-        'An AI-powered multilingual translation platform with API-based language processing, fast responses, and support for multiple languages.',
+        'An AI-powered multilingual translation platform with API-based language processing, fast responses, and support for multiple languages. It streamlines communication across teams and real-time translations at scale.',
       tags: ['Artificial Intelligence', 'API Integration', 'Translation'],
     },
     {
