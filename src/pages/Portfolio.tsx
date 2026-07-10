@@ -148,13 +148,13 @@ export const Portfolio: React.FC = () => {
                       <h3 className="text-xl text-white mb-2">{project.title}</h3>
                     </div>
                   </div>
-                  <div className="p-6 flex flex-col flex-1">
+                  <div className="p-6 flex flex-col flex-1 min-w-0">
                     <p className="text-gray-600 mb-4">{project.description}</p>
-                    <div className="flex flex-wrap gap-2">
+                    <div className="flex flex-nowrap items-center gap-2 overflow-x-auto pb-1">
                       {project.tags.map((tag, idx) => (
                         <span
                           key={idx}
-                          className="px-3 py-1 bg-orange-50 text-orange-500 rounded-full text-sm"
+                          className="shrink-0 whitespace-nowrap px-3 py-1 bg-orange-50 text-orange-500 rounded-full text-sm"
                         >
                           {tag}
                         </span>
