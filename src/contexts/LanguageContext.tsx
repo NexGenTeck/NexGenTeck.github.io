@@ -656,9 +656,9 @@ const translations: Record<Language, Record<string, string>> = {
     'services.seo.process1.title': 'Audit',
     'services.seo.process1.desc': 'Analyze your current SEO performance and identify opportunities',
     'services.seo.process2.title': 'Strategy',
-    'services.seo.process2.desc': 'Develop a customized SEO strategy for your business',
+    'services.seo.process2.desc': 'Develop a customized SEO strategy specifically for your business',
     'services.seo.process3.title': 'Implementation',
-    'services.seo.process3.desc': 'Execute on-page, technical, and off-page optimizations',
+    'services.seo.process3.desc': 'We execute on-page, technical, and off-page SEO optimizations',
     'services.seo.process4.title': 'Monitor',
     'services.seo.process4.desc': 'Track progress and continuously optimize for better results',
 

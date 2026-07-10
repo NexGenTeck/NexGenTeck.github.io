@@ -57,6 +57,55 @@ const teamMembers = [
   },
 ] as const;
 
+type TeamMember = (typeof teamMembers)[number];
+
+interface TeamCardProps {
+  member: TeamMember;
+  index: number;
+}
+
+const TeamCard: React.FC<TeamCardProps> = ({ member, index }) => (
+  <AnimatedSection delay={index * 0.06} className="w-full max-w-[240px]">
+    <motion.div
+      whileHover={{
+        y: -8,
+        x: index % 2 === 0 ? 3 : -3,
+        rotate: index % 2 === 0 ? 1 : -1,
+      }}
+      transition={{ type: 'spring', stiffness: 300, damping: 22 }}
+      className="team-card group relative mx-auto flex flex-col overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-b from-gray-900 via-black to-gray-950 text-center shadow-[0_18px_45px_rgba(0,0,0,0.35)] shadow-orange-500/5 transition-colors duration-300 hover:border-orange-500/45 hover:shadow-[0_22px_55px_rgba(249,115,22,0.18)]"
+      style={{ width: '240px', height: '330px' }}
+    >
+      <div className="team-image-wrapper relative overflow-hidden bg-[#050505]" style={{ height: '260px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <img
+          src={member.image}
+          alt={member.name}
+          className="team-image transition-transform duration-500 group-hover:scale-[1.03]"
+          style={{
+            width: '100%',
+            height: '100%',
+            objectFit: 'contain',
+            objectPosition: 'center center',
+          }}
+          onError={(event) => {
+            event.currentTarget.onerror = null;
+            event.currentTarget.src = TEAM_IMAGE_FALLBACK;
+          }}
+        />
+        <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent pointer-events-none" />
+        <div className="absolute inset-x-5 bottom-4 h-px bg-gradient-to-r from-transparent via-orange-400/80 to-transparent pointer-events-none" />
+      </div>
+
+      <div className="team-info flex flex-col items-center justify-center px-4" style={{ height: '70px' }}>
+        <h3 className="text-base font-semibold leading-tight text-white">{member.name}</h3>
+        <p className="mt-1 max-w-[22ch] text-xs leading-tight text-gray-300 text-center">
+          {member.role}
+        </p>
+      </div>
+    </motion.div>
+  </AnimatedSection>
+);
+
 export const About: React.FC = () => {
   const { t } = useLanguage();
   const location = useLocation();
@@ -113,6 +162,25 @@ export const About: React.FC = () => {
       imageFit: 'contain',
     },
   ] as const;
+
+  const getTeamMember = (name: string) =>
+    teamMembers.find((member) => member.name === name)!;
+
+  const ceo = getTeamMember('Muhammad Kaleem');
+
+  const departmentHeads = [
+    getTeamMember('Kashif Khan'),
+    getTeamMember('Muhammad Hasaan'),
+    getTeamMember('Asma Masood'),
+    getTeamMember('Irfan Iqbal'),
+  ];
+
+  const departmentMembers = [
+    getTeamMember('Waiz Hussain'),
+    getTeamMember('Sana Arif'),
+    getTeamMember('Anum Ejaz'),
+    getTeamMember('Subhana Zaki'),
+  ];
 
   return (
     <div className="min-h-screen pt-20">
@@ -251,48 +319,30 @@ export const About: React.FC = () => {
             </p>
           </AnimatedSection>
 
-          <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-2 lg:grid-cols-3 items-stretch max-w-4xl mx-auto">
-            {teamMembers.map((member, index) => (
-              <AnimatedSection key={member.name} delay={index * 0.06} className="w-full max-w-[240px]">
-                <motion.div
-                  whileHover={{
-                    y: -8,
-                    x: index % 2 === 0 ? 3 : -3,
-                    rotate: index % 2 === 0 ? 1 : -1,
-                  }}
-                  transition={{ type: 'spring', stiffness: 300, damping: 22 }}
-                  className="team-card group relative mx-auto flex flex-col overflow-hidden rounded-2xl border border-orange-500/20 bg-gradient-to-b from-gray-900 via-black to-gray-950 text-center shadow-[0_18px_45px_rgba(0,0,0,0.35)] shadow-orange-500/5 transition-colors duration-300 hover:border-orange-500/45 hover:shadow-[0_22px_55px_rgba(249,115,22,0.18)]"
-                  style={{ width: '240px', height: '330px' }}
-                >
-                  <div className="team-image-wrapper relative overflow-hidden bg-[#050505]" style={{ height: '260px', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
-                    <img
-                      src={member.image}
-                      alt={member.name}
-                      className="team-image transition-transform duration-500 group-hover:scale-[1.03]"
-                      style={{
-                        width: '100%',
-                        height: '100%',
-                        objectFit: 'contain',
-                        objectPosition: 'center center',
-                      }}
-                      onError={(event) => {
-                        event.currentTarget.onerror = null;
-                        event.currentTarget.src = TEAM_IMAGE_FALLBACK;
-                      }}
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black via-black/10 to-transparent pointer-events-none" />
-                    <div className="absolute inset-x-5 bottom-4 h-px bg-gradient-to-r from-transparent via-orange-400/80 to-transparent pointer-events-none" />
-                  </div>
+          <div className="relative mx-auto max-w-6xl">
+            <div className="relative z-10 mb-16 flex justify-center">
+              <TeamCard member={ceo} index={0} />
+              <div className="pointer-events-none absolute left-1/2 top-full hidden h-8 w-px -translate-x-1/2 bg-orange-500/40 lg:block" />
+            </div>
 
-                  <div className="team-info flex flex-col items-center justify-center px-4" style={{ height: '70px' }}>
-                    <h3 className="text-base font-semibold leading-tight text-white">{member.name}</h3>
-                    <p className="mt-1 max-w-[22ch] text-xs leading-tight text-gray-300 text-center">
-                      {member.role}
-                    </p>
-                  </div>
-                </motion.div>
-              </AnimatedSection>
-            ))}
+            <div className="relative mb-16 grid grid-cols-1 justify-items-center gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+              <div className="pointer-events-none absolute left-[12.5%] right-[12.5%] top-[-2rem] hidden h-px bg-orange-500/40 lg:block" />
+              {departmentHeads.map((member, index) => (
+                <div key={member.name} className="relative z-10 w-full max-w-[240px]">
+                  <div className="pointer-events-none absolute left-1/2 top-[-2rem] hidden h-8 w-px -translate-x-1/2 bg-orange-500/40 lg:block" />
+                  <TeamCard member={member} index={index + 1} />
+                </div>
+              ))}
+            </div>
+
+            <div className="grid grid-cols-1 justify-items-center gap-6 md:grid-cols-2 lg:grid-cols-4 lg:gap-8">
+              {departmentMembers.map((member, index) => (
+                <div key={member.name} className="relative z-10 w-full max-w-[240px]">
+                  <div className="pointer-events-none absolute left-1/2 top-[-4rem] hidden h-16 w-px -translate-x-1/2 bg-orange-500/40 lg:block" />
+                  <TeamCard member={member} index={index + 5} />
+                </div>
+              ))}
+            </div>
           </div>
         </div>
       </section>
