@@ -3,7 +3,6 @@ import { motion } from 'motion/react';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { useLanguage } from '../contexts/LanguageContext';
-import { supabase } from '../lib/supabase';
 
 type SubmitStatus = 'success' | 'error' | null;
 
@@ -32,27 +31,29 @@ export const Contact: React.FC = () => {
     setSubmitMessage('');
 
     try {
-      const { data, error } = await supabase.functions.invoke('submit-contact', {
-        body: {
+      const response = await fetch('/contact.php', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({
           name: formData.name,
           email: formData.email,
           phone: formData.phone || null,
           subject: formData.subject || null,
           message: formData.message,
-        },
+        }),
       });
 
-      if (error) {
-        console.error('Edge Function error:', error);
+      const data = await response.json();
+
+      if (!response.ok || !data?.success) {
         setSubmitStatus('error');
-        setSubmitMessage(DEFAULT_ERROR_MESSAGE);
-      } else if (data?.success) {
+        setSubmitMessage(data?.error || DEFAULT_ERROR_MESSAGE);
+      } else {
         setSubmitStatus('success');
         setSubmitMessage(t('contact.form.success'));
         setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
-      } else {
-        setSubmitStatus('error');
-        setSubmitMessage(data?.error || DEFAULT_ERROR_MESSAGE);
       }
     } catch (error) {
       setSubmitStatus('error');

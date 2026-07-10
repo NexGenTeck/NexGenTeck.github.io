@@ -100,5 +100,6 @@ try {
     send_json(['success' => true, 'message' => 'Message sent successfully']);
 
 } catch (Throwable $exception) {
-    send_json(['success' => false, 'error' => 'Error: ' . $exception->getMessage()], 500);
+    error_log('Contact form submission failed: ' . $exception->getMessage());
+    send_json(['success' => false, 'error' => 'Unable to send message right now. Please try again later.'], 500);
 }
