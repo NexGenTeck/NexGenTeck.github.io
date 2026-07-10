@@ -83,6 +83,19 @@ export const Portfolio: React.FC = () => {
         t('portfolio.projects.food-delivery.tag3'),
       ],
     },
+     {
+      id: 'food-delivery',
+      title: t('portfolio.projects.food-delivery.title'),
+      category: 'mobile',
+      client: 'QuickEats',
+      image: 'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
+      description: t('portfolio.projects.food-delivery.description'),
+      tags: [
+        t('portfolio.projects.food-delivery.tag1'),
+        t('portfolio.projects.food-delivery.tag2'),
+        t('portfolio.projects.food-delivery.tag3'),
+      ],
+    },
   ];
 
   const filteredProjects = filter === 'all'
