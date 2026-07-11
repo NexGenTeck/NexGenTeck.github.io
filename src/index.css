@@ -2396,6 +2396,13 @@ html {
   height: 24px;
 }
 
+.chatbot-toggle-logo {
+  width: 32px;
+  height: 32px;
+  object-fit: contain;
+  filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.15));
+}
+
 .ai-chatbot-toggle:hover {
   transform: scale(1.1);
   box-shadow: 0 6px 25px rgba(255, 107, 53, 0.6);
@@ -2739,13 +2746,14 @@ html {
 }
 
 .bot-message .message-content {
-  border: 1px solid rgba(249, 115, 22, 0.25);
+  border: 1px solid rgba(249, 115, 22, 0.45);
   background:
     linear-gradient(160deg, rgba(255, 255, 255, 0.04), rgba(255, 255, 255, 0.02)),
     linear-gradient(160deg, rgba(36, 18, 8, 0.78), rgba(17, 17, 17, 0.78));
   box-shadow:
     0 10px 22px rgba(0, 0, 0, 0.24),
-    0 0 12px rgba(249, 115, 22, 0.12);
+    0 0 18px rgba(249, 115, 22, 0.35);
+  /* font-weight: 500; */
 }
 
 .user-message .message-content {

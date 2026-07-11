@@ -290,7 +290,11 @@ export const Chatbot: React.FC = () => {
                     }
                     aria-expanded={isOpen}
                 >
-                    <Bot />
+                    <img
+                        src={logo}
+                        alt="NexGenTeck Logo"
+                        className="chatbot-toggle-logo"
+                    />
 
                     {!isOpen && (
                         <span
