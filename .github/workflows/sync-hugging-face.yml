@@ -28,9 +28,15 @@ jobs:
 
       - name: Refresh bundled authoritative website sources
         run: |
-          rm -rf hf-space/website_sources/src
-          mkdir -p hf-space/website_sources
-          cp -a src hf-space/website_sources/src
+          mkdir -p hf-space/website_sources/src
+          rsync -a --delete --delete-excluded \
+            --exclude='*.png' \
+            --exclude='*.jpg' \
+            --exclude='*.jpeg' \
+            --exclude='*.gif' \
+            --exclude='*.webp' \
+            --exclude='*.svg' \
+            src/ hf-space/website_sources/src/
 
       - name: Validate deployment source layout
         run: |
