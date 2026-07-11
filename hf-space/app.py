@@ -301,7 +301,6 @@ Answers are grounded in current NexGenTeck website content.
             ],
             title="Chat",
             cache_examples=False,
-            api_name="chat",
         )
 
         gr.Markdown("### Admin: Refresh Website Index")
