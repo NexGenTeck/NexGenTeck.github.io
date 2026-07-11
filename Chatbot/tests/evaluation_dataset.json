@@ -1,0 +1,155 @@
+{
+  "description": "Retrieval/evaluation questions for Hugging Face Space verification. Do not invent facts beyond website sources.",
+  "questions": [
+    {
+      "id": 1,
+      "question": "Who is the founder and CEO of NexGenTeck?",
+      "expected_entities": ["team-muhammad-kaleem"],
+      "expected_facts": ["Muhammad Kaleem", "Founder & CEO"]
+    },
+    {
+      "id": 2,
+      "question": "Who is the AI/ML Engineer and DevOps team member?",
+      "expected_entities": ["team-muhammad-hasaan"],
+      "expected_facts": ["Muhammad Hasaan", "AI/ML Engineer & DevOps"]
+    },
+    {
+      "id": 3,
+      "question": "List the NexGenTeck team.",
+      "expected_entities": [
+        "team-muhammad-kaleem",
+        "team-muhammad-hasaan",
+        "team-kashif-khan",
+        "team-asma-masood",
+        "team-waiz-hussain",
+        "team-subhana-zaki",
+        "team-irfan-iqbal",
+        "team-sana-arif",
+        "team-anum-ejaz"
+      ],
+      "expected_facts": ["Muhammad Kaleem", "Asma Masood", "Anum Ejaz"]
+    },
+    {
+      "id": 4,
+      "question": "Who are NexGenTeck’s partners?",
+      "expected_entities": [
+        "partner-medicare-pharma",
+        "partner-saifee-labs",
+        "partner-urban-healthcare"
+      ],
+      "expected_facts": ["Medicare Pharma", "Saifee Labs", "Urban Healthcare"]
+    },
+    {
+      "id": 5,
+      "question": "List the current portfolio projects.",
+      "expected_entities": [
+        "portfolio-trackit",
+        "portfolio-swift-translate-pro",
+        "portfolio-tiktok-downloader",
+        "portfolio-t-downloader-app",
+        "portfolio-ai-property-booking-concierge",
+        "portfolio-digital-campaign"
+      ],
+      "expected_facts": ["TrackIT", "Swift Translate Pro", "TikTok Downloader"]
+    },
+    {
+      "id": 6,
+      "question": "Tell me about TrackIT.",
+      "expected_entities": ["portfolio-trackit"],
+      "expected_facts": ["TrackIT", "TikTok Shop", "ecommerce"]
+    },
+    {
+      "id": 7,
+      "question": "Tell me about Swift Translate Pro.",
+      "expected_entities": ["portfolio-swift-translate-pro"],
+      "expected_facts": ["Swift Translate Pro", "AI", "Translation"]
+    },
+    {
+      "id": 8,
+      "question": "What is the AI Property Booking Concierge?",
+      "expected_entities": ["portfolio-ai-property-booking-concierge"],
+      "expected_facts": ["AI Property Booking Concierge", "Multi-Agent", "RAG", "FastAPI"]
+    },
+    {
+      "id": 9,
+      "question": "Which portfolio projects involve AI?",
+      "expected_entities": [
+        "portfolio-swift-translate-pro",
+        "portfolio-ai-property-booking-concierge"
+      ],
+      "expected_facts": ["Swift Translate Pro", "AI Property Booking Concierge"]
+    },
+    {
+      "id": 10,
+      "question": "Which projects involve mobile applications?",
+      "expected_entities": [
+        "portfolio-tiktok-downloader",
+        "portfolio-t-downloader-app"
+      ],
+      "expected_facts": ["TikTok Downloader", "T Downloader App"]
+    },
+    {
+      "id": 11,
+      "question": "What services does NexGenTeck currently offer?",
+      "expected_entities": ["service-artificial-intelligence"],
+      "expected_facts": [
+        "Website Development",
+        "E-commerce",
+        "Artificial Intelligence"
+      ]
+    },
+    {
+      "id": 12,
+      "question": "Does NexGenTeck provide artificial-intelligence services?",
+      "expected_entities": ["service-artificial-intelligence"],
+      "expected_facts": ["Artificial Intelligence", "yes"]
+    },
+    {
+      "id": 13,
+      "question": "How can I contact NexGenTeck?",
+      "expected_entities": ["contact-nexgenteck"],
+      "expected_facts": ["info@nexgenteck.com", "+92 300 927 0131"]
+    },
+    {
+      "id": 14,
+      "question": "What pricing information is currently published?",
+      "expected_entities": ["pricing-overview"],
+      "expected_facts": ["USD", "estimates"]
+    },
+    {
+      "id": 15,
+      "question": "What technologies does NexGenTeck use?",
+      "expected_facts": ["FastAPI", "Flutter", "Next.js"]
+    },
+    {
+      "id": 16,
+      "question": "Who handles HR?",
+      "expected_entities": ["team-kashif-khan"],
+      "expected_facts": ["Kashif Khan", "HR"]
+    },
+    {
+      "id": 17,
+      "question": "Who works in frontend development?",
+      "expected_entities": ["team-asma-masood"],
+      "expected_facts": ["Asma Masood", "Frontend"]
+    },
+    {
+      "id": 18,
+      "question": "Which project is related to translation?",
+      "expected_entities": ["portfolio-swift-translate-pro"],
+      "expected_facts": ["Swift Translate Pro"]
+    },
+    {
+      "id": 19,
+      "question": "Which projects are related to e-commerce?",
+      "expected_entities": ["portfolio-trackit"],
+      "expected_facts": ["TrackIT"]
+    },
+    {
+      "id": 20,
+      "question": "Which projects are related to digital marketing?",
+      "expected_entities": ["portfolio-digital-campaign"],
+      "expected_facts": ["Digital Marketing Campaign", "marketing"]
+    }
+  ]
+}

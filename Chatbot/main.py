@@ -8,31 +8,27 @@ if __name__ == "__main__":
 
 """
 NexGenTeck AI Chatbot Backend
-FastAPI application with fully softcoded RAG-based intelligent responses.
-
-FULLY SOFTCODED APPROACH:
-- NO hardcoded regex patterns or keyword matching
-- LLM interprets ALL user messages dynamically
-- Website content is the ONLY source of information
-- LLM decides intent, sentiment, and context needs
+FastAPI application with RAG-based intelligent responses grounded in website content.
 """
 
-from fastapi import FastAPI, HTTPException
+from fastapi import FastAPI, Header, HTTPException, Request
 from fastapi.middleware.cors import CORSMiddleware
 from pydantic import BaseModel, field_validator
 from contextlib import asynccontextmanager
 import logging
 import asyncio
+from typing import Optional
 
 from config import config
-from scraper import WebsiteScraper
 from vector_store import vector_store
 from rag_pipeline import process_message
 from reranker import reranker
+from knowledge_manager import knowledge_manager
+from auth_utils import authorize_reindex
 
 logging.basicConfig(
     level=logging.INFO,
-    format='%(asctime)s - %(name)s - %(levelname)s - %(message)s'
+    format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
 )
 logger = logging.getLogger(__name__)
 
@@ -41,93 +37,90 @@ _is_reindexing = False
 
 
 class ChatRequest(BaseModel):
-    """Request model for chat endpoint with input validation."""
     message: str
-    
-    @field_validator('message')
+
+    @field_validator("message")
     @classmethod
     def validate_message(cls, v: str) -> str:
-        """Validate and sanitize the message input."""
         if not v or not v.strip():
-            raise ValueError('Message cannot be empty')
-        
+            raise ValueError("Message cannot be empty")
         v = v.strip()
-        
         if len(v) > 2000:
-            raise ValueError('Message too long (max 2000 characters)')
-        
+            raise ValueError("Message too long (max 2000 characters)")
         if len(v) < 1:
-            raise ValueError('Message must contain at least 1 character')
-        
+            raise ValueError("Message must contain at least 1 character")
         return v
 
 
 class ChatResponse(BaseModel):
-    """Response model for chat endpoint."""
     response: str
     status: str = "success"
 
 
 class HealthResponse(BaseModel):
-    """Response model for health check."""
     status: str
     message: str
     documents_count: int
     reranker: dict = {}
+    content_version: str = ""
+    active_collection: str = ""
+
+
+def _authorize_reindex(
+    authorization: Optional[str],
+    x_reindex_secret: Optional[str],
+    request: Request,
+) -> None:
+    """
+    Protect mutating reindex endpoints.
+    - If REINDEX_SECRET / ADMIN_TOKEN is set, require Bearer token or X-Reindex-Secret.
+    - If unset, allow only loopback requests (local development).
+    """
+    client_host = request.client.host if request.client else ""
+    allowed, status_code, detail = authorize_reindex(
+        expected_secret=config.REINDEX_SECRET,
+        authorization=authorization,
+        x_reindex_secret=x_reindex_secret,
+        client_host=client_host,
+    )
+    if not allowed:
+        raise HTTPException(status_code=status_code, detail=detail)
 
 
 @asynccontextmanager
 async def lifespan(app: FastAPI):
-    """
-    Application lifespan handler.
-    Initializes the knowledge base on startup by scraping the ENTIRE website.
-    """
-    logger.info("Starting NexGenTeck AI Chatbot (Fully Softcoded)")
-    
+    logger.info("Starting NexGenTeck AI Chatbot")
+
     try:
         config.validate()
     except ValueError as e:
-        logger.error(f"Configuration error: {e}")
+        logger.error("Configuration error: %s", e)
         raise
-    
-    if not vector_store.is_initialized():
-        logger.info("Knowledge base is empty, scraping ENTIRE website...")
-        await initialize_knowledge_base()
+
+    if config.AUTO_REFRESH_ON_STARTUP:
+        try:
+            result = knowledge_manager.ensure_fresh_on_startup()
+            logger.info("Startup knowledge result: %s", result.get("message"))
+        except Exception as e:
+            logger.error("Startup knowledge refresh failed: %s", e)
+            if not vector_store.is_initialized():
+                logger.warning("Knowledge base unavailable after startup failure")
+    elif not vector_store.is_initialized():
+        logger.info("Knowledge base empty and AUTO_REFRESH_ON_STARTUP=false")
     else:
-        logger.info(f"Knowledge base already has {vector_store.count()} documents")
-    
+        logger.info(
+            "Knowledge base ready with %s documents", vector_store.count()
+        )
+
     yield
-    
     logger.info("Shutting down NexGenTeck AI Chatbot")
-
-
-async def initialize_knowledge_base() -> int:
-    """
-    Scrape the ENTIRE website and populate the vector store.
-    This is the ONLY source of information for the chatbot.
-    """
-    try:
-        scraper = WebsiteScraper()
-        documents = scraper.scrape(max_pages=100)
-
-        if documents:
-            count = vector_store.add_documents(documents)
-            logger.info(f"Indexed {count} documents from website")
-            return count
-        
-        logger.warning("No documents scraped, using fallback content")
-        return 0
-            
-    except Exception as e:
-        logger.error(f"Failed to initialize knowledge base: {e}")
-        return 0
 
 
 app = FastAPI(
     title="NexGenTeck AI Chatbot",
     description="Intelligent chatbot with RAG-based responses",
-    version="1.0.0",
-    lifespan=lifespan
+    version="2.0.0",
+    lifespan=lifespan,
 )
 
 app.add_middleware(
@@ -141,100 +134,112 @@ app.add_middleware(
 
 @app.get("/", response_model=HealthResponse)
 async def root():
-    """Root endpoint with basic info."""
     return HealthResponse(
         status="online",
         message="NexGenTeck AI Chatbot is running",
-        documents_count=vector_store.count()
+        documents_count=vector_store.count(),
+        content_version=vector_store.get_content_version() or "",
+        active_collection=vector_store.get_active_collection_name(),
     )
 
 
 @app.get("/health", response_model=HealthResponse)
 async def health_check():
-    """Health check endpoint for monitoring."""
     return HealthResponse(
         status="healthy",
         message="All systems operational",
         documents_count=vector_store.count(),
         reranker=reranker.status(),
+        content_version=vector_store.get_content_version() or "",
+        active_collection=vector_store.get_active_collection_name(),
     )
+
+
+@app.get("/knowledge/status")
+async def knowledge_status():
+    meta = vector_store.get_index_metadata()
+    return {
+        "status": "ready" if vector_store.count() > 0 else "empty",
+        "documents_count": vector_store.count(),
+        "content_version": vector_store.get_content_version() or "",
+        "active_collection": vector_store.get_active_collection_name(),
+        "index_metadata": meta,
+        "reindexing": _is_reindexing,
+    }
 
 
 @app.post("/chat", response_model=ChatResponse)
 async def chat(request: ChatRequest):
-    """
-    Process a chat message and return a response.
-    
-    The chatbot uses RAG to:
-    1. Analyze sentiment and intent
-    2. Retrieve relevant context from knowledge base
-    3. Generate a contextual response using Llama 3.3
-    
-    Input validation is handled by Pydantic ChatRequest model.
-    """
     global _is_reindexing
-    
+
     if _is_reindexing:
         logger.warning("Chat request received while reindexing is in progress")
-    
-    logger.info(f"Received message: {request.message[:100]}...")
-    
+
+    logger.info("Received message: %s...", request.message[:100])
+
     try:
         response = await process_message(request.message)
         return ChatResponse(response=response)
-        
     except Exception as e:
-        logger.error(f"Error processing message: {e}")
+        logger.error("Error processing message: %s", e)
         raise HTTPException(
             status_code=500,
-            detail="I'm having trouble processing your request. Please try again."
+            detail="I'm having trouble processing your request. Please try again.",
         )
 
 
 @app.post("/reindex")
-async def reindex_knowledge_base():
+async def reindex_knowledge_base(
+    request: Request,
+    authorization: Optional[str] = Header(default=None),
+    x_reindex_secret: Optional[str] = Header(default=None, alias="X-Reindex-Secret"),
+    force: bool = True,
+):
     """
-    Re-scrape website and update knowledge base.
-    Useful for updating content after website changes.
-    Uses a lock to prevent concurrent reindex operations.
+    Safely rebuild the knowledge base from authoritative website sources.
+    Requires REINDEX_SECRET / ADMIN_TOKEN when configured.
+    Never clears the active collection before the replacement dataset is validated.
     """
     global _is_reindexing
-    
+
+    _authorize_reindex(authorization, x_reindex_secret, request)
+
     if _is_reindexing:
         return {
             "status": "busy",
-            "message": "Reindexing is already in progress. Please wait."
+            "message": "Reindexing is already in progress. Please wait.",
         }
-    
-    logger.info("Re-indexing knowledge base")
-    
+
+    logger.info("Re-indexing knowledge base (force=%s)", force)
+
     async with _reindex_lock:
         _is_reindexing = True
         try:
-            scraper = WebsiteScraper()
-            documents = scraper.scrape(max_pages=100)
-
-            if not documents:
-                raise HTTPException(
-                    status_code=500,
-                    detail="Scraping failed; keeping existing knowledge base"
-                )
-
-            vector_store.clear()
-            count = vector_store.add_documents(documents)
-
-            return {
-                "status": "success",
-                "message": f"Re-indexed {count} documents"
-            }
-            
+            result = await asyncio.to_thread(
+                knowledge_manager.safe_reindex,
+                force=force,
+            )
+            if result.get("status") == "failed":
+                raise HTTPException(status_code=500, detail=result)
+            return result
+        except HTTPException:
+            raise
         except Exception as e:
-            logger.error(f"Re-indexing failed: {e}")
-            raise HTTPException(status_code=500, detail=str(e))
+            logger.error("Re-indexing failed: %s", e)
+            raise HTTPException(
+                status_code=500,
+                detail={
+                    "status": "failed",
+                    "message": "Reindex failed; previous knowledge base retained",
+                    "error": str(e),
+                },
+            )
         finally:
             _is_reindexing = False
 
 
 if __name__ == "__main__":
     import uvicorn
-    uvicorn.run(app, host="0.0.0.0", port=8000)
+
+    port = int(os.getenv("PORT", "8000"))
+    uvicorn.run(app, host="0.0.0.0", port=port)

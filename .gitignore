@@ -39,10 +39,25 @@ env/
 
 # Qdrant data
 qdrant_data/
+**/qdrant_storage/
+
+# Model caches / embedding artifacts
+.cache/
+**/model-cache/
+**/hf-home/
+*.onnx
+*.bin
+*.safetensors
 
 # Logs
 *.log
 logs/
+
+# Local browser / scraper artifacts
+chromedriver*
+selenium/
+*.pkl
+*.pt
 
 # UV
 .uv/

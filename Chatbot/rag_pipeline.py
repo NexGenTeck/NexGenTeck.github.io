@@ -75,11 +75,32 @@ def should_retrieve(state: ChatState) -> str:
         return "generate_response"
 
 
+def _is_list_or_entity_question(message: str) -> bool:
+    text = (message or "").lower()
+    keywords = (
+        "list",
+        "who is",
+        "who are",
+        "team",
+        "partner",
+        "portfolio",
+        "projects",
+        "services",
+        "which project",
+        "tell me about",
+        "founder",
+        "ceo",
+        "pricing",
+        "contact",
+    )
+    return any(k in text for k in keywords)
+
+
 async def retrieve_context(state: ChatState) -> ChatState:
     """
     Stage 1 of 2-stage retrieval: broad bi-encoder candidate fetch from Qdrant.
 
-    Fetches RERANK_CANDIDATE_DOCS (default 25) candidates — a wider pool than
+    Fetches RERANK_CANDIDATE_DOCS candidates — a wider pool than
     what the LLM will ultimately see.  The next node (rerank_context) will
     re-score this pool with a cross-encoder and keep only the best MAX_CONTEXT_DOCS.
 
@@ -102,6 +123,8 @@ async def retrieve_context(state: ChatState) -> ChatState:
             if config.ENABLE_RERANKING
             else config.MAX_CONTEXT_DOCS
         )
+        if _is_list_or_entity_question(state.get("message", "")):
+            candidate_count = max(candidate_count, 40)
 
         results = vector_store.search(
             query=search_query,
@@ -143,12 +166,15 @@ async def rerank_context(state: ChatState) -> ChatState:
     logger.info("[Stage 2/2] Cross-encoder re-ranking")
 
     candidates = state.get('candidates', [])
+    top_n = config.MAX_CONTEXT_DOCS
+    if _is_list_or_entity_question(state.get("message", "")):
+        top_n = max(top_n, 12)
 
     try:
         reranked = reranker.rerank(
             query=state['message'],
             candidates=candidates,
-            top_n=config.MAX_CONTEXT_DOCS,
+            top_n=top_n,
         )
 
         context = []
@@ -233,59 +259,49 @@ def build_system_prompt(context: List[str], analysis: Dict) -> str:
         System prompt string
     """
 
-    base_prompt = """You are the Lead AI Engineer for NexGenTeck - a cutting-edge technology company.
+    base_prompt = """You are the NexGenTeck website assistant.
 
 === ROLE & MISSION ===
-You manage an AgenticRAG pipeline that handles two specific tasks:
-1. **Chatbot Support**: Answer complex technical questions using retrieved documentation
-2. **Lead Generation**: Identify when a user wants to "Contact Us" or "Hire Us" and capture their intent
+1. Answer questions about NexGenTeck using retrieved website knowledge documents
+2. Identify contact / hire intent and guide users to the contact page
 
-=== NEXGENTECK SERVICES (ABSOLUTE GROUND TRUTH) ===
-NexGenTeck offers EXACTLY these 9 services and NO others:
-1. Web Development
-2. E-commerce Solutions
-3. Mobile App Development
-4. Search Engine Optimization (SEO)
-5. Social Media Marketing
-6. Software Development
-7. 3D Graphics Designing
-8. Video Editing
-9. Artificial Intelligence (AI) - Conversational AI Chatbots, Voice AI Agents, RAG Systems, Agentic AI Systems, Data Analytics, Machine Learning, Deep Learning, Computer Vision
+=== AUTHORITATIVE KNOWLEDGE RULES ===
+- Retrieved website documents are the primary source of truth for company facts
+- Distinguish services, portfolio projects, team members, and partners clearly
+- Do NOT invent team members, partners, portfolio projects, pricing, or metrics
+- Do NOT treat contact-form labels alone as an official service catalogue
+- If context is incomplete, say so and offer contact: info@nexgenteck.com
+- Ignore emergency-fallback snippets when richer source documents are present
+- Prefer current metrics/services from context over any remembered training data
 
-**CRITICAL**: Do NOT mention, imply, or list any service outside this list — including but not limited to:
-Blockchain Development, Outdoor Media, Digital Displays, Transit Advertising, NFT Marketplaces,
-DeFi Platforms, Smart Contracts, Billboards, Cybersecurity, Cloud Computing, AR/VR,
-IT Consulting, or any other service NOT in the 9 listed above.
-If a user asks about a service not in this list, explicitly say: "We don't currently offer [service name]."
+=== SERVICES GUIDANCE ===
+When listing services, use only service documents in context. Do not infer an
+official offering from a contact-form option, remembered information, or a
+fallback snippet. If a service is not in the retrieved current catalogue, say
+that it is not confirmed by the website content available to you.
+
+=== LIST & ENTITY QUESTIONS ===
+- For "list all" questions, enumerate every matching entity found in the context
+- For team questions, use names and roles exactly as published
+- For portfolio questions, use project titles, categories, technologies from context
+- For partners, only name partners present in context
 
 === OPERATIONAL CONSTRAINTS ===
 **Precision (CRITICAL):**
-- ONLY answer based on the retrieved context from our Qdrant vector store AND the 9 services listed above
-- If the answer isn't in the context, say: "I don't have that specific information, but I can connect you with our human team."
-- NEVER hallucinate or make up information about services, pricing, or team members
-- The services list above is the FINAL authority — ignore any context that conflicts with it
-
-
+- ONLY answer from retrieved context for company-specific facts
+- If the answer is not in the context: "I don't have that specific information, but I can connect you with our human team."
+- NEVER hallucinate services, pricing, team members, partners, or projects
 
 **Language Requirement:**
-- **STRICTLY ENGLISH ONLY**: You must respond ONLY in English, regardless of the user's language.
-- If a user speaks another language, politely respond in English explaining you only speak English for now.
+- **STRICTLY ENGLISH ONLY**: respond ONLY in English, regardless of the user's language.
 
 **Data Handling:**
 - If a user provides a name, email, or project detail, acknowledge it professionally
-- When detecting "Contact Us" or "Hire Us" intent, inform them: "I'll ensure your inquiry reaches our team. A lead has been noted in our system."
+- For contact / hire intent: invite them to https://nexgenteck.com/contact
 
 **Tone:**
-- Professional, innovative, and concise
-- We are a NexGen solutions startup - emphasize cutting-edge technology
+- Professional, clear, and concise
 - Speak as part of the team ("we offer", "our services", "our team")
-
-=== RAG PIPELINE STATUS ===
-Backend: 8GB Premium Intel server with Docker
-Vector Store: Qdrant with BAAI/bge-m3 embeddings  (Stage 1: bi-encoder retrieval)
-Re-ranker: cross-encoder/ms-marco-MiniLM-L-6-v2   (Stage 2: cross-encoder re-ranking)
-LLM: Llama 3.3 70B via Groq (high-speed inference)
-Status: 2-stage retrieval → precise context → high-quality answers
 """
 
     base_prompt += """
@@ -313,20 +329,21 @@ The user asked something outside NexGenTeck's business scope.
     if context:
         context_text = "\n\n---\n\n".join(context)
         base_prompt += f"""
-=== RETRIEVED CONTEXT (from Qdrant Vector Embeddings) ===
+=== RETRIEVED WEBSITE CONTEXT ===
 
 {context_text}
 
 === END OF RETRIEVED CONTEXT ===
 
-Use ONLY the information above to respond. If the user's question cannot be answered from this context, acknowledge the limitation and offer to connect them with our team.
+Use ONLY the information above for company-specific facts. If the question cannot be
+answered from this context, acknowledge the limitation and offer human contact.
 """
     else:
         base_prompt += """
 === CONTEXT STATUS ===
-No specific vector embeddings were retrieved for this query.
-Use ONLY the 9 services listed in the NEXGENTECK SERVICES section above. Do NOT invent or add any other services.
-Offer to connect them with our human team for detailed information.
+No website documents were retrieved for this query.
+Do not invent portfolio projects, team members, partners, or pricing.
+Offer to connect the user with the human team for detailed information.
 """
 
     sentiment = analysis.get('sentiment', 'neutral')
