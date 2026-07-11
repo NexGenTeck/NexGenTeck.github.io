@@ -157,12 +157,15 @@ def _startup_indexing() -> None:
 
 def ensure_indexing_started() -> None:
     """
-    Start one background indexing thread at a time.
+    Start the startup freshness check once per Space process.
+
+    Chat requests must not launch repeated reindex attempts. Administrative
+    refresh remains available as the explicit force-refresh path.
     """
     global _index_thread
 
     with _index_lock:
-        if _index_thread is not None and _index_thread.is_alive():
+        if _index_thread is not None:
             return
 
         _index_thread = threading.Thread(
@@ -298,6 +301,7 @@ Answers are grounded in current NexGenTeck website content.
             ],
             title="Chat",
             cache_examples=False,
+            api_name="chat",
         )
 
         gr.Markdown("### Admin: Refresh Website Index")

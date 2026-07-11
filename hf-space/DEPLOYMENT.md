@@ -15,6 +15,11 @@ The Space no longer depends solely on incomplete SPA HTML crawls.
 On startup the Space compares a **content fingerprint** of bundled website sources and
 reindexes only when content changed (or the index is empty).
 
+Retrieval is schema-driven: the query planner receives the document types that exist in
+the current index and returns validated JSON (`list`, `search`, or `general`). A `list`
+operation retrieves all unique metadata entities of the requested type, so complete
+catalogue answers are not silently truncated by semantic top-k ranking.
+
 ## 1. Create the Hugging Face Space
 
 1. Go to [huggingface.co/new-space](https://huggingface.co/new-space)
@@ -107,11 +112,14 @@ knowledge base is built from bundled sources.
 
 ## Updating knowledge after website changes
 
-1. Update the website sources and include the matching versioned Space source
-   snapshot in the same release.
-2. Deploy the Space.
-3. The changed source fingerprint triggers reindexing on startup.
-4. Or use **Admin: Refresh Website Index** with `ADMIN_TOKEN`.
+1. Update the website source files under root `src/` and push to `main`.
+2. GitHub Actions workflow `.github/workflows/sync-hugging-face.yml` replaces
+   `hf-space/website_sources/src` with that authoritative tree, validates the required
+   source files, and synchronizes the deployment package to the configured Space.
+3. Configure the repository secret `HF_TOKEN` so the workflow can push without
+   committing credentials. The workflow does not force-push.
+4. The Space rebuilds; its changed source fingerprint triggers reindexing on startup.
+5. Or use **Admin: Refresh Website Index** with `ADMIN_TOKEN` for an explicit refresh.
 
 Do not edit `website_sources` as an independent content database. A release check
 should verify that it matches the website source files before publishing.

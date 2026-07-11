@@ -1,4 +1,6 @@
-gradio>=5.0.0
+gradio==5.0.0
+fastapi==0.115.2
+starlette==0.40.0
 groq>=0.13.0
 httpx>=0.28.0
 beautifulsoup4>=4.12.0

@@ -9,6 +9,7 @@ a working index.
 
 from __future__ import annotations
 
+import json
 import logging
 import os
 import threading
@@ -92,24 +93,79 @@ class InMemoryVectorIndex:
             self._document_counts_by_type = counts
             return len(contents)
 
-    def search(self, query: str, top_k: int | None = None) -> List[Tuple[str, float, Dict]]:
-        k = top_k or config.TOP_K
+    def available_document_types(self) -> List[str]:
+        """Return the document types actually present in the current index."""
+        with self._lock:
+            return sorted(
+                {
+                    str(metadata.get("document_type")).strip()
+                    for metadata in self._metadata
+                    if metadata.get("document_type")
+                }
+            )
+
+    def documents_by_type(
+        self,
+        document_type: str,
+    ) -> List[Tuple[str, float, Dict]]:
+        """Return every unique entity of one indexed document type in source order."""
+        requested_type = (document_type or "").strip()
+        if not requested_type:
+            return []
+
+        with self._lock:
+            results: List[Tuple[str, float, Dict]] = []
+            seen: set[str] = set()
+            for content, metadata in zip(self._contents, self._metadata):
+                if metadata.get("document_type") != requested_type:
+                    continue
+
+                entity_id = str(metadata.get("entity_id") or "").strip()
+                title = " ".join(
+                    str(metadata.get("title") or "").lower().split()
+                )
+                dedupe_key = entity_id or title
+                if dedupe_key and dedupe_key in seen:
+                    continue
+                if dedupe_key:
+                    seen.add(dedupe_key)
+                results.append((content, 1.0, dict(metadata)))
+            return results
+
+    def search(
+        self,
+        query: str,
+        top_k: int | None = None,
+        document_type: str | None = None,
+    ) -> List[Tuple[str, float, Dict]]:
+        """Semantic search, optionally limited to one metadata document type."""
+        k = config.TOP_K if top_k is None else max(1, top_k)
         with self._lock:
             if self._embeddings is None or not self._contents:
+                return []
+
+            candidate_indices = [
+                index
+                for index, metadata in enumerate(self._metadata)
+                if not document_type
+                or metadata.get("document_type") == document_type
+            ]
+            if not candidate_indices:
                 return []
 
             self._load_embedder()
             query_vec = self._embedder.encode(query, normalize_embeddings=True)
             query_vec = np.asarray(query_vec, dtype=np.float32)
-            scores = self._embeddings @ query_vec
+            scores = self._embeddings[candidate_indices] @ query_vec
 
-            top_indices = np.argsort(scores)[::-1][:k]
+            ranked_candidates = np.argsort(scores)[::-1][:k]
             results: List[Tuple[str, float, Dict]] = []
-            for idx in top_indices:
-                score = float(scores[idx])
+            for candidate_index in ranked_candidates:
+                idx = candidate_indices[int(candidate_index)]
+                score = float(scores[int(candidate_index)])
                 if score < config.MIN_RELEVANCE_SCORE:
                     continue
-                results.append((self._contents[idx], score, self._metadata[idx]))
+                results.append((self._contents[idx], score, dict(self._metadata[idx])))
             return results
 
     def chunk_count(self) -> int:
@@ -175,6 +231,131 @@ class ChatbotEngine:
 
             self._groq_client = Groq(api_key=config.GROQ_API_KEY)
         return self._groq_client
+
+    @staticmethod
+    def _parse_query_plan(
+        raw_plan: str,
+        available_document_types: List[str],
+    ) -> Optional[Dict[str, Optional[str]]]:
+        """Validate planner JSON against the live index schema."""
+        try:
+            payload = json.loads(raw_plan.strip())
+        except (TypeError, json.JSONDecodeError):
+            return None
+
+        if not isinstance(payload, dict):
+            return None
+        if set(payload) != {"operation", "document_type", "entity_query"}:
+            return None
+
+        operation = str(payload.get("operation") or "").strip().lower()
+        if operation not in {"list", "search", "general"}:
+            return None
+
+        document_type_value = payload.get("document_type")
+        document_type = (
+            str(document_type_value).strip()
+            if document_type_value is not None
+            else None
+        )
+        if document_type and document_type not in available_document_types:
+            return None
+        if operation == "list" and not document_type:
+            return None
+
+        entity_query_value = payload.get("entity_query")
+        entity_query = (
+            str(entity_query_value).strip()
+            if entity_query_value is not None
+            else None
+        )
+        if entity_query == "":
+            entity_query = None
+
+        return {
+            "operation": operation,
+            "document_type": document_type,
+            "entity_query": entity_query,
+        }
+
+    def _plan_query(
+        self,
+        message: str,
+    ) -> Optional[Dict[str, Optional[str]]]:
+        """Ask Groq for a schema-constrained retrieval plan.
+
+        The only document-type vocabulary supplied to the model is read from
+        the current index, so new structured entity types require no Python
+        changes. Any malformed or unsupported response is ignored safely.
+        """
+        available_document_types = self.index.available_document_types()
+        if not available_document_types:
+            return None
+
+        client = self._get_groq_client()
+        if client is None:
+            return None
+
+        planner_prompt = (
+            "Classify the user's retrieval need for a website knowledge index. "
+            "Return JSON only, with exactly these keys: operation, document_type, "
+            "entity_query. operation must be one of list, search, general. "
+            "Use list only when the user asks for every entity in one type. "
+            "Use search for a specific entity or a type-focused question. "
+            "Use general when no type-specific retrieval is appropriate. "
+            "document_type must be null or one of the provided values. "
+            "entity_query must be a short user-derived phrase or null.\n\n"
+            f"Available document types: {json.dumps(available_document_types)}\n"
+            f"User message: {json.dumps(message.strip())}"
+        )
+
+        try:
+            completion = client.chat.completions.create(
+                model=config.LLM_MODEL,
+                temperature=0,
+                max_tokens=96,
+                timeout=20,
+                response_format={"type": "json_object"},
+                messages=[
+                    {
+                        "role": "system",
+                        "content": "You are a strict JSON retrieval planner.",
+                    },
+                    {"role": "user", "content": planner_prompt},
+                ],
+            )
+            content = completion.choices[0].message.content
+            plan = self._parse_query_plan(
+                content or "",
+                available_document_types,
+            )
+            if plan is None:
+                logger.warning("Ignoring invalid retrieval planner output")
+            return plan
+        except Exception as exc:
+            logger.warning(
+                "Retrieval planner failed; using semantic retrieval: %s",
+                type(exc).__name__,
+            )
+            return None
+
+    def _retrieve_documents(
+        self,
+        message: str,
+        plan: Optional[Dict[str, Optional[str]]],
+    ) -> List[Tuple[str, float, Dict]]:
+        """Run a generic metadata-driven retrieval operation."""
+        if plan and plan["operation"] == "list" and plan["document_type"]:
+            return self.index.documents_by_type(plan["document_type"])
+
+        if plan and plan["operation"] == "search":
+            return self.index.search(
+                plan["entity_query"] or message,
+                top_k=config.TOP_K,
+                document_type=plan["document_type"],
+            )
+
+        return self.index.search(message, top_k=config.TOP_K)
 
     def _extract_documents(self) -> Dict[str, Any]:
         warnings: List[str] = []
@@ -414,29 +595,16 @@ class ChatbotEngine:
         if self.index.chunk_count() == 0:
             return (
                 "The knowledge base is still loading. Please wait a moment and try again, "
-                "or contact info@nexgenteck.com for immediate help."
+                "or use the website contact page for immediate help."
             )
 
-        top_k = config.TOP_K
-        lower = message.lower()
-        if any(
-            token in lower
-            for token in (
-                "list",
-                "team",
-                "partner",
-                "portfolio",
-                "project",
-                "services",
-                "who is",
-                "who are",
-            )
-        ):
-            top_k = max(top_k, 12)
-
-        results = self.index.search(message.strip(), top_k=top_k)
+        plan = self._plan_query(message.strip())
+        results = self._retrieve_documents(message.strip(), plan)
         context_chunks = format_context_for_prompt(results)
-        system_prompt = build_system_prompt(context_chunks, message)
+        system_prompt = build_system_prompt(
+            context_chunks,
+            retrieval_operation=(plan or {}).get("operation", "general"),
+        )
         client = self._get_groq_client()
         if client is None:
             return MISSING_KEY_MESSAGE

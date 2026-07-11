@@ -29,37 +29,14 @@ PROMPT_INJECTION_PATTERNS = re.compile(
     re.IGNORECASE,
 )
 
-OFF_TOPIC_PATTERNS = re.compile(
-    r"\b(write (me )?(a )?(python|javascript|code|script|program)|"
-    r"solve (this )?(math|equation)|"
-    r"what is the capital of|"
-    r"tell me a joke|"
-    r"weather in|"
-    r"who won the (election|world cup)|"
-    r"translate .+ to (spanish|french|urdu|arabic)|"
-    r"homework help)\b",
-    re.IGNORECASE,
-)
-
-CONTACT_INTENT_PATTERNS = re.compile(
-    r"\b(contact|hire|quote|pricing|get started|start (a )?project|"
-    r"book (a )?call|consultation|proposal|work with you)\b",
-    re.IGNORECASE,
-)
-
 INJECTION_REFUSAL = (
     "I can only help with NexGenTeck services and business inquiries. "
     "How can I assist you with our digital solutions today?"
 )
 
-OFF_TOPIC_REFUSAL = (
-    "I'm the NexGenTeck business assistant and can help with our services, "
-    "projects, and how to work with our team. What would you like to know about NexGenTeck?"
-)
-
 FALLBACK_RESPONSE = (
     "I apologize, but I'm having trouble generating a response right now. "
-    "Please try again shortly or contact us at info@nexgenteck.com for assistance."
+    "Please try again shortly or use the website contact page for assistance."
 )
 
 MISSING_KEY_MESSAGE = (
@@ -85,14 +62,6 @@ def is_prompt_injection(message: str) -> bool:
     return bool(PROMPT_INJECTION_PATTERNS.search(message))
 
 
-def is_simple_off_topic(message: str) -> bool:
-    return bool(OFF_TOPIC_PATTERNS.search(message))
-
-
-def detect_contact_intent(message: str) -> bool:
-    return bool(CONTACT_INTENT_PATTERNS.search(message))
-
-
 def fast_path_response(message: str) -> Optional[str]:
     """Return a canned response without calling Groq when safe."""
     validation = validate_message(message)
@@ -105,13 +74,13 @@ def fast_path_response(message: str) -> Optional[str]:
     if is_prompt_injection(message):
         return INJECTION_REFUSAL
 
-    if is_simple_off_topic(message):
-        return OFF_TOPIC_REFUSAL
-
     return None
 
 
-def build_system_prompt(context_chunks: List[str], user_message: str) -> str:
+def build_system_prompt(
+    context_chunks: List[str],
+    retrieval_operation: str = "general",
+) -> str:
     """Build the NexGenTeck assistant system prompt with retrieved context."""
     prompt = f"""You are the NexGenTeck business assistant on the company website.
 
@@ -130,7 +99,7 @@ remembered information, or a stale fallback.
 - Do NOT invent team members, partners, portfolio projects, pricing, or metrics
 - Do NOT treat contact-form labels alone as the official service catalogue
 - For list questions, enumerate every matching entity present in context
-- If information is missing, say so and offer info@nexgenteck.com / the contact page
+- If information is missing, say so and offer the website contact page
 
 === OPERATIONAL RULES ===
 - Answer using retrieved website context when available.
@@ -148,14 +117,12 @@ remembered information, or a stale fallback.
 Professional, helpful, and concise. Use "we" and "our team" when speaking about NexGenTeck.
 """
 
-    if detect_contact_intent(user_message):
+    if retrieval_operation == "list":
         prompt += """
-=== CONTACT / HIRE INTENT ===
-The user may want to work with NexGenTeck.
-- Acknowledge interest warmly.
-- Ask what service or project they need if not clear.
-- Ask for contact details if missing.
-- Say our team can follow up. Do not claim automatic CRM storage.
+=== EXHAUSTIVE LIST RETRIEVAL ===
+The retrieved context contains every unique entity of the requested document type.
+Enumerate all of those entities. Do not omit an item and do not add an entity that is
+not present in context.
 """
 
     if context_chunks:
@@ -187,8 +154,15 @@ def format_context_for_prompt(
     for content, score, metadata in results:
         source = metadata.get("source", "website")
         title = metadata.get("title", "")
-        header = f"[Source: {source}]"
+        document_type = metadata.get("document_type", "page")
+        entity_id = metadata.get("entity_id", "")
+        source_url = metadata.get("source_url", "")
+        header = f"[Source: {source}] [Type: {document_type}]"
         if title:
             header += f" [Title: {title}]"
+        if entity_id:
+            header += f" [Entity: {entity_id}]"
+        if source_url:
+            header += f" [URL: {source_url}]"
         formatted.append(f"{header}\n{content}")
     return formatted

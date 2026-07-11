@@ -64,7 +64,11 @@ class HFContentExtractionTests(unittest.TestCase):
             with open(os.path.join(source_root, *relative.split("/")), "rb") as source, open(
                 os.path.join(bundled_root, *relative.split("/")), "rb"
             ) as snapshot:
-                self.assertEqual(source.read().strip(), snapshot.read().strip(), relative)
+                self.assertEqual(
+                    source.read().replace(b"\r\n", b"\n").strip(),
+                    snapshot.read().replace(b"\r\n", b"\n").strip(),
+                    relative,
+                )
 
 
 if __name__ == "__main__":

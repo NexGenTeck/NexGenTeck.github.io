@@ -1,0 +1,99 @@
+name: Synchronize Hugging Face Space
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - 'src/**'
+      - 'hf-space/**'
+      - '.github/workflows/sync-hugging-face.yml'
+  workflow_dispatch:
+
+permissions:
+  contents: read
+
+concurrency:
+  group: nexgenteck-hugging-face-sync
+  cancel-in-progress: false
+
+jobs:
+  synchronize:
+    runs-on: ubuntu-latest
+    env:
+      SPACE_REPOSITORY: muhammadhasaan82/NexGenTeck
+      SPACE_DIRECTORY: huggingface-space
+    steps:
+      - name: Check out website source
+        uses: actions/checkout@v4
+
+      - name: Refresh bundled authoritative website sources
+        run: |
+          rm -rf hf-space/website_sources/src
+          mkdir -p hf-space/website_sources
+          cp -a src hf-space/website_sources/src
+
+      - name: Validate deployment source layout
+        run: |
+          test -f hf-space/app.py
+          test -f hf-space/requirements.txt
+          test -f hf-space/chatbot_core/rag.py
+          test -f hf-space/chatbot_core/content_extractor.py
+          test -f hf-space/website_sources/src/pages/Portfolio.tsx
+          test -f hf-space/website_sources/src/pages/About.tsx
+          test -f hf-space/website_sources/src/pages/Services.tsx
+          test -f hf-space/website_sources/src/pages/Pricing.tsx
+          test -f hf-space/website_sources/src/pages/Contact.tsx
+          test -f hf-space/website_sources/src/contexts/LanguageContext.tsx
+          test -f hf-space/website_sources/src/translations/serviceTranslations.ts
+          test -f hf-space/website_sources/src/utils/routes.ts
+
+      - name: Clone the configured Hugging Face Space
+        env:
+          HF_TOKEN: ${{ secrets.HF_TOKEN }}
+        run: |
+          test -n "$HF_TOKEN"
+          git clone "https://huggingface.co/spaces/${SPACE_REPOSITORY}" "$SPACE_DIRECTORY"
+          git -C "$SPACE_DIRECTORY" remote set-url origin "https://x-access-token:${HF_TOKEN}@huggingface.co/spaces/${SPACE_REPOSITORY}"
+
+      - name: Synchronize deployment files at Space root
+        run: |
+          rm -rf "$SPACE_DIRECTORY/hf-space"
+          rsync -a --delete hf-space/chatbot_core/ "$SPACE_DIRECTORY/chatbot_core/"
+          rsync -a --delete hf-space/website_sources/ "$SPACE_DIRECTORY/website_sources/"
+          rsync -a hf-space/app.py hf-space/requirements.txt "$SPACE_DIRECTORY/"
+          for document in README.md DEPLOYMENT.md .gitignore; do
+            if [ -f "hf-space/$document" ]; then
+              cp "hf-space/$document" "$SPACE_DIRECTORY/$document"
+            fi
+          done
+          if [ -d hf-space/tests ]; then
+            rsync -a --delete hf-space/tests/ "$SPACE_DIRECTORY/tests/"
+          fi
+
+      - name: Refuse secrets and generated artifacts
+        run: |
+          if find "$SPACE_DIRECTORY" -type d -name __pycache__ -print -quit | grep -q .; then
+            echo 'Refusing to deploy Python bytecode directories.' >&2
+            exit 1
+          fi
+          if find "$SPACE_DIRECTORY" -type f \( -name '*.pyc' -o -name '*.pyo' -o -name '.env' -o -name '*.pem' -o -name '*.key' \) -print -quit | grep -q .; then
+            echo 'Refusing to deploy generated or secret-bearing files.' >&2
+            exit 1
+          fi
+          if rg -n --glob '!README.md' --glob '!DEPLOYMENT.md' --glob '!*.lock' '(sk-[A-Za-z0-9_-]{16,}|hf_[A-Za-z0-9]{20,})' "$SPACE_DIRECTORY"; then
+            echo 'Refusing to deploy a token-like literal.' >&2
+            exit 1
+          fi
+
+      - name: Commit and push only when the Space changed
+        run: |
+          git -C "$SPACE_DIRECTORY" config user.name 'github-actions[bot]'
+          git -C "$SPACE_DIRECTORY" config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git -C "$SPACE_DIRECTORY" add app.py requirements.txt chatbot_core website_sources README.md DEPLOYMENT.md .gitignore tests
+          git -C "$SPACE_DIRECTORY" diff --cached --check
+          if git -C "$SPACE_DIRECTORY" diff --cached --quiet; then
+            echo 'Hugging Face Space is already synchronized.'
+            exit 0
+          fi
+          git -C "$SPACE_DIRECTORY" commit -m 'chore: synchronize website chatbot sources'
+          git -C "$SPACE_DIRECTORY" push origin main
