@@ -3,6 +3,7 @@ import { motion } from 'motion/react';
 import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { useLanguage } from '../contexts/LanguageContext';
+import { submitContact } from '../services/contactApi';
 
 type SubmitStatus = 'success' | 'error' | null;
 
@@ -17,6 +18,7 @@ export const Contact: React.FC = () => {
     phone: '',
     subject: '',
     message: '',
+    website: '',
   });
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [submitStatus, setSubmitStatus] = useState<SubmitStatus>(null);
@@ -25,54 +27,36 @@ export const Contact: React.FC = () => {
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
 
+    if (isSubmitting) {
+      return;
+    }
 
     setIsSubmitting(true);
     setSubmitStatus(null);
     setSubmitMessage('');
 
     try {
-      const response = await fetch(
-      'https://api.nexgenteck.com/contact.php',
-      {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({
-          name: formData.name,
-          email: formData.email,
-          phone: formData.phone || null,
-          subject: formData.subject || null,
-          message: formData.message,
-        }),
+      const data = await submitContact({
+        name: formData.name,
+        email: formData.email,
+        phone: formData.phone || null,
+        subject: formData.subject || null,
+        message: formData.message,
+        website: formData.website,
       });
 
-      const responseText = await response.text();
-
-      let data: {
-        success?: boolean;
-        message?: string;
-        error?: string;
-      } | null = null;
-
-      try {
-        data = responseText ? JSON.parse(responseText) : null;
-      } catch {
-        console.error('Non-JSON server response:', responseText);
-      }
-
-      if (!response.ok || !data?.success) {
+      if (!data.success) {
         setSubmitStatus('error');
-        setSubmitMessage(data?.error || DEFAULT_ERROR_MESSAGE);
+        setSubmitMessage(DEFAULT_ERROR_MESSAGE);
       } else {
         setSubmitStatus('success');
         setSubmitMessage(t('contact.form.success'));
-        setFormData({ name: '', email: '', phone: '', subject: '', message: '' });
+        setFormData({ name: '', email: '', phone: '', subject: '', message: '', website: '' });
       }
     } catch (error) {
       setSubmitStatus('error');
       setSubmitMessage(DEFAULT_ERROR_MESSAGE);
-      console.error('Unexpected error:', error);
+      console.error('Contact submission failed:', error);
     } finally {
       setIsSubmitting(false);
     }
@@ -135,6 +119,16 @@ export const Contact: React.FC = () => {
 
                 <form onSubmit={handleSubmit} className="space-y-6 relative" noValidate>
 
+                  <input
+                    type="text"
+                    name="website"
+                    value={formData.website}
+                    onChange={handleChange}
+                    autoComplete="off"
+                    tabIndex={-1}
+                    aria-hidden="true"
+                    className="hidden"
+                  />
 
                   <div>
                     <label htmlFor="name" className="block text-gray-300 mb-2">

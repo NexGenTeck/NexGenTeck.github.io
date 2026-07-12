@@ -1,0 +1,49 @@
+services:
+  - type: web
+    name: nexgenteck-contact-api
+    runtime: python
+    plan: free
+    rootDir: backend
+    buildCommand: pip install -r requirements.txt
+    startCommand: uvicorn app.main:app --host 0.0.0.0 --port $PORT
+    healthCheckPath: /health
+    autoDeployTrigger: commit
+    envVars:
+      - key: APP_ENV
+        value: production
+      - key: APP_NAME
+        value: NexGenTeck Contact API
+      - key: LOG_LEVEL
+        value: INFO
+      - key: DB_HOST
+        sync: false
+      - key: DB_PORT
+        value: "3306"
+      - key: DB_NAME
+        sync: false
+      - key: DB_USER
+        sync: false
+      - key: DB_PASSWORD
+        sync: false
+      - key: DB_CONNECT_TIMEOUT
+        value: "10"
+      - key: DB_SSL_CA
+        sync: false
+      - key: CORS_ORIGINS
+        value: https://nexgenteck.com,https://www.nexgenteck.com,https://nexgenteck.github.io,https://muhammadhasaan82.github.io
+      - key: SMTP_ENABLED
+        value: "false"
+      - key: SMTP_HOST
+        value: smtp.hostinger.com
+      - key: SMTP_PORT
+        value: "465"
+      - key: SMTP_USERNAME
+        sync: false
+      - key: SMTP_PASSWORD
+        sync: false
+      - key: SMTP_FROM_EMAIL
+        sync: false
+      - key: SMTP_FROM_NAME
+        value: NexGenTeck Website
+      - key: ADMIN_EMAIL
+        value: info@nexgenteck.com

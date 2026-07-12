@@ -41,7 +41,7 @@ After restoring frontend and rebuilding, new error appeared:
 1. Worker code was doing: `fetch('http://165.245.177.103:8000/chat')`
 2. Cloudflare Workers route all outbound requests through their infrastructure
 3. When Cloudflare sees a raw IP in the fetch URL, it blocks with 1003
-4. Setting `Host: api.nexgenteck.com` didn't help (that domain doesn't exist in DNS)
+4. Setting a deprecated API host header did not help because that domain did not exist in DNS.
 5. Even without a custom Host header, raw IP fetch = automatic 1003
 
 ## Solutions Implemented
@@ -256,14 +256,14 @@ BACKEND_PORT = "8000"
 
 ### Long-Term Improvements
 1. **Setup Custom Domain for Backend**
-   - Register domain or subdomain (e.g., `api.nexgenteck.com`)
+   - Register an appropriate domain or subdomain.
    - Point A record to DigitalOcean droplet IP
    - Update Worker to use custom domain instead of nip.io
    - Eliminates external DNS dependency
 
 2. **Nginx with SSL on Droplet**
    - Install Let's Encrypt certificate
-   - Worker can fetch `https://api.nexgenteck.com` directly
+   - Worker can fetch the registered API endpoint directly.
    - No more HTTP in the Worker → Backend connection
 
 3. **Cloudflare Tunnel Alternative**
