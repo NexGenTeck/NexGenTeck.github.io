@@ -7,6 +7,8 @@ import { AnimatedSection } from '../components/AnimatedSection';
 import { useLanguage } from '../contexts/LanguageContext';
 import { ImageWithFallback } from '../components/figma/ImageWithFallback';
 import { TypewriterText } from '../components/TypewriterText';
+import { getProjects } from '../data/portfolioData';
+
 import {
   Carousel,
   CarouselContent,
@@ -177,28 +179,8 @@ export const Home: React.FC = () => {
     },
   ];
 
-  const portfolioPreview = [
-    {
-      title: 'Global E-commerce Platform',
-      category: 'services.ecommerce',
-      image: '/services/ecommerce-hero.png',
-      link: '/portfolio/global-ecommerce',
-    },
-    {
-      title: 'Corporate Website Redesign',
-      category: 'services.web',
-      image:
-        'https://images.unsplash.com/photo-1557324232-b8917d3c3dcb?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHx3ZWIlMjBkZXZlbG9wbWVudCUyMGNvZGluZ3xlbnwxfHx8fDE3NjQzODYyMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080',
-      link: '/portfolio/corporate-redesign',
-    },
-    {
-      title: 'Fitness Mobile App',
-      category: 'services.mobile',
-      image:
-        'https://images.unsplash.com/photo-1609921212029-bb5a28e60960?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3Nzg4Nzd8MHwxfHNlYXJjaHwxfHxtb2JpbGUlMjBhcHAlMjBkZXNpZ258ZW58MXx8fHwxNzY0NDEwODY4fDA&ixlib=rb-4.1.0&q=80&w=1080',
-      link: '/portfolio/fitness-app',
-    },
-  ];
+  const portfolioPreview = getProjects(t).filter(p => p.featured).slice(0, 3);
+
 
   return (
     <div className="min-h-screen">
@@ -552,28 +534,26 @@ export const Home: React.FC = () => {
 
             <div className="grid md:grid-cols-3 gap-8">
               {portfolioPreview.map((project, index) => (
-                <AnimatedSection key={index} delay={index * 0.1}>
-                  <Link to={project.link}>
-                    <motion.div
-                      whileHover={{ y: -10 }}
-                      className="bg-[#1a1a1a] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group border border-white/5"
-                    >
-                      <div className="relative h-64 overflow-hidden">
-                        <ImageWithFallback
-                          src={project.image}
-                          alt={project.title}
-                          className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
-                        />
-                        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
-                        <div className="absolute bottom-4 left-4 right-4">
-                          <div className="text-sm text-orange-400 mb-2">
-                            {t(project.category)}
-                          </div>
-                          <h3 className="text-xl text-white">{project.title}</h3>
+                <AnimatedSection key={project.id} delay={index * 0.1}>
+                  <motion.div
+                    whileHover={{ y: -10 }}
+                    className="bg-[#1a1a1a] rounded-2xl overflow-hidden shadow-lg hover:shadow-2xl transition-all group border border-white/5 cursor-default"
+                  >
+                    <div className="relative h-64 overflow-hidden">
+                      <ImageWithFallback
+                        src={project.image}
+                        alt={project.title}
+                        className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
+                      />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/40 to-transparent" />
+                      <div className="absolute bottom-4 left-4 right-4">
+                        <div className="text-sm text-orange-400 mb-2">
+                          {project.type}
                         </div>
+                        <h3 className="text-xl text-white">{project.title}</h3>
                       </div>
-                    </motion.div>
-                  </Link>
+                    </div>
+                  </motion.div>
                 </AnimatedSection>
               ))}
             </div>
