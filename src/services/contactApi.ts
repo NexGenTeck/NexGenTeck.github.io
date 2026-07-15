@@ -38,6 +38,9 @@ export const submitContact = async (
     payload: ContactPayload,
 ): Promise<ContactApiResponse> => {
     const endpoint = import.meta.env.VITE_CONTACT_API_URL?.trim();
+    console.log("CONTACT API URL:", import.meta.env.VITE_CONTACT_API_URL);
+    const body = JSON.stringify(payload);
+    console.log("REQUEST BODY:", body);
 
     if (!endpoint) {
         if (import.meta.env.DEV) {
@@ -48,11 +51,13 @@ export const submitContact = async (
     }
 
     try {
+        console.log("STEP A: about to fetch");
         const response = await fetch(endpoint, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(payload),
+            body,
         });
+        console.log("STEP B: response received", response.status);
         const data = readResponse(await response.text());
 
         if (
@@ -70,7 +75,8 @@ export const submitContact = async (
                         : 'Message received successfully.',
             };
         }
-    } catch {
+    } catch (error) {
+        console.error('Contact API request failed:', error);
         // Network details are intentionally not sent to the UI.
     }
 

@@ -35,7 +35,7 @@ jobs:
           NODE_ENV: production
           VITE_SUPABASE_URL: https://owmgcguwmqdxerorgzje.supabase.co
           VITE_SUPABASE_ANON_KEY: sb_publishable_1gLOmZn2nkwpMnmVR36Q0g_1XxPBmH0
-          VITE_CONTACT_API_URL: ${{ vars.VITE_CONTACT_API_URL }}
+          VITE_CONTACT_API_URL: ${{ vars.VITE_CONTACT_API_URL || 'https://nexgenteck-contact-api.onrender.com/contact' }}
 
       - name: Add CNAME and 404.html
         run: |

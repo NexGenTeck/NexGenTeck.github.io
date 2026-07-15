@@ -25,6 +25,7 @@ export const Contact: React.FC = () => {
   const [submitMessage, setSubmitMessage] = useState('');
 
   const handleSubmit = async (e: React.FormEvent) => {
+    console.log("STEP 1: handleSubmit entered");
     e.preventDefault();
 
     if (isSubmitting) {
@@ -36,6 +37,8 @@ export const Contact: React.FC = () => {
     setSubmitMessage('');
 
     try {
+      console.log("STEP 2: validating");
+      console.log("STEP 3: calling submitContact");
       const data = await submitContact({
         name: formData.name,
         email: formData.email,
@@ -44,6 +47,7 @@ export const Contact: React.FC = () => {
         message: formData.message,
         website: formData.website,
       });
+      console.log("STEP 4: submitContact returned");
 
       if (!data.success) {
         setSubmitStatus('error');
@@ -56,8 +60,10 @@ export const Contact: React.FC = () => {
     } catch (error) {
       setSubmitStatus('error');
       setSubmitMessage(DEFAULT_ERROR_MESSAGE);
+      console.error("HANDLE SUBMIT ERROR", error);
       console.error('Contact submission failed:', error);
     } finally {
+      console.log("STEP 5: finally");
       setIsSubmitting(false);
     }
   };
