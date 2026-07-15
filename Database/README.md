@@ -1,13 +1,11 @@
 # Contact database (Hostinger MySQL)
 
 The existing Hostinger MySQL `contacts` table remains the only persistent store for
-website contact submissions. The Render-hosted FastAPI service in `backend/` connects
-to it using environment variables; this repository contains no database credentials.
+website contact submissions. The Hostinger-hosted `public/contact.php` endpoint writes
+to it using credentials from an uncommitted `contact-config.php` file.
 
-Use `backend/sql/contacts.sql` only to document or verify the expected table shape.
-Do not execute it automatically and do not create a Render database, SQLite file, or
-local submission store.
+Do not create a Render database, SQLite file, local submission store, Supabase table,
+or serverless replacement for contact submissions.
 
-Configure Hostinger Remote MySQL to allow the Render service, using the Hostinger remote
-hostname and port 3306—not `localhost`. See `backend/README.md` for the complete Render,
-Hostinger, verification, credential-rotation, and legacy-file cleanup procedure.
+Upload `public/contact.php` and a real `contact-config.php` manually to Hostinger
+`public_html/`. Keep database credentials out of git.

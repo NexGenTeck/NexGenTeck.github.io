@@ -22,6 +22,8 @@ export type ContactApiResponse = ContactApiSuccess | ContactApiError;
 export const CONTACT_API_ERROR_MESSAGE =
     'Unable to send message right now. Please try again later.';
 
+export const CONTACT_ENDPOINT = 'https://nexgenteck.com/contact.php';
+
 const readResponse = (body: string): unknown => {
     if (!body.trim()) {
         return null;
@@ -37,27 +39,20 @@ const readResponse = (body: string): unknown => {
 export const submitContact = async (
     payload: ContactPayload,
 ): Promise<ContactApiResponse> => {
-    const endpoint = import.meta.env.VITE_CONTACT_API_URL?.trim();
-    console.log("CONTACT API URL:", import.meta.env.VITE_CONTACT_API_URL);
-    const body = JSON.stringify(payload);
-    console.log("REQUEST BODY:", body);
-
-    if (!endpoint) {
-        if (import.meta.env.DEV) {
-            console.warn('VITE_CONTACT_API_URL is not configured.');
-        }
-
-        return { success: false, error: CONTACT_API_ERROR_MESSAGE };
-    }
+    const body = JSON.stringify({
+        name: payload.name,
+        email: payload.email,
+        phone: payload.phone ?? '',
+        subject: payload.subject ?? '',
+        message: payload.message,
+    });
 
     try {
-        console.log("STEP A: about to fetch");
-        const response = await fetch(endpoint, {
+        const response = await fetch(CONTACT_ENDPOINT, {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
             body,
         });
-        console.log("STEP B: response received", response.status);
         const data = readResponse(await response.text());
 
         if (
