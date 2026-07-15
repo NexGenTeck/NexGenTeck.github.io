@@ -22,7 +22,7 @@ export type ContactApiResponse = ContactApiSuccess | ContactApiError;
 export const CONTACT_API_ERROR_MESSAGE =
     'Unable to send message right now. Please try again later.';
 
-export const CONTACT_ENDPOINT = 'https://nexgenteck.com/contact.php';
+export const CONTACT_ENDPOINT = 'https://api.nexgenteck.com/contact.php';
 
 const readResponse = (body: string): unknown => {
     if (!body.trim()) {
