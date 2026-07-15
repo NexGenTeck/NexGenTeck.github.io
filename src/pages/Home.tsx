@@ -700,7 +700,7 @@ export const Home: React.FC = () => {
                 <iframe
                   className="absolute top-0 left-0 w-full h-full"
                   style={{ zIndex: 1 }}
-                  src="https://www.youtube.com/embed/MdOanVqkeG8?autoplay=1&rel=0"
+                  src="https://www.youtube.com/embed/6lRpZ2fFdoI?autoplay=1&rel=0"
                   title="NexGenTeck Quick Demo"
                   allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
                   referrerPolicy="strict-origin-when-cross-origin"
