@@ -67,5 +67,13 @@ export default defineConfig({
   server: {
     port: 4000,
     open: true,
+    // Vite does not run the Vercel functions in api/, so forward
+    // /api requests to the deployed site during local development.
+    proxy: {
+      '/api': {
+        target: 'https://nexgenteck.com',
+        changeOrigin: true,
+      },
+    },
   },
 });
