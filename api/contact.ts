@@ -199,9 +199,11 @@ export default async function handler(
     }
 
     const apiKey = process.env.RESEND_API_KEY;
-    const toEmail = process.env.TO_EMAIL;
+    const toEmails = process.env.TO_EMAIL?.split(',')
+        .map((email) => email.trim())
+        .filter(Boolean);
 
-    if (!apiKey || !toEmail) {
+    if (!apiKey || !toEmails || toEmails.length === 0) {
         console.error('Contact email service is not configured.');
         response.status(500).json({ success: false, error: GENERIC_ERROR });
         return;
@@ -215,7 +217,7 @@ export default async function handler(
         const [companyResult, autoReplyResult] = await Promise.all([
             resend.emails.send({
                 from: 'NexGenTeck <info@nexgenteck.com>',
-                to: [toEmail],
+                to: toEmails,
                 replyTo: payload.email,
                 subject: 'New Contact Form Submission',
                 html: companyEmailHtml(payload, submittedAt, ip),
