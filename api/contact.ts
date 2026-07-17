@@ -209,7 +209,8 @@ export default async function handler(
         return;
     }
 
-    const submittedAt = new Date().toISOString();
+    const pkTime = new Date(Date.now() + 5 * 60 * 60 * 1000);
+    const submittedAt = pkTime.toISOString().replace('Z', '');
     const ip = getClientIp(request);
     const resend = new Resend(apiKey);
 
