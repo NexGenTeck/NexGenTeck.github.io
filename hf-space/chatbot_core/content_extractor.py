@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 BASE_SITE_URL = "https://nexgenteck.com"
 CONTENT_VERSION_FILES = (
     "pages/Portfolio.tsx",
+    "data/portfolioData.ts",
     "pages/About.tsx",
     "pages/Services.tsx",
     "pages/Home.tsx",
@@ -81,6 +82,7 @@ def resolve_src_root(project_root: Optional[str] = None) -> Optional[str]:
     root = resolve_project_root(project_root)
     here = os.path.dirname(__file__)
     candidates = [
+        root,
         os.path.join(root, "src"),
         os.path.join(root, "website_sources", "src"),
         os.path.join(here, "website_sources", "src"),
@@ -90,8 +92,15 @@ def resolve_src_root(project_root: Optional[str] = None) -> Optional[str]:
         os.path.abspath(os.path.join(root, "..", "src")),
     ]
     for path in candidates:
-        if os.path.isdir(path):
+        if os.path.isdir(path) and os.path.isfile(
+            os.path.join(path, "pages", "Services.tsx")
+        ):
+            logger.info("Website source root resolved: %s", path)
             return path
+    logger.error(
+        "No website source root found. Checked: %s",
+        ", ".join(os.path.abspath(path) for path in candidates),
+    )
     return None
 
 
@@ -120,6 +129,7 @@ class ContentExtractor:
             logger.warning("No website src directory found")
             return []
 
+        logger.info("Starting source extraction from %s", self.src_root)
         self.translations = self._load_english_translations()
         self.content_version = self.compute_content_fingerprint()
         self.updated_at = _utcnow_iso()
@@ -137,10 +147,16 @@ class ContentExtractor:
         documents.extend(self._docs_navigation())
         documents.extend(self._docs_localized_content())
 
+        counts: Dict[str, int] = {}
+        for doc in documents:
+            dtype = (doc.get("metadata") or {}).get("document_type", "unknown")
+            counts[dtype] = counts.get(dtype, 0) + 1
         logger.info(
-            "Source extraction produced %s documents (version=%s)",
+            "Source extraction produced %s documents (version=%s, types=%s, sources=%s)",
             len(documents),
             self.content_version[:12],
+            counts,
+            self.sources_used,
         )
         return documents
 
@@ -213,6 +229,7 @@ class ContentExtractor:
 
         if not documents:
             errors.append("No documents extracted")
+            logger.error("Source document validation failed: %s", errors)
             return {"ok": False, "errors": errors, "warnings": warnings}
 
         by_type: Dict[str, int] = {}
@@ -251,6 +268,15 @@ class ContentExtractor:
             errors.append(f"Missing required entities: {', '.join(missing)}")
 
         ok = not errors
+        log_fn = logger.info if ok else logger.error
+        log_fn(
+            "Source document validation %s: documents=%s types=%s errors=%s warnings=%s",
+            "passed" if ok else "failed",
+            len(documents),
+            by_type,
+            errors,
+            warnings + self.warnings,
+        )
         return {
             "ok": ok,
             "errors": errors,
@@ -414,13 +440,17 @@ class ContentExtractor:
     # ------------------------------------------------------------------
 
     def _extract_array_literal(self, text: str, array_name: str) -> str:
-        """Extract the body of `const arrayName = [ ... ]` or `const arrayName = [ ... ] as const`."""
+        """Extract the body of `const arrayName = [ ... ]` or an arrow function returning `[ ... ]`."""
         pattern = rf"(?:const|let|var)\s+{re.escape(array_name)}\s*=\s*\["
         match = re.search(pattern, text)
         if not match:
             # object property style: projects = [
             pattern2 = rf"\b{re.escape(array_name)}\s*=\s*\["
             match = re.search(pattern2, text)
+        if not match:
+            # array-returning function style: getProjects = (...) => [
+            pattern3 = rf"\b{re.escape(array_name)}\s*=\s*.*?=>\s*\["
+            match = re.search(pattern3, text, re.DOTALL)
             if not match:
                 return ""
         start = match.end() - 1
@@ -534,6 +564,11 @@ class ContentExtractor:
         if not text:
             return []
         body = self._extract_array_literal(text, "projects")
+        source_file = "pages/Portfolio.tsx"
+        if not body:
+            data_text = self._read_src("data", "portfolioData.ts") or ""
+            body = self._extract_array_literal(data_text, "getProjects")
+            source_file = "data/portfolioData.ts"
         projects: List[Dict[str, Any]] = []
         for obj in self._split_top_level_objects(body):
             fields = self._parse_object_fields(obj)
@@ -557,8 +592,14 @@ class ContentExtractor:
                     "description": description,
                     "tags": tags,
                     "image": fields.get("image", ""),
+                    "source_file": source_file,
                 }
             )
+        logger.info(
+            "Extracted %s portfolio projects from %s",
+            len(projects),
+            source_file,
+        )
         return projects
 
     def extract_team_members(self) -> List[Dict[str, Any]]:

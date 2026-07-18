@@ -47,9 +47,8 @@ class ConsistencyTests(unittest.TestCase):
         self.assertIn("services/artificial-intelligence", routes)
 
     def test_portfolio_matches_portfolio_page(self):
-        portfolio = _read(os.path.join(REPO_ROOT, "src", "pages", "Portfolio.tsx"))
+        portfolio = _read(os.path.join(REPO_ROOT, "src", "data", "portfolioData.ts"))
         ids = re.findall(r"id:\s*'([^']+)'", portfolio)
-        # Filter to project ids near project objects (exclude unrelated)
         expected = {
             "trackit",
             "swift-translate-pro",

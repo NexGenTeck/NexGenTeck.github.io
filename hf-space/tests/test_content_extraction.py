@@ -13,7 +13,11 @@ HF_ROOT = os.path.abspath(os.path.join(os.path.dirname(__file__), ".."))
 if HF_ROOT not in sys.path:
     sys.path.insert(0, HF_ROOT)
 
-from chatbot_core.content_extractor import CONTENT_VERSION_FILES, ContentExtractor  # noqa: E402
+from chatbot_core.content_extractor import (  # noqa: E402
+    CONTENT_VERSION_FILES,
+    ContentExtractor,
+    resolve_src_root,
+)
 
 
 class HFContentExtractionTests(unittest.TestCase):
@@ -28,6 +32,10 @@ class HFContentExtractionTests(unittest.TestCase):
 
     def test_sources_available(self):
         self.assertIsNotNone(self.extractor.src_root)
+
+    def test_direct_source_root_is_supported(self):
+        direct_src_root = os.path.join(HF_ROOT, "website_sources", "src")
+        self.assertEqual(resolve_src_root(direct_src_root), direct_src_root)
 
     def test_core_entities(self):
         for entity in [

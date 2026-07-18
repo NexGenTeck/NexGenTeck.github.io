@@ -22,7 +22,11 @@ export type ContactApiResponse = ContactApiSuccess | ContactApiError;
 export const CONTACT_API_ERROR_MESSAGE =
     'Unable to send message right now. Please try again later.';
 
-export const CONTACT_ENDPOINT = 'https://nexgenteck.com/contact.php';
+// Same-origin Vercel serverless function (api/contact.ts). The previous
+// https://api.nexgenteck.com/contact.php endpoint is gone — that domain is
+// parked, so requests to it never reach a mail server.
+export const CONTACT_ENDPOINT =
+    import.meta.env.VITE_CONTACT_API_URL || '/api/contact';
 
 const readResponse = (body: string): unknown => {
     if (!body.trim()) {
@@ -70,7 +74,8 @@ export const submitContact = async (
                         : 'Message received successfully.',
             };
         }
-    } catch {
+    } catch (error) {
+        console.error('Contact API request failed:', error);
         // Network details are intentionally not sent to the UI.
     }
 

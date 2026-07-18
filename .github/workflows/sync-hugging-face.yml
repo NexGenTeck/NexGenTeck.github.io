@@ -45,6 +45,7 @@ jobs:
           test -f hf-space/chatbot_core/rag.py
           test -f hf-space/chatbot_core/content_extractor.py
           test -f hf-space/website_sources/src/pages/Portfolio.tsx
+          test -f hf-space/website_sources/src/data/portfolioData.ts
           test -f hf-space/website_sources/src/pages/About.tsx
           test -f hf-space/website_sources/src/pages/Services.tsx
           test -f hf-space/website_sources/src/pages/Pricing.tsx

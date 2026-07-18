@@ -155,6 +155,36 @@ class MetadataRetrievalTests(unittest.TestCase):
             document_type=document_type,
         )
 
+    def test_build_index_refuses_emergency_fallback_on_cold_start(self):
+        engine = ChatbotEngine()
+        fallback_doc = {
+            "content": "WARNING: Authoritative website content could not be loaded.",
+            "metadata": {
+                "document_type": "company_overview",
+                "entity_id": "emergency-fallback",
+                "is_fallback": True,
+            },
+        }
+        engine._extract_documents = Mock(
+            return_value={
+                "documents": [fallback_doc],
+                "extraction_source": "emergency_fallback",
+                "content_version": "missing-src",
+                "pages_visited": 0,
+                "warnings": ["Using minimal emergency fallback"],
+                "sources_used": [],
+                "document_counts_by_type": {"company_overview": 1},
+            }
+        )
+
+        result = engine.build_index(force=True)
+
+        self.assertFalse(result["ok"])
+        self.assertEqual(result["status"], "failed")
+        self.assertIn("refusing to index emergency fallback", result["message"])
+        self.assertEqual(engine.index.chunk_count(), 0)
+        self.assertFalse(engine.index.has_authoritative_content())
+
 
 if __name__ == "__main__":
     unittest.main()

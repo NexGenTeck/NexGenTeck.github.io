@@ -126,6 +126,7 @@ class WebsiteScraper:
         self.visited = set()
 
         seed_urls = self._discover_seed_urls()
+        logger.info("Live scrape discovered %s seed URLs", len(seed_urls))
         queue: List[str] = []
         for url in seed_urls:
             normalized = normalize_url(url, self.base_url)
@@ -155,12 +156,23 @@ class WebsiteScraper:
                 try:
                     response = client.get(url)
                     response.raise_for_status()
+                    logger.info(
+                        "Fetched %s status=%s bytes=%s",
+                        url,
+                        response.status_code,
+                        len(response.text),
+                    )
                     content_type = response.headers.get("content-type", "")
                     if "html" not in content_type and "xml" not in content_type:
+                        logger.info(
+                            "Skipping %s because content-type is %r",
+                            url,
+                            content_type,
+                        )
                         continue
                     soup = BeautifulSoup(response.text, "lxml")
                 except Exception as exc:
-                    logger.warning("Failed to fetch %s: %s", url, exc)
+                    logger.exception("Failed to fetch %s: %s", url, exc)
                     continue
 
                 self._extract_page_content(soup, url)
@@ -187,10 +199,16 @@ class WebsiteScraper:
         try:
             with httpx.Client(timeout=config.HTTP_TIMEOUT, follow_redirects=True) as client:
                 response = client.get(sitemap_url)
+                logger.info(
+                    "Sitemap fetch %s status=%s bytes=%s",
+                    sitemap_url,
+                    response.status_code,
+                    len(response.text),
+                )
                 if response.status_code == 200 and "<urlset" in response.text:
                     seeds.extend(self._parse_sitemap(response.text))
         except Exception as exc:
-            logger.info("No usable sitemap at %s: %s", sitemap_url, exc)
+            logger.exception("No usable sitemap at %s: %s", sitemap_url, exc)
 
         common_paths = [
             "/services",
@@ -218,6 +236,7 @@ class WebsiteScraper:
             if normalized not in seen:
                 seen.add(normalized)
                 unique.append(normalized)
+        logger.info("Seed URL list prepared: %s", unique)
         return unique
 
     def _parse_sitemap(self, xml_text: str) -> List[str]:
@@ -285,6 +304,12 @@ class WebsiteScraper:
             return
 
         chunks = chunk_text(full_text, config.CHUNK_SIZE, config.CHUNK_OVERLAP)
+        logger.info(
+            "Extracted live page content url=%s text_chars=%s chunks=%s",
+            url,
+            len(full_text),
+            len(chunks),
+        )
         for index, chunk in enumerate(chunks):
             self.documents.append(
                 {

@@ -73,24 +73,37 @@ class InMemoryVectorIndex:
             self._load_embedder()
             contents = [doc["content"] for doc in documents]
             metadata = [doc.get("metadata", {}) for doc in documents]
+            counts: Dict[str, int] = {}
+            for meta in metadata:
+                dtype = meta.get("document_type", "unknown")
+                counts[dtype] = counts.get(dtype, 0) + 1
 
-            logger.info("Embedding %s chunks", len(contents))
+            logger.info(
+                "Embedding generation starting: chunks=%s extraction_source=%s types=%s",
+                len(contents),
+                extraction_source,
+                counts,
+            )
             vectors = self._embedder.encode(
                 contents,
                 normalize_embeddings=True,
                 show_progress_bar=len(contents) > 20,
             )
+            embeddings = np.asarray(vectors, dtype=np.float32)
             self._contents = contents
             self._metadata = metadata
-            self._embeddings = np.asarray(vectors, dtype=np.float32)
+            self._embeddings = embeddings
             self._pages_visited = pages_visited
             self._content_version = content_version
             self._extraction_source = extraction_source
-            counts: Dict[str, int] = {}
-            for meta in metadata:
-                dtype = meta.get("document_type", "unknown")
-                counts[dtype] = counts.get(dtype, 0) + 1
             self._document_counts_by_type = counts
+            logger.info(
+                "Vector index ready: chunks=%s embeddings_shape=%s pages=%s version=%s",
+                len(contents),
+                embeddings.shape,
+                pages_visited,
+                content_version[:12] if content_version else "n/a",
+            )
             return len(contents)
 
     def available_document_types(self) -> List[str]:
@@ -130,6 +143,11 @@ class InMemoryVectorIndex:
                 if dedupe_key:
                     seen.add(dedupe_key)
                 results.append((content, 1.0, dict(metadata)))
+            logger.info(
+                "Metadata list retrieval: document_type=%s returned=%s",
+                requested_type,
+                len(results),
+            )
             return results
 
     def search(
@@ -142,6 +160,10 @@ class InMemoryVectorIndex:
         k = config.TOP_K if top_k is None else max(1, top_k)
         with self._lock:
             if self._embeddings is None or not self._contents:
+                logger.warning(
+                    "Similarity search skipped: empty vector index query=%r",
+                    query,
+                )
                 return []
 
             candidate_indices = [
@@ -151,6 +173,11 @@ class InMemoryVectorIndex:
                 or metadata.get("document_type") == document_type
             ]
             if not candidate_indices:
+                logger.warning(
+                    "Similarity search skipped: no candidates query=%r document_type=%r",
+                    query,
+                    document_type,
+                )
                 return []
 
             self._load_embedder()
@@ -160,12 +187,24 @@ class InMemoryVectorIndex:
 
             ranked_candidates = np.argsort(scores)[::-1][:k]
             results: List[Tuple[str, float, Dict]] = []
+            top_scores: List[float] = []
             for candidate_index in ranked_candidates:
                 idx = candidate_indices[int(candidate_index)]
                 score = float(scores[int(candidate_index)])
+                top_scores.append(round(score, 4))
                 if score < config.MIN_RELEVANCE_SCORE:
                     continue
                 results.append((self._contents[idx], score, dict(self._metadata[idx])))
+            logger.info(
+                "Similarity search complete: query=%r document_type=%r candidates=%s top_k=%s threshold=%.3f returned=%s top_scores=%s",
+                query,
+                document_type,
+                len(candidate_indices),
+                k,
+                config.MIN_RELEVANCE_SCORE,
+                len(results),
+                top_scores,
+            )
             return results
 
     def chunk_count(self) -> int:
@@ -187,6 +226,17 @@ class InMemoryVectorIndex:
     def document_counts_by_type(self) -> Dict[str, int]:
         with self._lock:
             return dict(self._document_counts_by_type)
+
+    def has_authoritative_content(self) -> bool:
+        with self._lock:
+            if not self._contents:
+                return False
+            if self._extraction_source == "emergency_fallback":
+                return False
+            return any(
+                not (metadata or {}).get("is_fallback")
+                for metadata in self._metadata
+            )
 
     def snapshot(self) -> Dict[str, Any]:
         with self._lock:
@@ -345,6 +395,7 @@ class ChatbotEngine:
         plan: Optional[Dict[str, Optional[str]]],
     ) -> List[Tuple[str, float, Dict]]:
         """Run a generic metadata-driven retrieval operation."""
+        logger.info("Retrieval request: message=%r plan=%s", message, plan)
         if plan and plan["operation"] == "list" and plan["document_type"]:
             return self.index.documents_by_type(plan["document_type"])
 
@@ -367,6 +418,14 @@ class ChatbotEngine:
 
         extractor = ContentExtractor(base_url=config.WEBSITE_URL)
         content_version = extractor.compute_content_fingerprint()
+        logger.info(
+            "Knowledge extraction starting: website_url=%s source_extractor=%s live_scrape=%s src_root=%s fingerprint=%s",
+            config.WEBSITE_URL,
+            config.USE_SOURCE_EXTRACTOR,
+            config.ALLOW_LIVE_SCRAPE,
+            extractor.src_root,
+            content_version[:12] if content_version else "n/a",
+        )
 
         if config.USE_SOURCE_EXTRACTOR:
             try:
@@ -378,8 +437,22 @@ class ChatbotEngine:
                 validation = extractor.validate_documents(documents)
                 if validation.get("ok"):
                     extraction_source = "source_tsx"
+                    logger.info(
+                        "Source extraction accepted: documents=%s types=%s sources=%s",
+                        len(documents),
+                        validation.get("document_counts_by_type"),
+                        sources_used,
+                    )
                 else:
                     warnings.extend(validation.get("errors") or [])
+                    logger.error(
+                        "Source extraction rejected: documents=%s errors=%s warnings=%s types=%s sources=%s",
+                        len(documents),
+                        validation.get("errors"),
+                        validation.get("warnings"),
+                        validation.get("document_counts_by_type"),
+                        sources_used,
+                    )
                     documents = []
             except Exception as exc:
                 warnings.append(f"Source extraction failed: {exc}")
@@ -388,20 +461,32 @@ class ChatbotEngine:
 
         if not documents and config.ALLOW_LIVE_SCRAPE:
             try:
+                logger.info("Falling back to live scrape because source documents are empty")
                 scraper = WebsiteScraper()
                 live_docs = scraper.scrape_live_only(max_pages=config.MAX_PAGES)
                 if live_docs:
                     documents = live_docs
                     extraction_source = "live_scrape"
                     pages_visited = len(scraper.visited)
+                    logger.info(
+                        "Live scrape accepted: pages=%s chunks=%s",
+                        pages_visited,
+                        len(documents),
+                    )
+                else:
+                    logger.error("Live scrape returned zero documents")
             except Exception as exc:
                 warnings.append(f"Live scrape failed: {exc}")
-                logger.warning("Live scrape failed: %s", exc)
+                logger.exception("Live scrape failed: %s", exc)
 
         if not documents:
             documents = get_minimal_emergency_fallback(config.WEBSITE_URL)
             extraction_source = "emergency_fallback"
             warnings.append("Using minimal emergency fallback")
+            logger.error(
+                "All authoritative extraction paths failed; emergency fallback was generated but must not become the active index. warnings=%s",
+                warnings,
+            )
 
         counts: Dict[str, int] = {}
         for doc in documents:
@@ -417,6 +502,16 @@ class ChatbotEngine:
             "sources_used": sources_used,
             "document_counts_by_type": counts,
         }
+
+    @staticmethod
+    def _is_emergency_fallback_extraction(extraction: Dict[str, Any]) -> bool:
+        if extraction.get("extraction_source") == "emergency_fallback":
+            return True
+        documents = extraction.get("documents") or []
+        return bool(documents) and all(
+            (doc.get("metadata") or {}).get("is_fallback")
+            for doc in documents
+        )
 
     def build_index(self, force: bool = True) -> Dict[str, object]:
         """Extract content and rebuild in-memory index without destroying old data on failure."""
@@ -438,6 +533,14 @@ class ChatbotEngine:
             extraction = self._extract_documents()
             documents = extraction["documents"]
             content_version = extraction["content_version"]
+            logger.info(
+                "Index build extraction result: source=%s documents=%s pages=%s types=%s warnings=%s",
+                extraction["extraction_source"],
+                len(documents),
+                extraction["pages_visited"],
+                extraction["document_counts_by_type"],
+                extraction["warnings"],
+            )
 
             if (
                 not force
@@ -463,14 +566,11 @@ class ChatbotEngine:
                 self._last_index_error = None
                 return result
 
-            if (
-                extraction["extraction_source"] == "emergency_fallback"
-                and previous.get("contents")
-            ):
+            if self._is_emergency_fallback_extraction(extraction):
                 result = {
                     "ok": False,
                     "status": "failed",
-                    "message": "Refusing to replace working index with emergency fallback.",
+                    "message": "Authoritative website content unavailable; refusing to index emergency fallback.",
                     "chunks": self.index.chunk_count(),
                     "pages": self.index.page_count(),
                     "content_version": previous.get("content_version") or "",
@@ -478,10 +578,11 @@ class ChatbotEngine:
                     "document_counts_by_type": extraction["document_counts_by_type"],
                     "warnings": extraction["warnings"],
                     "duration_seconds": round(time.time() - started, 3),
-                    "previous_collection_retained": True,
+                    "previous_collection_retained": bool(previous.get("contents")),
                 }
                 self._last_index_result = result
                 self._last_index_error = result["message"]
+                logger.error("Index build refused emergency fallback: %s", result)
                 return result
 
             # Build into a temporary index first
@@ -522,6 +623,7 @@ class ChatbotEngine:
                 "previous_collection_retained": False,
             }
             self._last_index_result = result
+            logger.info("Index build succeeded: %s", result)
             return result
         except Exception as exc:
             logger.exception("Index build failed")
@@ -546,7 +648,7 @@ class ChatbotEngine:
 
     def ensure_fresh_on_startup(self) -> Dict[str, object]:
         if not config.AUTO_REFRESH_ON_STARTUP:
-            if self.index.chunk_count() == 0:
+            if not self.index.has_authoritative_content():
                 return self.build_index(force=True)
             return {
                 "ok": True,
@@ -557,7 +659,7 @@ class ChatbotEngine:
 
         current_fp = ContentExtractor(base_url=config.WEBSITE_URL).compute_content_fingerprint()
         stored = self.index.content_version()
-        if self.index.chunk_count() == 0 or not stored or stored != current_fp:
+        if not self.index.has_authoritative_content() or not stored or stored != current_fp:
             return self.build_index(force=True)
         return {
             "ok": True,
@@ -570,7 +672,7 @@ class ChatbotEngine:
     def status_text(self) -> str:
         if self._is_indexing:
             return "Indexing website content..."
-        if self.index.chunk_count() == 0:
+        if not self.index.has_authoritative_content():
             if self._last_index_error:
                 return f"Index not ready. {self._last_index_error}"
             return "Index not ready yet."
@@ -592,7 +694,7 @@ class ChatbotEngine:
         if not config.GROQ_API_KEY:
             return MISSING_KEY_MESSAGE
 
-        if self.index.chunk_count() == 0:
+        if not self.index.has_authoritative_content():
             return (
                 "The knowledge base is still loading. Please wait a moment and try again, "
                 "or use the website contact page for immediate help."
@@ -600,7 +702,23 @@ class ChatbotEngine:
 
         plan = self._plan_query(message.strip())
         results = self._retrieve_documents(message.strip(), plan)
+        logger.info(
+            "Retrieved documents for chat: count=%s scores=%s entities=%s",
+            len(results),
+            [round(score, 4) for _, score, _ in results],
+            [
+                (metadata or {}).get("entity_id") or (metadata or {}).get("title")
+                for _, _, metadata in results
+            ],
+        )
         context_chunks = format_context_for_prompt(results)
+        context_length = sum(len(chunk) for chunk in context_chunks)
+        logger.info(
+            "Prompt context prepared: chunks=%s chars=%s retrieval_operation=%s",
+            len(context_chunks),
+            context_length,
+            (plan or {}).get("operation", "general"),
+        )
         system_prompt = build_system_prompt(
             context_chunks,
             retrieval_operation=(plan or {}).get("operation", "general"),
@@ -623,7 +741,7 @@ class ChatbotEngine:
             content = completion.choices[0].message.content
             return content.strip() if content else FALLBACK_RESPONSE
         except Exception as exc:
-            logger.error("Groq API error: %s", type(exc).__name__)
+            logger.exception("Groq API error: %s", type(exc).__name__)
             return FALLBACK_RESPONSE
 
 

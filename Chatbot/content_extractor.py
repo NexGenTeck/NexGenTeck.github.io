@@ -25,6 +25,7 @@ logger = logging.getLogger(__name__)
 BASE_SITE_URL = "https://nexgenteck.com"
 CONTENT_VERSION_FILES = (
     "pages/Portfolio.tsx",
+    "data/portfolioData.ts",
     "pages/About.tsx",
     "pages/Services.tsx",
     "pages/Home.tsx",
@@ -78,13 +79,16 @@ def resolve_src_root(project_root: Optional[str] = None) -> Optional[str]:
     """
     root = resolve_project_root(project_root)
     candidates = [
+        root,
         os.path.join(root, "src"),
         os.path.join(os.path.dirname(__file__), "website_sources", "src"),
         os.path.join(root, "website_sources", "src"),
         os.path.join(root, "Chatbot", "website_sources", "src"),
     ]
     for path in candidates:
-        if os.path.isdir(path):
+        if os.path.isdir(path) and os.path.isfile(
+            os.path.join(path, "pages", "Services.tsx")
+        ):
             return path
     return None
 
@@ -410,13 +414,17 @@ class ContentExtractor:
     # ------------------------------------------------------------------
 
     def _extract_array_literal(self, text: str, array_name: str) -> str:
-        """Extract the body of `const arrayName = [ ... ]` or `const arrayName = [ ... ] as const`."""
+        """Extract the body of `const arrayName = [ ... ]` or an arrow function returning `[ ... ]`."""
         pattern = rf"(?:const|let|var)\s+{re.escape(array_name)}\s*=\s*\["
         match = re.search(pattern, text)
         if not match:
             # object property style: projects = [
             pattern2 = rf"\b{re.escape(array_name)}\s*=\s*\["
             match = re.search(pattern2, text)
+        if not match:
+            # array-returning function style: getProjects = (...) => [
+            pattern3 = rf"\b{re.escape(array_name)}\s*=\s*.*?=>\s*\["
+            match = re.search(pattern3, text, re.DOTALL)
             if not match:
                 return ""
         start = match.end() - 1
@@ -530,6 +538,11 @@ class ContentExtractor:
         if not text:
             return []
         body = self._extract_array_literal(text, "projects")
+        source_file = "pages/Portfolio.tsx"
+        if not body:
+            data_text = self._read_src("data", "portfolioData.ts") or ""
+            body = self._extract_array_literal(data_text, "getProjects")
+            source_file = "data/portfolioData.ts"
         projects: List[Dict[str, Any]] = []
         for obj in self._split_top_level_objects(body):
             fields = self._parse_object_fields(obj)
@@ -553,6 +566,7 @@ class ContentExtractor:
                     "description": description,
                     "tags": tags,
                     "image": fields.get("image", ""),
+                    "source_file": source_file,
                 }
             )
         return projects
