@@ -761,62 +761,108 @@ class ChatbotEngine:
         )
 
     def chat(self, message: str, history: List) -> str:
-        fast = fast_path_response(message)
-        if fast:
-            return fast
-
-        if not config.GROQ_API_KEY:
-            return MISSING_KEY_MESSAGE
-
-        if not self.index.has_authoritative_content():
-            return (
-                "The knowledge base is still loading. Please wait a moment and try again, "
-                "or use the website contact page for immediate help."
-            )
-
-        plan = self._plan_query(message.strip())
-        results = self._retrieve_documents(message.strip(), plan)
-        logger.info(
-            "Retrieved documents for chat: count=%s scores=%s entities=%s",
-            len(results),
-            [round(score, 4) for _, score, _ in results],
-            [
-                (metadata or {}).get("entity_id") or (metadata or {}).get("title")
-                for _, _, metadata in results
-            ],
-        )
-        context_chunks = format_context_for_prompt(results)
-        context_length = sum(len(chunk) for chunk in context_chunks)
-        logger.info(
-            "Prompt context prepared: chunks=%s chars=%s retrieval_operation=%s",
-            len(context_chunks),
-            context_length,
-            (plan or {}).get("operation", "general"),
-        )
-        system_prompt = build_system_prompt(
-            context_chunks,
-            retrieval_operation=(plan or {}).get("operation", "general"),
-        )
-        client = self._get_groq_client()
-        if client is None:
-            return MISSING_KEY_MESSAGE
+        logger.info("Request received")
+        query_text = message.strip()
+        logger.info("Query text: %r", query_text)
 
         try:
-            completion = client.chat.completions.create(
-                model=config.LLM_MODEL,
-                temperature=config.LLM_TEMPERATURE,
-                max_tokens=config.LLM_MAX_TOKENS,
-                timeout=60,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": message.strip()},
+            fast = fast_path_response(query_text)
+            if fast:
+                logger.info("Final response (fast path): %r", fast)
+                return fast
+
+            if not config.GROQ_API_KEY:
+                logger.warning("Groq API key not configured")
+                return MISSING_KEY_MESSAGE
+
+            if not self.index.has_authoritative_content():
+                logger.warning("Index does not have authoritative content yet")
+                return (
+                    "The knowledge base is still loading. Please wait a moment and try again, "
+                    "or use the website contact page for immediate help."
+                )
+
+            # Query planner
+            logger.info("Query planner starting")
+            try:
+                plan = self._plan_query(query_text)
+                logger.info("Query planner output: %r", plan)
+            except Exception as exc:
+                logger.exception("Query planner failed")
+                plan = None
+
+            # Retrieval
+            logger.info("Retrieval start")
+            try:
+                results = self._retrieve_documents(query_text, plan)
+                logger.info("Retrieval end: count=%s", len(results))
+            except Exception as exc:
+                logger.exception("Retrieval failed")
+                raise
+
+            logger.info(
+                "Retrieved documents for chat: count=%s scores=%s entities=%s",
+                len(results),
+                [round(score, 4) for _, score, _ in results],
+                [
+                    (metadata or {}).get("entity_id") or (metadata or {}).get("title")
+                    for _, _, metadata in results
                 ],
             )
+
+            # Prompt construction
+            logger.info("Prompt construction starting")
+            try:
+                context_chunks = format_context_for_prompt(results)
+                context_length = sum(len(chunk) for chunk in context_chunks)
+                logger.info(
+                    "Prompt context prepared: chunks=%s chars=%s retrieval_operation=%s",
+                    len(context_chunks),
+                    context_length,
+                    (plan or {}).get("operation", "general"),
+                )
+                system_prompt = build_system_prompt(
+                    context_chunks,
+                    retrieval_operation=(plan or {}).get("operation", "general"),
+                )
+                logger.info("Prompt construction completed")
+            except Exception as exc:
+                logger.exception("Prompt construction failed")
+                raise
+
+            # LLM Request
+            client = self._get_groq_client()
+            if client is None:
+                logger.warning("Groq client not initialized")
+                return MISSING_KEY_MESSAGE
+
+            logger.info("LLM request starting. model=%r", config.LLM_MODEL)
+            try:
+                completion = client.chat.completions.create(
+                    model=config.LLM_MODEL,
+                    temperature=config.LLM_TEMPERATURE,
+                    max_tokens=config.LLM_MAX_TOKENS,
+                    timeout=60,
+                    messages=[
+                        {"role": "system", "content": system_prompt},
+                        {"role": "user", "content": query_text},
+                    ],
+                )
+                logger.info("LLM request ended")
+            except Exception as exc:
+                logger.exception("LLM request failed")
+                raise
+
             content = completion.choices[0].message.content
-            return content.strip() if content else FALLBACK_RESPONSE
+            logger.info("LLM response: %r", content)
+
+            final_response = content.strip() if content else FALLBACK_RESPONSE
+            logger.info("Final response: %r", final_response)
+            return final_response
+
         except Exception as exc:
-            logger.exception("Groq API error: %s", type(exc).__name__)
-            return FALLBACK_RESPONSE
+            logger.exception("Chat request failed")
+            raise
 
 
 engine = ChatbotEngine()
