@@ -10,4 +10,3 @@ venv/
 .cache/
 models/
 qdrant_storage/
-
