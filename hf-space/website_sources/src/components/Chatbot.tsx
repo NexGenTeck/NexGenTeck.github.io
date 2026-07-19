@@ -219,6 +219,7 @@ export const Chatbot: React.FC = () => {
             const result = await client.predict('/chat', [
                 currentMessage,
                 history,
+                history,
             ]);
 
             const responseText =

@@ -315,12 +315,11 @@ Answers are grounded in current NexGenTeck website content.
 
         gr.ChatInterface(
             fn=respond,
-            type="messages",
             examples=[
                 "What services does NexGenTeck offer?",
                 "List the current portfolio projects",
                 "Who is the founder and CEO of NexGenTeck?",
-                "Who are NexGenTeck’s partners?",
+                "Who are NexGenTeck's partners?",
                 "Tell me about TrackIT",
                 "How can I contact NexGenTeck?",
             ],
