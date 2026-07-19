@@ -9,5 +9,5 @@ venv/
 *.log
 .cache/
 models/
-data/
 qdrant_storage/
+
