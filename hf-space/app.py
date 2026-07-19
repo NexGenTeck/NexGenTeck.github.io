@@ -26,6 +26,30 @@ from chatbot_core.guardrails import MISSING_KEY_MESSAGE
 from chatbot_core.rag import engine
 
 
+# ---------------------------------------------------------------------------
+# ZeroGPU compliance
+# ---------------------------------------------------------------------------
+# Hugging Face ZeroGPU Spaces require at least one @spaces.GPU-decorated
+# function to be present at import time. Without one, the runtime aborts with
+# "No @spaces.GPU function detected during startup".
+#
+# IMPORTANT: This function must NEVER read or mutate the in-memory vector
+# index (engine.index).  ZeroGPU runs decorated functions inside an isolated
+# worker subprocess; any state changes are discarded when the subprocess
+# exits.  The previous implementation decorated admin_refresh() with
+# @spaces.GPU, which rebuilt the index inside the worker and then lost it.
+#
+# The no-op below satisfies the startup check.  It is wired to a hidden
+# Gradio component so the runtime registers it, but it performs no work.
+# ---------------------------------------------------------------------------
+
+@spaces.GPU(duration=1)
+def _gpu_noop() -> str:
+    """No-op function required by ZeroGPU. Does not touch the RAG index."""
+    return "ok"
+
+
+
 logging.basicConfig(
     level=logging.INFO,
     format="%(asctime)s - %(name)s - %(levelname)s - %(message)s",
@@ -350,6 +374,11 @@ Answers are grounded in current NexGenTeck website content.
             fn=refresh_status,
             outputs=[status_box],
         )
+
+        # Hidden components to register the @spaces.GPU compliance function with Gradio
+        dummy_btn = gr.Button("Dummy GPU Trigger", visible=False)
+        dummy_output = gr.Textbox(visible=False)
+        dummy_btn.click(fn=_gpu_noop, outputs=[dummy_output])
 
     return demo
 
