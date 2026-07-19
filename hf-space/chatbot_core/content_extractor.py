@@ -18,7 +18,7 @@ import logging
 import os
 import re
 from datetime import datetime, timezone
-from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple
+from typing import Any, Dict, Iterable, List, Optional, Sequence, Tuple, Set
 
 logger = logging.getLogger(__name__)
 
@@ -117,6 +117,7 @@ class ContentExtractor:
         self.sources_used: List[str] = []
         self.content_version: str = ""
         self.updated_at: str = _utcnow_iso()
+        self._accessed_translation_keys: Set[str] = set()
 
     # ------------------------------------------------------------------
     # Public API
@@ -342,6 +343,7 @@ class ContentExtractor:
         return text
 
     def _t(self, key: str, default: str = "") -> str:
+        self._accessed_translation_keys.add(key)
         return self.translations.get(key, default)
 
     def _meta(
@@ -1402,7 +1404,7 @@ class ContentExtractor:
                 entries = [
                     f"{key}: {value}"
                     for key, value in sorted(values.items())
-                    if key.startswith(group) and value
+                    if key.startswith(group) and value and key in self._accessed_translation_keys
                 ]
                 if not entries:
                     continue
@@ -1430,7 +1432,7 @@ class ContentExtractor:
                                 language=language,
                                 translation_group=group_id,
                                 chunk_index=part - 1,
-                            ),
+                             ),
                         )
                     )
         return documents
