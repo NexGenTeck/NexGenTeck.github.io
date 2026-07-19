@@ -142,6 +142,8 @@ class InMemoryVectorIndex:
             for content, metadata in zip(self._contents, self._metadata):
                 if metadata.get("document_type") != requested_type:
                     continue
+                if metadata.get("language", "en") != "en":
+                    continue
 
                 entity_id = str(metadata.get("entity_id") or "").strip()
                 title = " ".join(
@@ -188,8 +190,8 @@ class InMemoryVectorIndex:
             candidate_indices = [
                 index
                 for index, metadata in enumerate(self._metadata)
-                if not document_type
-                or metadata.get("document_type") == document_type
+                if (not document_type or metadata.get("document_type") == document_type)
+                and metadata.get("language", "en") == "en"
             ]
             if not candidate_indices:
                 logger.warning(
@@ -313,39 +315,48 @@ class ChatbotEngine:
         available_document_types: List[str],
     ) -> Optional[Dict[str, Optional[str]]]:
         """Validate planner JSON against the live index schema."""
+        clean_plan = raw_plan.strip()
+        if clean_plan.startswith("```"):
+            lines = clean_plan.split("\n")
+            if lines[0].startswith("```"):
+                lines = lines[1:]
+            if lines and lines[-1].startswith("```"):
+                lines = lines[:-1]
+            clean_plan = "\n".join(lines).strip()
+
         try:
-            payload = json.loads(raw_plan.strip())
+            payload = json.loads(clean_plan)
         except (TypeError, json.JSONDecodeError):
             return None
 
         if not isinstance(payload, dict):
             return None
-        if set(payload) != {"operation", "document_type", "entity_query"}:
+
+        # Allow extra keys but require the core three keys
+        if not all(k in payload for k in ("operation", "document_type", "entity_query")):
             return None
 
-        operation = str(payload.get("operation") or "").strip().lower()
+        def normalize_val(val) -> Optional[str]:
+            if val is None:
+                return None
+            s = str(val).strip()
+            if s.lower() in {"null", "none", "n/a", ""}:
+                return None
+            return s
+
+        operation = normalize_val(payload.get("operation"))
+        if operation:
+            operation = operation.lower()
         if operation not in {"list", "search", "general"}:
             return None
 
-        document_type_value = payload.get("document_type")
-        document_type = (
-            str(document_type_value).strip()
-            if document_type_value is not None
-            else None
-        )
+        document_type = normalize_val(payload.get("document_type"))
         if document_type and document_type not in available_document_types:
             return None
         if operation == "list" and not document_type:
             return None
 
-        entity_query_value = payload.get("entity_query")
-        entity_query = (
-            str(entity_query_value).strip()
-            if entity_query_value is not None
-            else None
-        )
-        if entity_query == "":
-            entity_query = None
+        entity_query = normalize_val(payload.get("entity_query"))
 
         return {
             "operation": operation,
