@@ -223,7 +223,19 @@ class ContentExtractor:
         return hasher.hexdigest()
 
     def validate_documents(self, documents: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
-        """Validate extraction quality before indexing."""
+        """Validate extraction quality before indexing.
+
+        Hard-required document types (errors if missing):
+          - company_overview
+          - service
+
+        Optional document types (warnings if missing):
+          - portfolio_project
+          - team_member
+          - partner
+          - contact
+          - pricing
+        """
         warnings: List[str] = []
         errors: List[str] = []
 
@@ -244,28 +256,53 @@ class ContentExtractor:
             if meta.get("entity_id"):
                 entity_ids.append(str(meta["entity_id"]))
 
-        required_types = {
+        # Hard-required: the chatbot cannot function without these.
+        hard_required_types = {
+            "company_overview",
             "service",
+        }
+        for required in hard_required_types:
+            if by_type.get(required, 0) < 1:
+                errors.append(f"Missing required document type: {required}")
+
+        # Optional: log warnings but do not reject the index.
+        optional_types = {
             "portfolio_project",
             "team_member",
             "partner",
             "contact",
-            "company_overview",
             "pricing",
         }
-        for required in required_types:
-            if by_type.get(required, 0) < 1:
-                errors.append(f"Missing required document type: {required}")
+        for optional in optional_types:
+            if by_type.get(optional, 0) < 1:
+                warnings.append(f"Missing optional document type: {optional}")
 
-        required_entities = {
-            *(f"service-{service['slug']}" for service in self.extract_service_catalogue()),
-            *(f"portfolio-{project['id']}" for project in self.extract_portfolio_projects()),
-            *(f"team-{_slugify(member['name'])}" for member in self.extract_team_members()),
-            *(f"partner-{_slugify(partner['name'])}" for partner in self.extract_partners()),
-        }
-        missing = sorted(required_entities - set(entity_ids))
-        if missing:
-            errors.append(f"Missing required entities: {', '.join(missing)}")
+        # Entity completeness check — only enforce for hard-required types.
+        required_entities: set[str] = set()
+        required_entities.update(
+            f"service-{service['slug']}" for service in self.extract_service_catalogue()
+        )
+        # Portfolio, team, and partner entities are optional; missing ones
+        # produce warnings, not errors.
+        optional_entities: set[str] = set()
+        optional_entities.update(
+            f"portfolio-{project['id']}" for project in self.extract_portfolio_projects()
+        )
+        optional_entities.update(
+            f"team-{_slugify(member['name'])}" for member in self.extract_team_members()
+        )
+        optional_entities.update(
+            f"partner-{_slugify(partner['name'])}" for partner in self.extract_partners()
+        )
+
+        entity_id_set = set(entity_ids)
+        missing_required = sorted(required_entities - entity_id_set)
+        if missing_required:
+            errors.append(f"Missing required entities: {', '.join(missing_required)}")
+
+        missing_optional = sorted(optional_entities - entity_id_set)
+        if missing_optional:
+            warnings.append(f"Missing optional entities: {', '.join(missing_optional)}")
 
         ok = not errors
         log_fn = logger.info if ok else logger.error
@@ -283,7 +320,7 @@ class ContentExtractor:
             "warnings": warnings + self.warnings,
             "document_count": len(documents),
             "document_counts_by_type": by_type,
-            "entity_ids": sorted(set(entity_ids)),
+            "entity_ids": sorted(entity_id_set),
         }
 
     # ------------------------------------------------------------------
