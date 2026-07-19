@@ -203,7 +203,8 @@ def refresh_status() -> str:
     return status
 
 
-@spaces.GPU(duration=120)
+# Removed @spaces.GPU decorator to prevent ZeroGPU subprocess state loss.
+# Sentence-transformers runs on CPU in this application, so GPU is not required.
 def admin_refresh(admin_token: str) -> str:
     """
     Rebuild the index when the configured admin token is provided.
@@ -352,6 +353,33 @@ Answers are grounded in current NexGenTeck website content.
 
     return demo
 
+
+# Preload the index synchronously on application startup to avoid race conditions.
+# This blocks the app from serving until the knowledge base is fully initialized.
+logger.info("Application Startup: preloading knowledge base begins.")
+import time
+start_time = time.time()
+try:
+    init_result = engine.ensure_fresh_on_startup()
+    duration = time.time() - start_time
+    logger.info(
+        "Application Startup: knowledge base preloaded successfully. "
+        "Duration: %.3f seconds. Result: %s",
+        duration,
+        init_result,
+    )
+    if not init_result.get("ok", True):
+        raise RuntimeError(
+            f"Knowledge base preloading failed to obtain authoritative content: {init_result.get('message')}"
+        )
+except Exception as e:
+    logger.exception("Application Startup: failed to build/load knowledge base.")
+    raise RuntimeError(
+        "Application Startup aborted: failed to build/load knowledge base."
+    ) from e
+
+# Prevent redundant background indexing since it is already preloaded
+_index_thread = threading.current_thread()
 
 demo = build_ui()
 

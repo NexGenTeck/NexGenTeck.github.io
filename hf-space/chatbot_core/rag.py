@@ -84,12 +84,19 @@ class InMemoryVectorIndex:
                 extraction_source,
                 counts,
             )
+            # Log embedding count
+            logger.info("Embedding count: %d chunks to embed.", len(contents))
+
             vectors = self._embedder.encode(
                 contents,
                 normalize_embeddings=True,
                 show_progress_bar=len(contents) > 20,
             )
             embeddings = np.asarray(vectors, dtype=np.float32)
+
+            # Log vector count
+            logger.info("Vector count: %d embeddings created.", len(embeddings))
+
             self._contents = contents
             self._metadata = metadata
             self._embeddings = embeddings
@@ -127,6 +134,9 @@ class InMemoryVectorIndex:
             return []
 
         with self._lock:
+            # Log retrieval executed
+            logger.info("Retrieval executed: list documents by type=%r", requested_type)
+
             results: List[Tuple[str, float, Dict]] = []
             seen: set[str] = set()
             for content, metadata in zip(self._contents, self._metadata):
@@ -143,6 +153,10 @@ class InMemoryVectorIndex:
                 if dedupe_key:
                     seen.add(dedupe_key)
                 results.append((content, 1.0, dict(metadata)))
+
+            # Log retrieval document count
+            logger.info("Retrieval document count: %d chunks returned.", len(results))
+
             logger.info(
                 "Metadata list retrieval: document_type=%s returned=%s",
                 requested_type,
@@ -159,11 +173,16 @@ class InMemoryVectorIndex:
         """Semantic search, optionally limited to one metadata document type."""
         k = config.TOP_K if top_k is None else max(1, top_k)
         with self._lock:
+            # Log retrieval executed
+            logger.info("Retrieval executed: semantic search for query=%r, document_type=%s, top_k=%d", query, document_type, k)
+
             if self._embeddings is None or not self._contents:
                 logger.warning(
                     "Similarity search skipped: empty vector index query=%r",
                     query,
                 )
+                # Log retrieval document count
+                logger.info("Retrieval document count: 0 chunks returned.")
                 return []
 
             candidate_indices = [
@@ -178,6 +197,8 @@ class InMemoryVectorIndex:
                     query,
                     document_type,
                 )
+                # Log retrieval document count
+                logger.info("Retrieval document count: 0 chunks returned.")
                 return []
 
             self._load_embedder()
@@ -195,6 +216,10 @@ class InMemoryVectorIndex:
                 if score < config.MIN_RELEVANCE_SCORE:
                     continue
                 results.append((self._contents[idx], score, dict(self._metadata[idx])))
+
+            # Log retrieval document count
+            logger.info("Retrieval document count: %d chunks returned.", len(results))
+
             logger.info(
                 "Similarity search complete: query=%r document_type=%r candidates=%s top_k=%s threshold=%.3f returned=%s top_scores=%s",
                 query,
@@ -416,6 +441,9 @@ class ChatbotEngine:
         pages_visited = 0
         sources_used: List[str] = []
 
+        # Log extraction begins
+        logger.info("Extraction begins: Starting document extraction from sources.")
+
         extractor = ContentExtractor(base_url=config.WEBSITE_URL)
         content_version = extractor.compute_content_fingerprint()
         logger.info(
@@ -456,7 +484,7 @@ class ChatbotEngine:
                     documents = []
             except Exception as exc:
                 warnings.append(f"Source extraction failed: {exc}")
-                logger.exception("Source extraction failed")
+                logger.exception("Source extraction failed with exception:")
                 documents = []
 
         if not documents and config.ALLOW_LIVE_SCRAPE:
@@ -477,7 +505,7 @@ class ChatbotEngine:
                     logger.error("Live scrape returned zero documents")
             except Exception as exc:
                 warnings.append(f"Live scrape failed: {exc}")
-                logger.exception("Live scrape failed: %s", exc)
+                logger.exception("Live scrape failed with exception: %s", exc)
 
         if not documents:
             documents = get_minimal_emergency_fallback(config.WEBSITE_URL)
@@ -492,6 +520,10 @@ class ChatbotEngine:
         for doc in documents:
             dtype = (doc.get("metadata") or {}).get("document_type", "unknown")
             counts[dtype] = counts.get(dtype, 0) + 1
+
+        # Log extraction completed & document count
+        logger.info("Extraction completed: Successfully extracted documents. Source: %s", extraction_source)
+        logger.info("Document count extracted: %d", len(documents))
 
         return {
             "documents": documents,
@@ -528,6 +560,9 @@ class ChatbotEngine:
             self._is_indexing = True
 
         started = time.time()
+        # Log startup begins
+        logger.info("Startup begins: Index build requested (force=%s)", force)
+
         previous = self.index.snapshot()
         try:
             extraction = self._extract_documents()
@@ -564,6 +599,9 @@ class ChatbotEngine:
                 }
                 self._last_index_result = result
                 self._last_index_error = None
+
+                # Log startup duration
+                logger.info("Startup duration: %s seconds", result["duration_seconds"])
                 return result
 
             if self._is_emergency_fallback_extraction(extraction):
@@ -583,6 +621,9 @@ class ChatbotEngine:
                 self._last_index_result = result
                 self._last_index_error = result["message"]
                 logger.error("Index build refused emergency fallback: %s", result)
+
+                # Log startup duration
+                logger.info("Startup duration: %s seconds", result["duration_seconds"])
                 return result
 
             # Build into a temporary index first
@@ -606,6 +647,11 @@ class ChatbotEngine:
             # Swap only after success
             self.index = staging
             self._last_index_error = None
+
+            # Log readiness flag changed & index loaded
+            logger.info("Readiness flag changed: has_authoritative_content = %s", self.index.has_authoritative_content())
+            logger.info("Index loaded: InMemoryVectorIndex successfully populated.")
+
             result = {
                 "ok": True,
                 "status": "success",
@@ -624,11 +670,20 @@ class ChatbotEngine:
             }
             self._last_index_result = result
             logger.info("Index build succeeded: %s", result)
+
+            # Log startup duration
+            logger.info("Startup duration: %s seconds", result["duration_seconds"])
             return result
         except Exception as exc:
-            logger.exception("Index build failed")
+            # Log complete exception stack trace
+            logger.exception("Index build failed with exception:")
+
             self.index.restore(previous)
-            self._last_index_error = "Indexing failed. Previous knowledge retained."
+            self._last_index_error = f"Indexing failed. Previous knowledge retained. Error: {exc}"
+
+            # Log readiness flag changed
+            logger.info("Readiness flag changed: has_authoritative_content = %s (due to indexing failure)", self.index.has_authoritative_content())
+
             result = {
                 "ok": False,
                 "status": "failed",
@@ -641,12 +696,20 @@ class ChatbotEngine:
                 "previous_collection_retained": True,
             }
             self._last_index_result = result
-            return result
+
+            # Log startup duration
+            logger.info("Startup duration: %s seconds", result["duration_seconds"])
+
+            # Fail loudly by re-raising!
+            raise exc
         finally:
             with self._index_lock:
                 self._is_indexing = False
 
     def ensure_fresh_on_startup(self) -> Dict[str, object]:
+        # Log startup begins
+        logger.info("Startup begins: Ensure fresh on startup check initiated.")
+
         if not config.AUTO_REFRESH_ON_STARTUP:
             if not self.index.has_authoritative_content():
                 return self.build_index(force=True)
