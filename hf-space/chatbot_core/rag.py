@@ -1,14 +1,4 @@
-"""
-In-memory RAG pipeline for Hugging Face Gradio deployment.
-Uses sentence-transformers + numpy cosine similarity (no Qdrant).
-
-Preferred knowledge source: bundled / repository website TSX extraction.
-Live scrape is secondary. Emergency fallback is last resort and cannot replace
-a working index.
-"""
-
 from __future__ import annotations
-
 import json
 import logging
 import os
@@ -399,7 +389,11 @@ class ChatbotEngine:
             completion = client.chat.completions.create(
                 model=config.LLM_MODEL,
                 temperature=0,
-                max_tokens=96,
+                extra_body={
+                    "max_completion_tokens": config.LLM_PLANNER_MAX_TOKENS,
+                    "reasoning_effort": "low",
+                    "include_reasoning": False,
+                },
                 timeout=20,
                 response_format={"type": "json_object"},
                 messages=[
@@ -410,6 +404,10 @@ class ChatbotEngine:
                     {"role": "user", "content": planner_prompt},
                 ],
             )
+            if completion.choices[0].finish_reason == "length":
+                logger.warning("Retrieval planner reached its token limit")
+                return None
+
             content = completion.choices[0].message.content
             plan = self._parse_query_plan(
                 content or "",
@@ -452,7 +450,6 @@ class ChatbotEngine:
         pages_visited = 0
         sources_used: List[str] = []
 
-        # Log extraction begins
         logger.info("Extraction begins: Starting document extraction from sources.")
 
         extractor = ContentExtractor(base_url=config.WEBSITE_URL)
@@ -777,12 +774,8 @@ class ChatbotEngine:
 
             if not self.index.has_authoritative_content():
                 logger.warning("Index does not have authoritative content yet")
-                return (
-                    "The knowledge base is still loading. Please wait a moment and try again, "
-                    "or use the website contact page for immediate help."
-                )
+                return FALLBACK_RESPONSE
 
-            # Query planner
             logger.info("Query planner starting")
             try:
                 plan = self._plan_query(query_text)
@@ -791,7 +784,6 @@ class ChatbotEngine:
                 logger.exception("Query planner failed")
                 plan = None
 
-            # Retrieval
             logger.info("Retrieval start")
             try:
                 results = self._retrieve_documents(query_text, plan)
@@ -841,7 +833,11 @@ class ChatbotEngine:
                 completion = client.chat.completions.create(
                     model=config.LLM_MODEL,
                     temperature=config.LLM_TEMPERATURE,
-                    max_tokens=config.LLM_MAX_TOKENS,
+                    extra_body={
+                        "max_completion_tokens": config.LLM_MAX_TOKENS,
+                        "reasoning_effort": "low",
+                        "include_reasoning": False,
+                    },
                     timeout=60,
                     messages=[
                         {"role": "system", "content": system_prompt},
@@ -853,10 +849,14 @@ class ChatbotEngine:
                 logger.exception("LLM request failed")
                 raise
 
+            if completion.choices[0].finish_reason == "length":
+                logger.warning("Answer generation reached its token limit")
+                return FALLBACK_RESPONSE
+
             content = completion.choices[0].message.content
             logger.info("LLM response: %r", content)
 
-            final_response = content.strip() if content else FALLBACK_RESPONSE
+            final_response = (content or "").strip() or FALLBACK_RESPONSE
             logger.info("Final response: %r", final_response)
             return final_response
 
