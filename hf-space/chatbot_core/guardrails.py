@@ -34,15 +34,13 @@ INJECTION_REFUSAL = (
     "How can I assist you with our digital solutions today?"
 )
 
-FALLBACK_RESPONSE = (
-    "I apologize, but I'm having trouble generating a response right now. "
-    "Please try again shortly or use the website contact page for assistance."
+MAINTENANCE_MESSAGE = (
+    "Our AI assistant is temporarily unavailable while we perform maintenance. "
+    "We'll be back soon. Please try again shortly."
 )
 
-MISSING_KEY_MESSAGE = (
-    "The chatbot is online, but the Groq API key is not configured. "
-    "Please add GROQ_API_KEY in Space Secrets."
-)
+FALLBACK_RESPONSE = MAINTENANCE_MESSAGE
+MISSING_KEY_MESSAGE = MAINTENANCE_MESSAGE
 
 
 def validate_message(message: str, max_length: int = 2000) -> Optional[str]:

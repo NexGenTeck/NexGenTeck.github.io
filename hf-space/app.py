@@ -1,14 +1,4 @@
-"""
-NexGenTeck AI Chatbot — Hugging Face Gradio Space entrypoint.
-
-Knowledge base preference:
-1. Structured extraction from bundled website sources
-2. Live website scrape (secondary)
-3. Minimal emergency fallback
-"""
-
 from __future__ import annotations
-
 import inspect
 import logging
 import os
@@ -22,7 +12,7 @@ import gradio as gr
 import spaces
 
 from chatbot_core.config import config
-from chatbot_core.guardrails import MISSING_KEY_MESSAGE
+from chatbot_core.guardrails import FALLBACK_RESPONSE, MISSING_KEY_MESSAGE
 from chatbot_core.rag import engine
 
 @spaces.GPU(duration=1)
@@ -185,11 +175,14 @@ def ensure_indexing_started() -> None:
 
 def respond(message: str, history: list) -> str:
     """
-    Handle a chatbot request.
+    Handle a chatbot request and return a visitor-friendly failure message.
     """
-    ensure_indexing_started()
-    return engine.chat(message, history)
-
+    try:
+        ensure_indexing_started()
+        return engine.chat(message, history)
+    except Exception:
+        logger.exception("Chat request could not be completed")
+        return FALLBACK_RESPONSE
 
 def refresh_status() -> str:
     """
@@ -404,5 +397,5 @@ if __name__ == "__main__":
         server_name="0.0.0.0",
         server_port=int(os.getenv("PORT", "7860")),
         ssr_mode=False,
-        show_error=True,
+        show_error=False,
     )

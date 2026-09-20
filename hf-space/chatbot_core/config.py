@@ -1,5 +1,3 @@
-"""Configuration for NexGenTeck Hugging Face Gradio chatbot."""
-
 import os
 
 from dotenv import load_dotenv
@@ -22,9 +20,12 @@ class Config:
         "EMBEDDING_MODEL", "sentence-transformers/all-MiniLM-L6-v2"
     )
 
-    LLM_MODEL: str = os.getenv("LLM_MODEL", "llama-3.3-70b-versatile")
+    LLM_MODEL: str = os.getenv("LLM_MODEL", "openai/gpt-oss-120b")
     LLM_TEMPERATURE: float = float(os.getenv("LLM_TEMPERATURE", "0.3"))
-    LLM_MAX_TOKENS: int = int(os.getenv("LLM_MAX_TOKENS", "768"))
+    LLM_MAX_TOKENS: int = int(os.getenv("LLM_MAX_TOKENS", "4096"))
+    LLM_PLANNER_MAX_TOKENS: int = int(
+        os.getenv("LLM_PLANNER_MAX_TOKENS", "2048")
+    )
 
     MAX_PAGES: int = int(os.getenv("MAX_PAGES", "100"))
     TOP_K: int = int(os.getenv("TOP_K", "8"))

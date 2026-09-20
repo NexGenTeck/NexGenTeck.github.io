@@ -23,6 +23,10 @@ const SPACE_ID =
     import.meta.env.VITE_HF_SPACE_ID ||
     'muhammadhasaan82/NexGenTeck';
 
+const MAINTENANCE_MESSAGE =
+    'Our AI assistant is temporarily unavailable while we perform maintenance. ' +
+    "We'll be back soon. Please try again shortly.";
+
 type GradioClient = Awaited<ReturnType<typeof Client.connect>>;
 
 let chatbotClientPromise: Promise<GradioClient> | null = null;
@@ -221,9 +225,13 @@ export const Chatbot: React.FC = () => {
                 history,
             ]);
 
-            const responseText =
-                extractAssistantText(result.data) ||
-                "I'm sorry, I couldn't generate a response.";
+            const responseText = extractAssistantText(result.data);
+
+            if (!responseText) {
+                throw new Error('Chatbot returned an empty response.');
+            }
+
+                
 
             const botResponse: Message = {
                 id: Date.now() + 1,
@@ -237,6 +245,8 @@ export const Chatbot: React.FC = () => {
                 botResponse,
             ]);
         } catch (error) {
+            chatbotClientPromise = null;
+
             console.error(
                 'Hugging Face chatbot request failed:',
                 error,
@@ -244,10 +254,7 @@ export const Chatbot: React.FC = () => {
 
             const errorResponse: Message = {
                 id: Date.now() + 1,
-                text:
-                    'The AI assistant is temporarily unavailable. ' +
-                    'The Hugging Face Space may be waking up. ' +
-                    'Please wait a moment and try again.',
+                text: MAINTENANCE_MESSAGE,
                 isBot: true,
                 timestamp: new Date(),
             };
@@ -321,7 +328,7 @@ export const Chatbot: React.FC = () => {
                                         <h4>NGT – AI Assistant</h4>
 
                                         <span className="status">
-                                            Online • {messages.length}{' '}
+                                            AI assistant • {messages.length}{' '}
                                             messages
                                         </span>
                                     </div>
