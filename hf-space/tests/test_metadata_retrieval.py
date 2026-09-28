@@ -29,6 +29,7 @@ if "numpy" not in sys.modules:
 
 from chatbot_core.content_extractor import ContentExtractor  # noqa: E402
 from chatbot_core.config import config  # noqa: E402
+from chatbot_core.guardrails import build_system_prompt  # noqa: E402
 from chatbot_core.rag import ChatbotEngine, InMemoryVectorIndex  # noqa: E402
 
 
@@ -71,6 +72,16 @@ class MetadataRetrievalTests(unittest.TestCase):
         ]
         returned_ids = [metadata["entity_id"] for _, _, metadata in results]
         self.assertEqual(returned_ids, expected_ids)
+
+    def test_service_catalogue_prompt_requires_a_numbered_list_with_links(self):
+        prompt = build_system_prompt(
+            ["[Type: service] [URL: https://nexgenteck.com/services/example]"],
+            retrieval_operation="list",
+            retrieval_document_type="service",
+        )
+        self.assertIn("never a table", prompt)
+        self.assertIn("every unique service record", prompt)
+        self.assertIn("exact source URL", prompt)
 
     def test_list_retrieval_deduplicates_by_entity_id_in_source_order(self):
         duplicate = dict(self.service_documents[0])

@@ -78,6 +78,7 @@ def fast_path_response(message: str) -> Optional[str]:
 def build_system_prompt(
     context_chunks: List[str],
     retrieval_operation: str = "general",
+    retrieval_document_type: Optional[str] = None,
 ) -> str:
     """Build the NexGenTeck assistant system prompt with retrieved context."""
     prompt = f"""You are the NexGenTeck business assistant on the company website.
@@ -121,6 +122,25 @@ Professional, helpful, and concise. Use "we" and "our team" when speaking about 
 The retrieved context contains every unique entity of the requested document type.
 Enumerate all of those entities. Do not omit an item and do not add an entity that is
 not present in context.
+"""
+
+    if (
+        retrieval_operation == "list"
+        and retrieval_document_type == "service"
+    ):
+        prompt += """
+=== SERVICE CATALOGUE RESPONSE ===
+The user wants the complete NexGenTeck service catalogue.
+
+Use a numbered Markdown list, never a table. Include every unique service record in
+the retrieved context exactly once, in the supplied order. Each list item must use
+this exact structure:
+
+1. **[Service title](exact source URL)** — One concise sentence describing the service.
+
+Use the service title, URL, and description from the corresponding record. Keep each
+description factual and concise. Do not group services into a smaller set of 'core'
+areas, omit services, add services, use a feature table, or add a lengthy conclusion.
 """
 
     if context_chunks:
