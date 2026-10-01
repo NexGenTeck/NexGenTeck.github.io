@@ -4,6 +4,13 @@ import { Mail, Phone, MapPin, Clock, Send } from 'lucide-react';
 import { AnimatedSection } from '../components/AnimatedSection';
 import { useLanguage } from '../contexts/LanguageContext';
 import { submitContact } from '../services/contactApi';
+import {
+  EMAIL_PATTERN,
+  NAME_PATTERN,
+  PHONE_PATTERN,
+  normalizeNameInput,
+  normalizePhoneInput,
+} from '../utils/contactValidation';
 
 type SubmitStatus = 'success' | 'error' | null;
 
@@ -63,9 +70,16 @@ export const Contact: React.FC = () => {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement | HTMLSelectElement>) => {
+    const { name, value } = e.target;
+    const nextValue = name === 'name'
+      ? normalizeNameInput(value)
+      : name === 'phone'
+        ? normalizePhoneInput(value)
+        : value;
+
     setFormData({
       ...formData,
-      [e.target.name]: e.target.value,
+      [name]: nextValue,
     });
   };
 
@@ -117,7 +131,7 @@ export const Contact: React.FC = () => {
                   </motion.div>
                 )}
 
-                <form onSubmit={handleSubmit} className="space-y-6 relative" noValidate>
+                <form onSubmit={handleSubmit} className="space-y-6 relative">
 
                   <input
                     type="text"
@@ -141,6 +155,8 @@ export const Contact: React.FC = () => {
                       value={formData.name}
                       onChange={handleChange}
                       required
+                      pattern={NAME_PATTERN.source}
+                      title="Use letters, spaces, apostrophes, and hyphens only."
                       autoComplete="name"
                       className="w-full px-4 py-3 bg-black/40 text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder:text-gray-500"
                       placeholder={t('contact.form.namePlaceholder')}
@@ -158,6 +174,8 @@ export const Contact: React.FC = () => {
                       value={formData.email}
                       onChange={handleChange}
                       required
+                      pattern={EMAIL_PATTERN.source}
+                      title="Enter a valid email address, for example name@example.com."
                       autoComplete="email"
                       className="w-full px-4 py-3 bg-black/40 text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder:text-gray-500"
                       placeholder={t('contact.form.emailPlaceholder')}
@@ -166,7 +184,7 @@ export const Contact: React.FC = () => {
 
                   <div>
                     <label htmlFor="phone" className="block text-gray-300 mb-2">
-                      {t('contact.phone')}
+                      {t('contact.phone')} *
                     </label>
                     <input
                       type="tel"
@@ -174,6 +192,9 @@ export const Contact: React.FC = () => {
                       name="phone"
                       value={formData.phone}
                       onChange={handleChange}
+                      required
+                      pattern={PHONE_PATTERN.source}
+                      title="Enter a valid phone number using digits and optional +, spaces, hyphens, or parentheses."
                       autoComplete="tel"
                       className="w-full px-4 py-3 bg-black/40 text-white border border-white/20 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 placeholder:text-gray-500"
                       placeholder={t('contact.form.phonePlaceholder')}
@@ -182,7 +203,7 @@ export const Contact: React.FC = () => {
 
                   <div>
                     <label htmlFor="subject" className="block text-gray-300 mb-2">
-                      {t('contact.subject')}
+                      {t('contact.subject')} *
                     </label>
                     <select
                       key={`contact-subject-${language}`}
@@ -190,6 +211,7 @@ export const Contact: React.FC = () => {
                       name="subject"
                       value={formData.subject}
                       onChange={handleChange}
+                      required
                       autoComplete="off"
                       className="contact-subject-select w-full px-4 py-3 border border-orange-300/70 rounded-lg focus:outline-none focus:ring-2 focus:ring-orange-500/50 focus:border-orange-500 text-white"
                     >
